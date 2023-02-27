@@ -3,92 +3,49 @@ import {
   View,
   Text,
   Image,
-  Button,
   TouchableOpacity,
-  TouchableHighlight,
+  Dimensions,
+  StatusBar,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 import wash_machine from "../../assets/washing-machine.png";
-import { text, image, container } from "./OnboardingScreenStyle";
+import {
+  text,
+  image,
+  container,
+  circle,
+  button,
+} from "./OnboardingScreenStyle";
+
+const screenHeight = Dimensions.get("screen").height;
+const windowHeight = Dimensions.get("window").height;
+const navbarHeight = screenHeight - (windowHeight + StatusBar.currentHeight);
+const { width, height } = Dimensions.get("screen");
 
 const OnboardingScreen = ({ navigation, props }) => {
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-      }}
-    >
-      <View
-        style={{
-          width: 500,
-          height: 400,
-          borderBottomStartRadius: 500 / 2,
-          borderBottomEndRadius: 500 / 2,
-          position: "absolute",
-          backgroundColor: "#4691FB",
-        }}
-      />
-      <Image
-        source={wash_machine}
-        style={{ width: "60%", height: "30%", marginTop: "25%" }}
-        resizeMode="contain"
-      />
-      <View
-        style={{
-          marginTop: "25%",
-          width: "100%",
-          height: "100%",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 42,
-            // color: "#0000",
-            fontFamily: "Montserrat",
-          }}
-        >
-          Suck&Reed
-        </Text>
-        <TouchableOpacity
-          style={{
-            marginTop: "15%",
-            borderRadius: 10,
-            width: "90%",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "#4691FB",
-            paddingVertical: 20,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 18,
-              color: "#ffff",
-            }}
-          >
-            สร้างบัญชีใหม่
-          </Text>
-        </TouchableOpacity>
+    <View style={container}>
+      <View style={{ alignItems: "center" }}>
+        <View style={circle} />
+      </View>
 
-        <View
-          style={{
-            width: "100%",
-            height: "100%",
-            alignItems: "center",
-            marginVertical: 100,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 14,
-              //   color: "#ffff",
-            }}
-          >
-            มีบัญชีอยู่แล้ว? เข้าสู่ระบบ
+      <View style={{ marginTop: getStatusBarHeight(), alignItems: "center" }}>
+        <Image source={wash_machine} style={image} resizeMode="contain" />
+        <Text style={text}>Suck&Reed</Text>
+        <TouchableOpacity style={button}>
+          <Text style={{ fontSize: 18, color: "#ffffff" }}>สร้างบัญชีใหม่</Text>
+        </TouchableOpacity>
+        <View style={{ flexDirection: "row", marginTop: 50 }}>
+          <Text style={{ color: "#000000", fontSize: 14 }}>
+            {"มีบัญชีอยู่แล้ว? "}
           </Text>
+          <TouchableOpacity>
+            <Text style={{ color: "#4691FB", fontSize: 14 }}>
+              {"เข้าสู่ระบบ"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

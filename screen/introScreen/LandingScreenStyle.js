@@ -7,7 +7,7 @@ export const container = {
 
 export const text = {
   fontSize: 42,
-  marginTop: 10,
+  marginTop: 20,
   color: "#FFFFFF",
   fontFamily: "Montserrat",
 };
