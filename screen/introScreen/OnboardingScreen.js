@@ -41,7 +41,9 @@ const OnboardingScreen = ({ navigation, props }) => {
           <Text style={{ color: "#000000", fontSize: 14 }}>
             {"มีบัญชีอยู่แล้ว? "}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate("SignIn")
+          }}>
             <Text style={{ color: "#4691FB", fontSize: 14 }}>
               {"เข้าสู่ระบบ"}
             </Text>

@@ -7,6 +7,7 @@ import { useFonts } from "expo-font";
 
 import LandingScreen from "./screen/introScreen/LandingScreen";
 import OnboardingScreen from "./screen/introScreen/OnboardingScreen";
+import SignInScreen from "./screen/authenticationScreen/SignInScreen";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export default function App() {
       >
         <Stack.Screen name="Landing" component={LandingScreen} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="SignIn" component={SignInScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
