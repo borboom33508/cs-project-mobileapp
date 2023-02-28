@@ -34,7 +34,12 @@ const OnboardingScreen = ({ navigation, props }) => {
       <View style={{ marginTop: getStatusBarHeight(), alignItems: "center" }}>
         <Image source={wash_machine} style={image} resizeMode="contain" />
         <Text style={text}>{"Suck&Reed"}</Text>
-        <TouchableOpacity style={button}>
+        <TouchableOpacity
+          style={button}
+          onPress={() => {
+            navigation.navigate("SignUp");
+          }}
+        >
           <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
             {"สร้างบัญชีใหม่"}
           </Text>

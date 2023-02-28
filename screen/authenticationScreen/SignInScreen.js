@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import { container, button, text, input } from "./SignInScreenStyle";
@@ -25,7 +25,7 @@ const SignInScreen = ({ navigation, props }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ padding: 10 }}>
+        <View style={{ padding: 10, paddingTop: 40 }}>
           <Text style={{ fontSize: 26, fontFamily: "Kanit" }}>
             {"กรอกบัญชีเพื่อเข้าสู่ระบบ"}
           </Text>
@@ -100,5 +100,3 @@ const SignInScreen = ({ navigation, props }) => {
 };
 
 export default SignInScreen;
-
-const styles = StyleSheet.create({});
