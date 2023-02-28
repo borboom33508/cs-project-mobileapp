@@ -14,6 +14,7 @@ const Stack = createStackNavigator();
 export default function App() {
   const [fontsLoading] = useFonts({
     Montserrat: require("./assets/fonts/Montserrat-Regular.ttf"),
+    Kanit: require("./assets/fonts/Kanit-Light.ttf"),
   });
 
   if (!fontsLoading) {

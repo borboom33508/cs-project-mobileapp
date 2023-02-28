@@ -33,18 +33,24 @@ const OnboardingScreen = ({ navigation, props }) => {
 
       <View style={{ marginTop: getStatusBarHeight(), alignItems: "center" }}>
         <Image source={wash_machine} style={image} resizeMode="contain" />
-        <Text style={text}>Suck&Reed</Text>
+        <Text style={text}>{"Suck&Reed"}</Text>
         <TouchableOpacity style={button}>
-          <Text style={{ fontSize: 18, color: "#ffffff" }}>{"สร้างบัญชีใหม่"}</Text>
+          <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
+            {"สร้างบัญชีใหม่"}
+          </Text>
         </TouchableOpacity>
         <View style={{ flexDirection: "row", marginTop: 50 }}>
-          <Text style={{ color: "#000000", fontSize: 14 }}>
+          <Text style={{ color: "#000000", fontSize: 14, fontFamily: "Kanit" }}>
             {"มีบัญชีอยู่แล้ว? "}
           </Text>
-          <TouchableOpacity onPress={() => {
-            navigation.navigate("SignIn")
-          }}>
-            <Text style={{ color: "#4691FB", fontSize: 14 }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("SignIn");
+            }}
+          >
+            <Text
+              style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
+            >
               {"เข้าสู่ระบบ"}
             </Text>
           </TouchableOpacity>
