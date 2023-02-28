@@ -35,7 +35,7 @@ const OnboardingScreen = ({ navigation, props }) => {
         <Image source={wash_machine} style={image} resizeMode="contain" />
         <Text style={text}>Suck&Reed</Text>
         <TouchableOpacity style={button}>
-          <Text style={{ fontSize: 18, color: "#ffffff" }}>สร้างบัญชีใหม่</Text>
+          <Text style={{ fontSize: 18, color: "#ffffff" }}>{"สร้างบัญชีใหม่"}</Text>
         </TouchableOpacity>
         <View style={{ flexDirection: "row", marginTop: 50 }}>
           <Text style={{ color: "#000000", fontSize: 14 }}>

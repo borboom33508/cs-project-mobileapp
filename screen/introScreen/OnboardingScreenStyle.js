@@ -29,7 +29,6 @@ export const button = {
   borderRadius: 10,
   width: "90%",
   alignItems: "center",
-  justifyContent: "center",
   backgroundColor: "#4691FB",
-  paddingVertical: 20,
+  padding: 20,
 };
