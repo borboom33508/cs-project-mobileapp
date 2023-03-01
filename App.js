@@ -11,6 +11,7 @@ import SignInScreen from "./screen/authenticationScreen/SignInScreen";
 import SignUpScreen from "./screen/authenticationScreen/SignUpScreen";
 import PreChangePasswordScreen from "./screen/authenticationScreen/PreChangePasswordScreen";
 import ChangePasswordScreen from "./screen/authenticationScreen/ChangePasswordScreen";
+import OTPScreen from "./screen/authenticationScreen/OTPScreen";
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,7 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="PreChangePassword" component={PreChangePasswordScreen} />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+        <Stack.Screen name="OTPForm" component={OTPScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

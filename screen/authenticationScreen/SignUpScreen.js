@@ -197,7 +197,15 @@ const SignUpScreen = ({ navigation, props }) => {
                 />
               </View>
 
-              <TouchableOpacity style={button}>
+              <TouchableOpacity
+                style={button}
+                onPress={() => {
+                  navigation.navigate("OTPForm", {
+                    page: "SignIn",
+                    description: "สร้างบัญชีผู้ใช้เรียบร้อย",
+                  });
+                }}
+              >
                 <Text
                   style={{
                     fontSize: 18,
@@ -205,7 +213,7 @@ const SignUpScreen = ({ navigation, props }) => {
                     fontFamily: "Kanit",
                   }}
                 >
-                  {"เข้าสู่ระบบ"}
+                  {"สร้างบัญชี"}
                 </Text>
               </TouchableOpacity>
 
