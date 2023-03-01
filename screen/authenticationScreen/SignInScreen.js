@@ -78,7 +78,9 @@ const SignInScreen = ({ navigation, props }) => {
             />
           </View>
 
-          <TouchableOpacity style={{ marginLeft: "80%" }}>
+          <TouchableOpacity style={{ marginLeft: "80%" }} onPress={() => {
+            navigation.navigate("PreChangePassword")
+          }}>
             <Text
               style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
             >

@@ -9,6 +9,8 @@ import LandingScreen from "./screen/introScreen/LandingScreen";
 import OnboardingScreen from "./screen/introScreen/OnboardingScreen";
 import SignInScreen from "./screen/authenticationScreen/SignInScreen";
 import SignUpScreen from "./screen/authenticationScreen/SignUpScreen";
+import PreChangePasswordScreen from "./screen/authenticationScreen/PreChangePasswordScreen";
+import ChangePasswordScreen from "./screen/authenticationScreen/ChangePasswordScreen";
 
 const Stack = createStackNavigator();
 
@@ -32,6 +34,8 @@ export default function App() {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="PreChangePassword" component={PreChangePasswordScreen} />
+        <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
