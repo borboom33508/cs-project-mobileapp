@@ -1,17 +1,14 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 
-import LandingScreen from "./screen/introScreen/LandingScreen";
-import OnboardingScreen from "./screen/introScreen/OnboardingScreen";
-import SignInScreen from "./screen/authenticationScreen/SignInScreen";
-import SignUpScreen from "./screen/authenticationScreen/SignUpScreen";
-import PreChangePasswordScreen from "./screen/authenticationScreen/PreChangePasswordScreen";
-import ChangePasswordScreen from "./screen/authenticationScreen/ChangePasswordScreen";
-import OTPScreen from "./screen/authenticationScreen/OTPScreen";
+import LandingScreen from "./src/screen/introScreen/LandingScreen"
+import OnboardingScreen from "./src/screen/introScreen/OnboardingScreen";
+import SignInScreen from "./src/screen/authenticationScreen/SignInScreen";
+import SignUpScreen from "./src/screen/authenticationScreen/SignUpScreen";
+import PreChangePasswordScreen from "./src/screen/authenticationScreen/PreChangePasswordScreen";
+import ChangePasswordScreen from "./src/screen/authenticationScreen/ChangePasswordScreen";
+import OTPScreen from "./src/screen/authenticationScreen/OTPScreen";
 
 const Stack = createStackNavigator();
 

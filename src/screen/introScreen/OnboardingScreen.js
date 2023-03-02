@@ -9,8 +9,9 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import { useIsFocused } from "@react-navigation/native";
 
-import wash_machine from "../../assets/washing-machine.png";
+import wash_machine from "../../../assets/washing-machine.png";
 import {
   text,
   image,
@@ -19,12 +20,43 @@ import {
   button,
 } from "./OnboardingScreenStyle";
 
+import getApi from "../../api/getApi";
+
 const screenHeight = Dimensions.get("screen").height;
 const windowHeight = Dimensions.get("window").height;
 const navbarHeight = screenHeight - (windowHeight + StatusBar.currentHeight);
 const { width, height } = Dimensions.get("screen");
 
 const OnboardingScreen = ({ navigation, props }) => {
+  // const isFocused = useIsFocused();
+
+  // useEffect(() => {
+  //   getUser();
+  // }, [isFocused]);
+
+  // const getUser = async () => {
+  //   // var formdata = new FormData();
+  //   // formdata.append("cus_id", 1);
+
+  //   try {
+  //     // await AsyncStorage.getItem("@user").then((result) => {
+  //     //   let user = JSON.parse(result);
+  //     await getApi
+  //       .useFetch("GET", "", `/Test.php?cus_id=${1}`)
+  //       .then((data) => {
+  //         console.log(data);
+  //       });
+  //       // await getApi
+  //       // .useFetch("POST", formdata, `/Test.php`, "")
+  //       // .then((data) => {
+  //       //   console.log(data);
+  //       // });
+  //     // });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
   return (
     <View style={container}>
       <View style={{ alignItems: "center" }}>

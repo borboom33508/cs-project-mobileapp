@@ -26,7 +26,7 @@ const Successpopup = ({ navigation, props }) => {
             }}
             onPress={() => {
               setToggleClose(!toggleClose);
-              navigation.navigate("SignIn");
+              navigation.navigate("Onboarding");
             }}
           >
             <Ionicons name="close" size={36} color="#4691FB" />

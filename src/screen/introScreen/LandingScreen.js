@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { View, Text, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import wash_machine from "../../assets/washing-machine.png";
+import wash_machine from "../../../assets/washing-machine.png";
 import { text, image, container } from "./LandingScreenStyle";
 
 const LandingScreen = ({ navigation, props }) => {

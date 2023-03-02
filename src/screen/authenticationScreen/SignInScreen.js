@@ -4,13 +4,36 @@ import { TouchableOpacity } from "react-native";
 import { container, button, text, input } from "./SignInScreenStyle";
 import { Ionicons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-
 import { TextInput } from "react-native-paper";
+import { useIsFocused } from "@react-navigation/native";
+import getApi from "../../api/getApi";
 
 const SignInScreen = ({ navigation, props }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    setUsername("");
+    setPassword("");
+  }, [isFocused]);
+
+  const userAuthentication = async () => {
+    try {
+      await getApi
+        .useFetch(
+          "GET",
+          "",
+          `/customer/GetLoginRequest.php?cus_email=${username}&cus_phone=${username}&cus_password=${password}`
+        )
+        .then((data) => {
+          console.log(data);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <View style={container}>
@@ -91,7 +114,12 @@ const SignInScreen = ({ navigation, props }) => {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={button}>
+          <TouchableOpacity
+            style={button}
+            onPress={() => {
+              userAuthentication();
+            }}
+          >
             <Text
               style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}
             >

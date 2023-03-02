@@ -16,14 +16,9 @@ const OTPScreen = ({ navigation, route, props }) => {
   const description = route.params.description;
 
   useEffect(() => {
-    console.log(otp);
     setOTP("");
     setIsSuccess(false);
   }, [isFocused]);
-
-  useEffect(() => {
-    console.log(otp);
-  }, [otp]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -31,7 +26,7 @@ const OTPScreen = ({ navigation, route, props }) => {
         <View style={{ paddingHorizontal: 10 }}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("SignUp");
+              navigation.goBack();
             }}
           >
             <Ionicons name="arrow-back" size={30} color="#4691FB" />
