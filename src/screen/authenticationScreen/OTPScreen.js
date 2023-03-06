@@ -6,38 +6,75 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
 import SuccessPopUp from "../../components/SuccessPopUp";
 import { useIsFocused } from "@react-navigation/native";
-import SendOTP from "../../api/SendOTP";
 
 const OTPScreen = ({ navigation, route, props }) => {
   const isFocused = useIsFocused();
   const [otp, setOTP] = useState("");
+  const [otpCode, setOtpCode] = useState("default");
   const [isSuccess, setIsSuccess] = useState(false);
 
   const page = route.params.page;
   const description = route.params.description;
   const account = route.params.account;
 
-  // useEffect(() => {
-  //   getRandomArbitrary();
-  //   console.log(otp);
-  // }, [otp]);
+  const getRandomArbitrary = () => {
+    return Math.floor(Math.random() * (9999 - 1111 + 1) + 1111).toString(); // String
+  };
+
+  const sendOTP = () => {
+    var tmp = getRandomArbitrary()
+    fetch("https://19lp31.api.infobip.com/sms/2/text/advanced", {
+      'method': 'POST',
+      'hostname': '19lp31.api.infobip.com',
+      'path': '/sms/2/text/advanced',
+      'headers': {
+          'Authorization': 'App 4f984a95564887480f80c719347b2656-151ff6fb-5a39-4352-a684-658365c4a0f5',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+      },
+      'maxRedirects': 20,
+      body: JSON.stringify({
+        "messages": [
+          {
+              "destinations": [
+                  {
+                      "to": `66${account.phone.value}`
+                  }
+              ],
+              "from": "Suck$Reed",
+              "text": `Suck&Reed Service: รหัส OTP ของคุณคือ ${tmp}`
+          }
+      ]
+      })
+    })
+    setOtpCode(tmp); //String
+    // .then(res => res.json())
+  }
+  
+  const verifyOTp = () => {
+    if (otp.toString() == otpCode.toString()) {
+      setIsSuccess(true)
+      console.log("OTP ถูกต้อง");
+    }
+    else {
+      console.log(`OTP ที่ถูกคือ ${otpCode}`);
+    }
+  }
+
 
   useEffect(() => {
-    if (isFocused) {
-      getRandomArbitrary();
+    // if (isFocused) {
+      // sendOTP("660625491524")
       // sendingOTP();
-      SendOTP();
-    }
+      // SendOTP();
+    // }
     return () => {
-      setOTP("");
+      // setOTP("");
+      console.log(`66${account.phone.value}`)
       setIsSuccess(false);
     };
   }, [isFocused]);
 
-  const getRandomArbitrary = () => {
-    const otp_code = Math.floor(Math.random() * (9999 - 1111 + 1) + 1111); // String
-    setOTP(otp_code);
-  };
 
   const addAccount = async () => {
     var formdata = new FormData();
@@ -88,7 +125,6 @@ const OTPScreen = ({ navigation, route, props }) => {
             handleTextChange={(value) => {
               setOTP(value);
             }}
-            ref={(value) => {}}
             tintColor="#4691FB"
             inputCellLength={1}
             containerStyle={{ width: "80%" }}
@@ -96,6 +132,7 @@ const OTPScreen = ({ navigation, route, props }) => {
           />
 
           <TouchableOpacity
+            onPress={() => verifyOTp()}
             style={{
               marginTop: "10%",
               borderRadius: 10,
@@ -104,11 +141,11 @@ const OTPScreen = ({ navigation, route, props }) => {
               padding: 20,
               width: "90%",
             }}
-            onPress={() => {
-              page == "ChangePassword"
-                ? navigation.navigate(page)
-                : setIsSuccess(!isSuccess);
-            }}
+            // onPress={() => {
+            //   page == "ChangePassword"
+            //     ? navigation.navigate(page)
+            //     : setIsSuccess(!isSuccess);
+            // }}
           >
             <Text
               style={{
@@ -127,11 +164,11 @@ const OTPScreen = ({ navigation, route, props }) => {
             >
               {"ไม่ได้รับ OTP ? "}
             </Text>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => sendOTP()}>
               <Text
                 style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
               >
-                {"ส่งอีกครั้ง"}
+                {"ส่ง OTP"}
               </Text>
             </TouchableOpacity>
           </View>
