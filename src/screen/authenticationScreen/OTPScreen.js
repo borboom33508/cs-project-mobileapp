@@ -6,8 +6,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
 import SuccessPopUp from "../../components/SuccessPopUp";
 import { useIsFocused } from "@react-navigation/native";
+
 import SendOTP from "../../api/SendOTP";
 import GetApi from "../../api/GetApi";
+
 
 const OTPScreen = ({ navigation, route, props }) => {
   const isFocused = useIsFocused();
@@ -20,14 +22,17 @@ const OTPScreen = ({ navigation, route, props }) => {
   const description = route.params.description;
   const account = route.params.account;
 
+
   useEffect(() => {
     return () => {
       setOTP("");
       setOtpCode("");
+
       setIsSuccess(false);
       setIsOTPError(false);
     };
   }, [isFocused]);
+
 
   const genAndSendOTP = () => {
     let tpm = Math.floor(Math.random() * (9999 - 1111 + 1) + 1111).toString(); // String
@@ -48,6 +53,7 @@ const OTPScreen = ({ navigation, route, props }) => {
       console.log(`OTP ที่ถูกคือ ${otpCode}`);
     }
   };
+
 
   const addAccount = async () => {
     var formdata = new FormData();
@@ -120,7 +126,9 @@ const OTPScreen = ({ navigation, route, props }) => {
           ) : null}
 
           <TouchableOpacity
+
             onPress={() => verifyOTP()}
+
             style={{
               marginTop: "10%",
               borderRadius: 10,
@@ -129,6 +137,7 @@ const OTPScreen = ({ navigation, route, props }) => {
               padding: 20,
               width: "90%",
             }}
+
           >
             <Text
               style={{
@@ -147,11 +156,13 @@ const OTPScreen = ({ navigation, route, props }) => {
             >
               {"ไม่ได้รับ OTP ? "}
             </Text>
+
             <TouchableOpacity
               onPress={() => {
                 genAndSendOTP();
               }}
             >
+
               <Text
                 style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
               >
