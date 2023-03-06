@@ -22,23 +22,6 @@ const SignUpScreen = ({ navigation, props }) => {
     phone: { value: "", error: "" },
   });
 
-  // const addAccount = async () => {
-  //   var formdata = new FormData();
-  //   formdata.append("cus_email", account.email.value);
-  //   formdata.append("cus_phone", account.phone.value);
-  //   formdata.append("cus_password", account.password.value);
-  //   formdata.append("cus_name", account.name.value);
-  //   try {
-  //     await GetApi
-  //       .useFetch("POST", formdata, `/customer/PostAccountRequest.php`)
-  //       .then((data) => {
-  //         console.log(data);
-  //       });
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
   return (
     <View style={container}>
       <KeyboardAvoidingView behavior="height">
@@ -160,7 +143,6 @@ const SignUpScreen = ({ navigation, props }) => {
                       ...account,
                       passwordConfirm: { value: text, error: "" },
                     });
-                    console.log(text);
                   }}
                   value={account.passwordConfirm.value}
                   activeOutlineColor="#4691FB"

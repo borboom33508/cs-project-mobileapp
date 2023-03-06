@@ -7,36 +7,46 @@ import { useEffect, useRef, useState } from "react";
 import SuccessPopUp from "../../components/SuccessPopUp";
 import { useIsFocused } from "@react-navigation/native";
 import SendOTP from "../../api/SendOTP";
+import GetApi from "../../api/GetApi";
 
 const OTPScreen = ({ navigation, route, props }) => {
   const isFocused = useIsFocused();
   const [otp, setOTP] = useState("");
+  const [otpCode, setOtpCode] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isOTPError, setIsOTPError] = useState(false);
 
   const page = route.params.page;
   const description = route.params.description;
   const account = route.params.account;
 
-  // useEffect(() => {
-  //   getRandomArbitrary();
-  //   console.log(otp);
-  // }, [otp]);
-
   useEffect(() => {
-    if (isFocused) {
-      getRandomArbitrary();
-      // sendingOTP();
-      SendOTP();
-    }
     return () => {
       setOTP("");
+      setOtpCode("");
       setIsSuccess(false);
+      setIsOTPError(false);
     };
   }, [isFocused]);
 
-  const getRandomArbitrary = () => {
-    const otp_code = Math.floor(Math.random() * (9999 - 1111 + 1) + 1111); // String
-    setOTP(otp_code);
+  const genAndSendOTP = () => {
+    let tpm = Math.floor(Math.random() * (9999 - 1111 + 1) + 1111).toString(); // String
+    SendOTP.useFetch(account.phone.value, tpm);
+    setOtpCode(tpm);
+  };
+
+  const verifyOTP = () => {
+    if (otp == otpCode && otp !== "") {
+      setIsOTPError(false);
+      addAccount();
+      page == "ChangePassword"
+        ? navigation.navigate(page)
+        : setIsSuccess(!isSuccess);
+      console.log("OTP ถูกต้อง");
+    } else {
+      setIsOTPError(true);
+      console.log(`OTP ที่ถูกคือ ${otpCode}`);
+    }
   };
 
   const addAccount = async () => {
@@ -85,17 +95,32 @@ const OTPScreen = ({ navigation, route, props }) => {
           }}
         >
           <OTPTextInput
+            defaultValue={otp}
             handleTextChange={(value) => {
               setOTP(value);
             }}
-            ref={(value) => {}}
             tintColor="#4691FB"
             inputCellLength={1}
             containerStyle={{ width: "80%" }}
             textInputStyle={{ fontFamily: "Kanit", fontSize: 32 }}
           />
 
+          {isOTPError ? (
+            <View style={{ marginTop: "5%" }}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "#F91616",
+                  fontFamily: "Kanit",
+                }}
+              >
+                {"OTP ไม่ถูกต้อง"}
+              </Text>
+            </View>
+          ) : null}
+
           <TouchableOpacity
+            onPress={() => verifyOTP()}
             style={{
               marginTop: "10%",
               borderRadius: 10,
@@ -103,11 +128,6 @@ const OTPScreen = ({ navigation, route, props }) => {
               backgroundColor: "#4691FB",
               padding: 20,
               width: "90%",
-            }}
-            onPress={() => {
-              page == "ChangePassword"
-                ? navigation.navigate(page)
-                : setIsSuccess(!isSuccess);
             }}
           >
             <Text
@@ -127,11 +147,15 @@ const OTPScreen = ({ navigation, route, props }) => {
             >
               {"ไม่ได้รับ OTP ? "}
             </Text>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              onPress={() => {
+                genAndSendOTP();
+              }}
+            >
               <Text
                 style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
               >
-                {"ส่งอีกครั้ง"}
+                {"ส่ง OTP"}
               </Text>
             </TouchableOpacity>
           </View>
