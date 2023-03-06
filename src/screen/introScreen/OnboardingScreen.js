@@ -20,7 +20,7 @@ import {
   button,
 } from "./OnboardingScreenStyle";
 
-import getApi from "../../api/getApi";
+import GetApi from "../../api/GetApi";
 
 const screenHeight = Dimensions.get("screen").height;
 const windowHeight = Dimensions.get("window").height;

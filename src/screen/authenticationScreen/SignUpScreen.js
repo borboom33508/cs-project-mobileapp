@@ -10,6 +10,7 @@ import { container, button, text, input } from "./SignInScreenStyle";
 import { Ionicons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TextInput } from "react-native-paper";
+import GetApi from "../../api/GetApi";
 
 const SignUpScreen = ({ navigation, props }) => {
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
@@ -20,6 +21,23 @@ const SignUpScreen = ({ navigation, props }) => {
     passwordConfirm: { value: "", error: "" },
     phone: { value: "", error: "" },
   });
+
+  // const addAccount = async () => {
+  //   var formdata = new FormData();
+  //   formdata.append("cus_email", account.email.value);
+  //   formdata.append("cus_phone", account.phone.value);
+  //   formdata.append("cus_password", account.password.value);
+  //   formdata.append("cus_name", account.name.value);
+  //   try {
+  //     await GetApi
+  //       .useFetch("POST", formdata, `/customer/PostAccountRequest.php`)
+  //       .then((data) => {
+  //         console.log(data);
+  //       });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   return (
     <View style={container}>
@@ -200,9 +218,11 @@ const SignUpScreen = ({ navigation, props }) => {
               <TouchableOpacity
                 style={button}
                 onPress={() => {
+                  // addAccount();
                   navigation.navigate("OTPForm", {
                     page: "SignIn",
                     description: "สร้างบัญชีผู้ใช้เรียบร้อย",
+                    account: account,
                   });
                 }}
               >

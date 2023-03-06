@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text, View, Alert } from "react-native";
 import React, { useState, useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import { container, button, text, input } from "./SignInScreenStyle";
@@ -6,22 +6,25 @@ import { Ionicons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TextInput } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
-import getApi from "../../api/getApi";
+import GetApi from "../../api/GetApi";
 
 const SignInScreen = ({ navigation, props }) => {
+  const isFocused = useIsFocused();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
-  const isFocused = useIsFocused();
+  const [showError, setshowError] = useState(false);
 
   useEffect(() => {
     setUsername("");
     setPassword("");
+    setshowError(false);
+    setIsPasswordSecure(true);
   }, [isFocused]);
 
   const userAuthentication = async () => {
     try {
-      await getApi
+      await GetApi
         .useFetch(
           "GET",
           "",
@@ -29,6 +32,12 @@ const SignInScreen = ({ navigation, props }) => {
         )
         .then((data) => {
           console.log(data);
+          if (data.success) {
+            // console.log("true");
+          } else {
+            setshowError(true);
+            setPassword("");
+          }
         });
     } catch (e) {
       console.log(e);
@@ -72,6 +81,7 @@ const SignInScreen = ({ navigation, props }) => {
                   },
                 },
               }}
+              error={showError}
             />
 
             <TextInput
@@ -98,21 +108,36 @@ const SignInScreen = ({ navigation, props }) => {
                   },
                 },
               }}
+              error={showError}
             />
           </View>
 
-          <TouchableOpacity
-            style={{ marginLeft: "80%" }}
-            onPress={() => {
-              navigation.navigate("PreChangePassword");
+          <View
+            style={{
+              marginTop: 5,
+              marginHorizontal: 10,
+              flexDirection: "row",
+              justifyContent: showError ? "space-between" : "flex-end",
             }}
           >
-            <Text
-              style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
+            {showError ? (
+              <Text
+                style={{ color: "#F91616", fontSize: 14, fontFamily: "Kanit" }}
+              >{`ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง`}</Text>
+            ) : null}
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("PreChangePassword");
+              }}
             >
-              {"ลืมรหัสผ่าน?"}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
+              >
+                {"ลืมรหัสผ่าน?"}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity
             style={button}
