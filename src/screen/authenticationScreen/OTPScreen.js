@@ -7,73 +7,52 @@ import { useEffect, useRef, useState } from "react";
 import SuccessPopUp from "../../components/SuccessPopUp";
 import { useIsFocused } from "@react-navigation/native";
 
+import SendOTP from "../../api/SendOTP";
+import GetApi from "../../api/GetApi";
+
+
 const OTPScreen = ({ navigation, route, props }) => {
   const isFocused = useIsFocused();
   const [otp, setOTP] = useState("");
-  const [otpCode, setOtpCode] = useState("default");
+  const [otpCode, setOtpCode] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isOTPError, setIsOTPError] = useState(false);
 
   const page = route.params.page;
   const description = route.params.description;
   const account = route.params.account;
 
-  const getRandomArbitrary = () => {
-    return Math.floor(Math.random() * (9999 - 1111 + 1) + 1111).toString(); // String
-  };
-
-  const sendOTP = () => {
-    var tmp = getRandomArbitrary()
-    fetch("https://19lp31.api.infobip.com/sms/2/text/advanced", {
-      'method': 'POST',
-      'hostname': '19lp31.api.infobip.com',
-      'path': '/sms/2/text/advanced',
-      'headers': {
-          'Authorization': 'App 4f984a95564887480f80c719347b2656-151ff6fb-5a39-4352-a684-658365c4a0f5',
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-      },
-      'maxRedirects': 20,
-      body: JSON.stringify({
-        "messages": [
-          {
-              "destinations": [
-                  {
-                      "to": `66${account.phone.value}`
-                  }
-              ],
-              "from": "Suck$Reed",
-              "text": `Suck&Reed Service: รหัส OTP ของคุณคือ ${tmp}`
-          }
-      ]
-      })
-    })
-    setOtpCode(tmp); //String
-    // .then(res => res.json())
-  }
-  
-  const verifyOTp = () => {
-    if (otp.toString() == otpCode.toString()) {
-      setIsSuccess(true)
-      console.log("OTP ถูกต้อง");
-    }
-    else {
-      console.log(`OTP ที่ถูกคือ ${otpCode}`);
-    }
-  }
-
 
   useEffect(() => {
-    // if (isFocused) {
-      // sendOTP("660625491524")
-      // sendingOTP();
-      // SendOTP();
-    // }
     return () => {
-      // setOTP("");
-      console.log(`66${account.phone.value}`)
+      setOTP("");
+      setOtpCode("");
+
       setIsSuccess(false);
+      setIsOTPError(false);
     };
   }, [isFocused]);
+
+
+  const genAndSendOTP = () => {
+    let tpm = Math.floor(Math.random() * (9999 - 1111 + 1) + 1111).toString(); // String
+    SendOTP.useFetch(account.phone.value, tpm);
+    setOtpCode(tpm);
+  };
+
+  const verifyOTP = () => {
+    if (otp == otpCode && otp !== "") {
+      setIsOTPError(false);
+      addAccount();
+      page == "ChangePassword"
+        ? navigation.navigate(page)
+        : setIsSuccess(!isSuccess);
+      console.log("OTP ถูกต้อง");
+    } else {
+      setIsOTPError(true);
+      console.log(`OTP ที่ถูกคือ ${otpCode}`);
+    }
+  };
 
 
   const addAccount = async () => {
@@ -122,6 +101,7 @@ const OTPScreen = ({ navigation, route, props }) => {
           }}
         >
           <OTPTextInput
+            defaultValue={otp}
             handleTextChange={(value) => {
               setOTP(value);
             }}
@@ -131,8 +111,24 @@ const OTPScreen = ({ navigation, route, props }) => {
             textInputStyle={{ fontFamily: "Kanit", fontSize: 32 }}
           />
 
+          {isOTPError ? (
+            <View style={{ marginTop: "5%" }}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "#F91616",
+                  fontFamily: "Kanit",
+                }}
+              >
+                {"OTP ไม่ถูกต้อง"}
+              </Text>
+            </View>
+          ) : null}
+
           <TouchableOpacity
-            onPress={() => verifyOTp()}
+
+            onPress={() => verifyOTP()}
+
             style={{
               marginTop: "10%",
               borderRadius: 10,
@@ -141,11 +137,7 @@ const OTPScreen = ({ navigation, route, props }) => {
               padding: 20,
               width: "90%",
             }}
-            // onPress={() => {
-            //   page == "ChangePassword"
-            //     ? navigation.navigate(page)
-            //     : setIsSuccess(!isSuccess);
-            // }}
+
           >
             <Text
               style={{
@@ -164,7 +156,13 @@ const OTPScreen = ({ navigation, route, props }) => {
             >
               {"ไม่ได้รับ OTP ? "}
             </Text>
-            <TouchableOpacity onPress={() => sendOTP()}>
+
+            <TouchableOpacity
+              onPress={() => {
+                genAndSendOTP();
+              }}
+            >
+
               <Text
                 style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
               >
