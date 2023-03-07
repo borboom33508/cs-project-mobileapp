@@ -28,7 +28,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Landing"
+        initialRouteName="MapTest"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Landing" component={LandingScreen} />
@@ -40,7 +40,7 @@ export default function App() {
         <Stack.Screen name="OTPForm" component={OTPScreen} />
         <Stack.Screen name="Setting" component={SettingScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-        <Stack.Screen name="Map" component={MapTest} /> 
+        <Stack.Screen name="MapTest" component={MapTest} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );

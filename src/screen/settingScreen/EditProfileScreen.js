@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { Feather } from '@expo/vector-icons';
 import { container } from "./EditProfileScreenStyle";
 import { TextInput } from "react-native-paper";
 import { getStatusBarHeight } from "react-native-status-bar-height";
@@ -39,14 +40,14 @@ const EditProfileScreen = () => {
         <View
           style={{
             marginHorizontal: 20,
-            marginTop: "20%",
+            marginTop: "5%",
             alignItems: "center",
           }}
         >
           <Image
             source={require("../../../assets/unknown-user.png")}
             style={{ width: 200, height: 200 }}
-          ></Image>
+          />
           <TouchableOpacity>
             <Text
               style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
@@ -61,7 +62,6 @@ const EditProfileScreen = () => {
             <TextInput
               label={<Text style={{ fontFamily: "Kanit" }}>{"ชื่อ"}</Text>}
               mode="outlined"
-              disabled="true"
               style={{ backgroundColor: "#ffffff", height: 60 }}
               //   onChangeText={(text) => {
               //     setAccount({
@@ -84,7 +84,6 @@ const EditProfileScreen = () => {
             <TextInput
               label={<Text style={{ fontFamily: "Kanit" }}>{"นามสกุล"}</Text>}
               mode="outlined"
-              disabled="true"
               style={{ backgroundColor: "#ffffff", height: 60 }}
               //   onChangeText={(text) => {
               //     setAccount({
@@ -124,13 +123,13 @@ const EditProfileScreen = () => {
                   },
                 },
               }}
-            />
+            >
+            </TextInput>
           </View>
           <View style={{ paddingVertical: 10 }}>
             <TextInput
               label={<Text style={{ fontFamily: "Kanit" }}>{"อีเมล"}</Text>}
               mode="outlined"
-              disabled="true"
               style={{ backgroundColor: "#ffffff", height: 60 }}
               //   onChangeText={(text) => {
               //     setAccount({

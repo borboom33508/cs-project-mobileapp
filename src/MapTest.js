@@ -1,9 +1,4 @@
-import {
-  View,
-  Dimensions,
-  StyleSheet,
-  Button,
-} from "react-native";
+import { View, Dimensions, StyleSheet, Button } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
@@ -25,7 +20,7 @@ const MapTest = () => {
       enableHighAccuracy: true,
     });
     setMapRegion({
-      latitude: 13.814960922983204, 
+      latitude: 13.814960922983204,
       longitude: 100.56503558421038,
       latitudeDelta: 0.04,
       longitudeDelta: 0.05,
@@ -41,6 +36,15 @@ const MapTest = () => {
     <View style={styles.container}>
       <MapView style={styles.map} region={mapRegion}>
         <Marker coordinate={mapRegion} title="marker" />
+        <Marker
+          coordinate={{
+            latitude: 13.814960922983204,
+            longitude: 100.56503558421038,
+            latitudeDelta: 0.04,
+            longitudeDelta: 0.05,
+          }}
+          title="marker"
+        />
       </MapView>
       <Button title="Get Location" onPress={userLocation} />
     </View>
