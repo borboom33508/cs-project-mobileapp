@@ -13,32 +13,31 @@ const SignInScreen = ({ navigation, props }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
-  const [showError, setshowError] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState("");
 
   useEffect(() => {
     setUsername("");
     setPassword("");
-    setshowError(false);
+    setShowError(false);
     setIsPasswordSecure(true);
   }, [isFocused]);
 
   const userAuthentication = async () => {
     try {
-      await GetApi
-        .useFetch(
-          "GET",
-          "",
-          `/customer/GetLoginRequest.php?cus_email=${username}&cus_phone=${username}&cus_password=${password}`
-        )
-        .then((data) => {
-          console.log(data);
-          if (data.success) {
-            // console.log("true");
-          } else {
-            setshowError(true);
-            setPassword("");
-          }
-        });
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/customer/GetLoginRequest.php?cus_email=${username}&cus_phone=${username}&cus_password=${password}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          navigation.navigate("Tab")
+        } else {
+          setShowError(true);
+          setPassword("");
+        }
+      });
     } catch (e) {
       console.log(e);
     }
