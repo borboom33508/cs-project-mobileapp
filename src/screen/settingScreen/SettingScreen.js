@@ -66,6 +66,15 @@ const SettingScreen = ({ navigation, props }) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <View style={{alignItems: "center", marginTop: 60}}>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate("Onboarding")
+        }}>
+          <Text style={{ fontSize: 18, color: "#F91616", fontFamily: "Kanit" }}>
+            {"ออกจากระบบ"}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
