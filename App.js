@@ -28,7 +28,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="MapTest"
+        initialRouteName="Setting"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Landing" component={LandingScreen} />

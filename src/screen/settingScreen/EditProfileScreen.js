@@ -6,7 +6,7 @@ import { container } from "./EditProfileScreenStyle";
 import { TextInput } from "react-native-paper";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
-const EditProfileScreen = () => {
+const EditProfileScreen = ({ navigation, props }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
