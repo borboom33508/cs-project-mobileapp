@@ -1,6 +1,10 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity, Text } from "react-native";
+import React, { useState } from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import LandingScreen from "./src/screen/introScreen/LandingScreen";
 import OnboardingScreen from "./src/screen/introScreen/OnboardingScreen";
@@ -9,11 +13,6 @@ import SignUpScreen from "./src/screen/authenticationScreen/SignUpScreen";
 import PreChangePasswordScreen from "./src/screen/authenticationScreen/PreChangePasswordScreen";
 import ChangePasswordScreen from "./src/screen/authenticationScreen/ChangePasswordScreen";
 import OTPScreen from "./src/screen/authenticationScreen/OTPScreen";
-
-import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity, Text } from "react-native";
-import React, { useState, useEffect } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SelectShopScreen from "./src/screen/coreScreen/SelectShopScreen";
 
 const Stack = createStackNavigator();
@@ -48,45 +47,25 @@ const TabScreen = ({ navigation }) => {
             >
               <Ionicons
                 name={focused === "SelectShop" ? "home" : "home-outline"}
-                color="#4691FB"
+                color={focused === "SelectShop" ? "#4691FB" : "#CACFD2"}
                 size={28}
               />
-              <Text style={{ fontSize: 10, color: "#4691FB", fontFamily: "Kanit" }}>หน้าแรก</Text>
-            </TouchableOpacity>
-          ),
-        })}
-      />
-      {/* <Tab.Screen
-        name="Project"
-        component={""}
-        options={({ route }) => ({
-          tabBarButton: (props) => (
-            <TouchableOpacity
-              style={{
-                alignSelf: "center",
-                alignItems: "center",
-                width: "25%",
-              }}
-              onPress={() => {
-                setFocused(route.name);
-                navigation.navigate("Project", { namePage: focused });
-              }}
-            >
-              <Ionicons
-                name={
-                  focused === "Project" ? "folder-open" : "folder-open-outline"
-                }
-                color={theme.colors.icon}
-                size={28}
-              />
-              <Text style={styles.text}>{message.TEXT.listofproject}</Text>
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: focused === "SelectShop" ? "#4691FB" : "#CACFD2",
+                  fontFamily: "Kanit",
+                }}
+              >
+                หน้าแรก
+              </Text>
             </TouchableOpacity>
           ),
         })}
       />
       <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="Test"
+        component={"Test"}
         options={({ route }) => ({
           tabBarButton: (props) => (
             <TouchableOpacity
@@ -97,26 +76,70 @@ const TabScreen = ({ navigation }) => {
               }}
               onPress={() => {
                 setFocused(route.name);
-                navigation.navigate("Profile", { namePage: focused });
+                // navigation.navigate("", { namePage: focused });
               }}
             >
               <Ionicons
                 name={
-                  focused === "Profile"
+                  focused === "Test" ? "folder-open" : "folder-open-outline"
+                }
+                color={focused === "Test" ? "#4691FB" : "#CACFD2"}
+                size={28}
+              />
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: focused === "Test" ? "#4691FB" : "#CACFD2",
+                  fontFamily: "Kanit",
+                }}
+              >
+                รายการ
+              </Text>
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Tab.Screen
+        name="Test1"
+        component={"Test1"}
+        options={({ route }) => ({
+          tabBarButton: (props) => (
+            <TouchableOpacity
+              style={{
+                alignSelf: "center",
+                alignItems: "center",
+                width: "25%",
+              }}
+              onPress={() => {
+                setFocused(route.name);
+                // navigation.navigate("Profile", { namePage: focused });
+              }}
+            >
+              <Ionicons
+                name={
+                  focused === "Test1"
                     ? "person-circle"
                     : "person-circle-outline"
                 }
-                color={theme.colors.icon}
+                color={focused === "Test1" ? "#4691FB" : "#CACFD2"}
                 size={28}
               />
-              <Text style={styles.text}>{message.TEXT.profile}</Text>
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: focused === "Test1" ? "#4691FB" : "#CACFD2",
+                  fontFamily: "Kanit",
+                }}
+              >
+                แจ้งเตือน
+              </Text>
             </TouchableOpacity>
           ),
         })}
       />
       <Tab.Screen
-        name="Setting"
-        component={SettingScreen}
+        name="Test2"
+        component={"Test2"}
         options={({ route }) => ({
           tabBarButton: (props) => (
             <TouchableOpacity
@@ -127,19 +150,27 @@ const TabScreen = ({ navigation }) => {
               }}
               onPress={() => {
                 setFocused(route.name);
-                navigation.navigate("Setting", { namePage: focused });
+                // navigation.navigate("Setting", { namePage: focused });
               }}
             >
               <Ionicons
-                name={focused === "Setting" ? "settings" : "settings-outline"}
+                name={focused === "Test2" ? "settings" : "settings-outline"}
                 size={28}
-                color={theme.colors.icon}
+                color={focused === "Test2" ? "#4691FB" : "#CACFD2"}
               />
-              <Text style={styles.text}>{message.TEXT.settings}</Text>
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: focused === "Test2" ? "#4691FB" : "#CACFD2",
+                  fontFamily: "Kanit",
+                }}
+              >
+                ตั้งค่า
+              </Text>
             </TouchableOpacity>
           ),
         })}
-      /> */}
+      />
     </Tab.Navigator>
   );
 };
@@ -157,7 +188,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Landing"
+        initialRouteName="Tab"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Landing" component={LandingScreen} />
