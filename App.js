@@ -11,6 +11,7 @@ import ChangePasswordScreen from "./src/screen/authenticationScreen/ChangePasswo
 import OTPScreen from "./src/screen/authenticationScreen/OTPScreen";
 import SettingScreen from "./src/screen/settingScreen/SettingScreen";
 import EditProfileScreen from "./src/screen/settingScreen/EditProfileScreen";
+import MapTest from "./src/MapTest";
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,7 @@ export default function App() {
         <Stack.Screen name="OTPForm" component={OTPScreen} />
         <Stack.Screen name="Setting" component={SettingScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+        <Stack.Screen name="Map" component={MapTest} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );
