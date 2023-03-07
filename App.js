@@ -14,6 +14,9 @@ import PreChangePasswordScreen from "./src/screen/authenticationScreen/PreChange
 import ChangePasswordScreen from "./src/screen/authenticationScreen/ChangePasswordScreen";
 import OTPScreen from "./src/screen/authenticationScreen/OTPScreen";
 import SelectShopScreen from "./src/screen/coreScreen/SelectShopScreen";
+import SettingScreen from "./src/screen/settingScreen/SettingScreen";
+import EditProfileScreen from "./src/screen/settingScreen/EditProfileScreen";
+import MapTest from "./src/MapTest";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -188,7 +191,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Tab"
+        initialRouteName="Landing"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Landing" component={LandingScreen} />
@@ -202,6 +205,9 @@ export default function App() {
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="OTPForm" component={OTPScreen} />
         <Stack.Screen name="Tab" component={TabScreen} />
+        <Stack.Screen name="Setting" component={SettingScreen} />
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+        <Stack.Screen name="MapTest" component={MapTest} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );
