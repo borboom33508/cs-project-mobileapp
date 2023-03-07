@@ -141,8 +141,8 @@ const TabScreen = ({ navigation }) => {
         })}
       />
       <Tab.Screen
-        name="Test2"
-        component={"Test2"}
+        name="Setting"
+        component={SettingScreen}
         options={({ route }) => ({
           tabBarButton: (props) => (
             <TouchableOpacity
@@ -153,18 +153,18 @@ const TabScreen = ({ navigation }) => {
               }}
               onPress={() => {
                 setFocused(route.name);
-                // navigation.navigate("Setting", { namePage: focused });
+                navigation.navigate("Setting", { namePage: focused });
               }}
             >
               <Ionicons
-                name={focused === "Test2" ? "settings" : "settings-outline"}
+                name={focused === "Setting" ? "settings" : "settings-outline"}
                 size={28}
-                color={focused === "Test2" ? "#4691FB" : "#CACFD2"}
+                color={focused === "Setting" ? "#4691FB" : "#CACFD2"}
               />
               <Text
                 style={{
                   fontSize: 10,
-                  color: focused === "Test2" ? "#4691FB" : "#CACFD2",
+                  color: focused === "Setting" ? "#4691FB" : "#CACFD2",
                   fontFamily: "Kanit",
                 }}
               >
@@ -205,7 +205,7 @@ export default function App() {
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="OTPForm" component={OTPScreen} />
         <Stack.Screen name="Tab" component={TabScreen} />
-        <Stack.Screen name="Setting" component={SettingScreen} />
+        {/* <Stack.Screen name="Setting" component={SettingScreen} /> */}
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="MapTest" component={MapTest} /> 
       </Stack.Navigator>

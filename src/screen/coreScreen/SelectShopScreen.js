@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  Platform,
 } from "react-native";
 import React from "react";
 import { getStatusBarHeight } from "react-native-status-bar-height";
@@ -86,7 +87,7 @@ const SelectShopScreen = ({ navigation }) => {
         <View
           style={{
             width: 500,
-            height: 200,
+            height: Platform.OS === "android" ? 170 : 190,
             position: "absolute",
             backgroundColor: "#4691FB",
           }}

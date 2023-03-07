@@ -10,23 +10,26 @@ const SettingScreen = ({ navigation, props }) => {
           flexDirection: "row",
           marginTop: 48,
           alignItems: "center",
+          marginHorizontal: 10,
         }}
       >
         <Image
           source={require("../../../assets/unknown-user.png")}
-          style={{ width: 190, height: 190 }}
+          style={{ width: 190, height: 190, borderWidth: 1, borderColor: "#000000" }}
           resizeMode="contain"
         />
-        <View>
+        <View style={{ marginLeft: 16}}>
           <Text style={{ fontSize: 14, fontFamily: "Kanit" }}>
             {"คุณด๊อบบี้"}
           </Text>
           <Text style={{ fontSize: 14, fontFamily: "Kanit" }}>
             {"+66 0625491524"}
           </Text>
-          <TouchableOpacity onPress={() => {
-            navigation.navigate("EditProfile")
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("EditProfile");
+            }}
+          >
             <Text
               style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
             >
@@ -35,37 +38,29 @@ const SettingScreen = ({ navigation, props }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View >
-        <TouchableOpacity
-          style={button}
-        >
+      <View>
+        <TouchableOpacity style={button}>
           <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
             {"สะสมแต้ม"}
           </Text>
         </TouchableOpacity>
       </View>
       <View>
-        <TouchableOpacity
-          style={button}
-        >
+        <TouchableOpacity style={button}>
           <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
             {"เปลี่ยนรหัสผ่าน"}
           </Text>
         </TouchableOpacity>
       </View>
-      <View >
-        <TouchableOpacity
-          style={button}
-        >
+      <View>
+        <TouchableOpacity style={button}>
           <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
             {"Policy / นโยบาย"}
           </Text>
         </TouchableOpacity>
       </View>
       <View>
-        <TouchableOpacity
-          style={button}
-        >
+        <TouchableOpacity style={button}>
           <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
             {"เกี่ยวกับเรา"}
           </Text>
