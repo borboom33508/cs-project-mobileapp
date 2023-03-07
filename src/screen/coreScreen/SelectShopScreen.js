@@ -9,9 +9,6 @@ import {
 import React from "react";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
-import shop1 from "../../../assets/shop1.jpg";
-import shop2 from "../../../assets/shop2.jpg";
-import shop3 from "../../../assets/shop3.jpg";
 
 const SelectShopScreen = ({ navigation }) => {
   const renderItem = ({ item }) => (
@@ -73,8 +70,10 @@ const SelectShopScreen = ({ navigation }) => {
             }}
           >
             <FontAwesome name="star" size={18} color="orange" />
-            <FontAwesome name="star-half-full" size={18} color="orange" />
-            <FontAwesome name="star-o" size={18} color="orange" />
+            <FontAwesome name="star" size={18} color="orange" />
+            <FontAwesome name="star" size={18} color="orange" />
+            {/* <FontAwesome name="star-half-full" size={18} color="orange" />
+            <FontAwesome name="star-o" size={18} color="orange" /> */}
           </View>
         </View>
       </TouchableOpacity>
@@ -183,43 +182,43 @@ const SelectShopScreen = ({ navigation }) => {
               name: "ร้านป้าศรีซักยังไง",
               open: "เปิด 09.00 - 18.00 น.",
               between: "1.2 กม. (25 นาที)",
-              image: shop1,
+              image: require("../../../assets/shop1.jpg"),
             },
             {
               key: "2",
               name: "ร้านชูใจไข่ดาว",
               open: "เปิด 09.00 - 16.00 น.",
               between: "2.2 กม. (22 นาที)",
-              image: shop2,
+              image: require("../../../assets/shop2.jpg"),
             },
             {
               key: "3",
               name: "ร้านลุงเริง",
               open: "เปิด 09.00 - 17.00 น.",
               between: "7 กม. (30 นาที)",
-              image: shop3,
+              image: require("../../../assets/shop3.jpg"),
             },
-            {
-              key: "4",
-              name: "ร้านป้าศรีซักยังไง",
-              open: "เปิด 09.00 - 18.00 น.",
-              between: "1.2 กม. (25 นาที)",
-              image: shop1,
-            },
-            {
-              key: "5",
-              name: "ร้านชูใจไข่ดาว",
-              open: "เปิด 09.00 - 16.00 น.",
-              between: "2.2 กม. (22 นาที)",
-              image: shop2,
-            },
-            {
-              key: "6",
-              name: "ร้านลุงเริง",
-              open: "เปิด 09.00 - 17.00 น.",
-              between: "7 กม. (30 นาที)",
-              image: shop3,
-            },
+            // {
+            //   key: "4",
+            //   name: "ร้านป้าศรีซักยังไง",
+            //   open: "เปิด 09.00 - 18.00 น.",
+            //   between: "1.2 กม. (25 นาที)",
+            //   image: shop1,
+            // },
+            // {
+            //   key: "5",
+            //   name: "ร้านชูใจไข่ดาว",
+            //   open: "เปิด 09.00 - 16.00 น.",
+            //   between: "2.2 กม. (22 นาที)",
+            //   image: shop2,
+            // },
+            // {
+            //   key: "6",
+            //   name: "ร้านลุงเริง",
+            //   open: "เปิด 09.00 - 17.00 น.",
+            //   between: "7 กม. (30 นาที)",
+            //   image: shop3,
+            // },
           ]}
           renderItem={renderItem}
           // keyExtractor={(item) => item.id_request}

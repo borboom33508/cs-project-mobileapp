@@ -17,6 +17,8 @@ import SelectShopScreen from "./src/screen/coreScreen/SelectShopScreen";
 import SettingScreen from "./src/screen/settingScreen/SettingScreen";
 import EditProfileScreen from "./src/screen/settingScreen/EditProfileScreen";
 import MapTest from "./src/MapTest";
+import OrderScreen from "./src/screen/coreScreen/OrderScreen";
+import NotificationScreen from "./src/screen/coreScreen/NotificationScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -67,8 +69,8 @@ const TabScreen = ({ navigation }) => {
         })}
       />
       <Tab.Screen
-        name="Test"
-        component={"Test"}
+        name="Order"
+        component={OrderScreen}
         options={({ route }) => ({
           tabBarButton: (props) => (
             <TouchableOpacity
@@ -79,20 +81,20 @@ const TabScreen = ({ navigation }) => {
               }}
               onPress={() => {
                 setFocused(route.name);
-                // navigation.navigate("", { namePage: focused });
+                navigation.navigate("Order", { namePage: focused });
               }}
             >
               <Ionicons
                 name={
-                  focused === "Test" ? "folder-open" : "folder-open-outline"
+                  focused === "Order" ? "folder-open" : "folder-open-outline"
                 }
-                color={focused === "Test" ? "#4691FB" : "#CACFD2"}
+                color={focused === "Order" ? "#4691FB" : "#CACFD2"}
                 size={28}
               />
               <Text
                 style={{
                   fontSize: 10,
-                  color: focused === "Test" ? "#4691FB" : "#CACFD2",
+                  color: focused === "Order" ? "#4691FB" : "#CACFD2",
                   fontFamily: "Kanit",
                 }}
               >
@@ -103,8 +105,8 @@ const TabScreen = ({ navigation }) => {
         })}
       />
       <Tab.Screen
-        name="Test1"
-        component={"Test1"}
+        name="Notification"
+        component={NotificationScreen}
         options={({ route }) => ({
           tabBarButton: (props) => (
             <TouchableOpacity
@@ -115,22 +117,22 @@ const TabScreen = ({ navigation }) => {
               }}
               onPress={() => {
                 setFocused(route.name);
-                // navigation.navigate("Profile", { namePage: focused });
+                navigation.navigate("Notification", { namePage: focused });
               }}
             >
               <Ionicons
                 name={
-                  focused === "Test1"
-                    ? "person-circle"
-                    : "person-circle-outline"
+                  focused === "Notification"
+                    ? "notifications"
+                    : "notifications-outline"
                 }
-                color={focused === "Test1" ? "#4691FB" : "#CACFD2"}
+                color={focused === "Notification" ? "#4691FB" : "#CACFD2"}
                 size={28}
               />
               <Text
                 style={{
                   fontSize: 10,
-                  color: focused === "Test1" ? "#4691FB" : "#CACFD2",
+                  color: focused === "Notification" ? "#4691FB" : "#CACFD2",
                   fontFamily: "Kanit",
                 }}
               >
@@ -205,7 +207,6 @@ export default function App() {
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="OTPForm" component={OTPScreen} />
         <Stack.Screen name="Tab" component={TabScreen} />
-        {/* <Stack.Screen name="Setting" component={SettingScreen} /> */}
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="MapTest" component={MapTest} /> 
       </Stack.Navigator>
