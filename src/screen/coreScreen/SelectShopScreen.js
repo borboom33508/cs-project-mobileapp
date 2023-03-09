@@ -6,11 +6,38 @@ import {
   Image,
   Platform,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import GetApi from "../../api/GetApi";
+import { useIsFocused } from "@react-navigation/native";
 
 const SelectShopScreen = ({ navigation }) => {
+  const isFocused = useIsFocused();
+  const [requestList, setRequestList] = useState({});
+
+  useEffect(() => {
+    if (isFocused) {
+      getLaundryData();
+      // console.log(requestList);
+    }
+  }, [isFocused]);
+
+  const getLaundryData = async () => {
+    try {
+      await GetApi.useFetch("GET", "", `/customer/GetLaundryData.php`).then(
+        (res) => {
+          let data = JSON.parse(res);
+          if (data.success) {
+            setRequestList(data.request);
+          }
+        }
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const renderItem = ({ item }) => (
     <View
       style={{
@@ -26,10 +53,28 @@ const SelectShopScreen = ({ navigation }) => {
         paddingHorizontal: 10,
       }}
     >
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity
+        onPress={() => {
+          console.log(item);
+        }}
+      >
         <View style={{ flexDirection: "row" }}>
           <Image
-            source={item.image}
+            source={
+              Platform.OS === "android"
+                ? {
+                    uri:
+                      "http://10.0.2.2/CS-PROJECT-BACKEND" +
+                      "/laundryAssets/" +
+                      item.laundry_picture,
+                  }
+                : {
+                    uri:
+                      "http://localhost/CS-PROJECT-BACKEND" +
+                      "/laundryAssets/" +
+                      item.laundry_picture,
+                  }
+            }
             style={{ width: 130, height: 100 }}
             resizeMode="contain"
           />
@@ -41,39 +86,52 @@ const SelectShopScreen = ({ navigation }) => {
                 fontFamily: "Kanit",
               }}
             >
-              {item.name}
+              {item.laundry_name}
             </Text>
-            <Text
+            <View
               style={{
-                fontSize: 14,
-                color: "#000000",
-                fontFamily: "Kanit",
+                flexDirection: "row",
+                marginVertical: 2,
               }}
             >
-              {item.between}
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >
-              {item.open}
-            </Text>
-          </View>
-          <View
-            style={{
-              alignItems: "flex-end",
-              flexDirection: "row",
-              marginLeft: 20,
-            }}
-          >
-            <FontAwesome name="star" size={18} color="orange" />
-            <FontAwesome name="star" size={18} color="orange" />
-            <FontAwesome name="star" size={18} color="orange" />
-            {/* <FontAwesome name="star-half-full" size={18} color="orange" />
-            <FontAwesome name="star-o" size={18} color="orange" /> */}
+              <FontAwesome name="star" size={18} color="orange" />
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "#B9BCBE",
+                  fontFamily: "Kanit",
+                  marginLeft: 5,
+                }}
+              >
+                {item.laundry_rating}
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", marginBottom: 2 }}>
+              <MaterialIcons name="delivery-dining" size={18} color="#4691FB" />
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "#000000",
+                  fontFamily: "Kanit",
+                  marginLeft: 5,
+                }}
+              >
+                {`1.2 กม. (25นาที)`}
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Ionicons name="time-outline" size={18} color="#4691FB" />
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "#000000",
+                  fontFamily: "Kanit",
+                  marginLeft: 5,
+                }}
+              >
+                {`${item.laundry_hours} น.`}
+              </Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -176,52 +234,9 @@ const SelectShopScreen = ({ navigation }) => {
       <View style={{ flex: 1, marginHorizontal: 5, marginBottom: 5 }}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={[
-            {
-              key: "1",
-              name: "ร้านป้าศรีซักยังไง",
-              open: "เปิด 09.00 - 18.00 น.",
-              between: "1.2 กม. (25 นาที)",
-              image: require("../../../assets/shop1.jpg"),
-            },
-            {
-              key: "2",
-              name: "ร้านชูใจไข่ดาว",
-              open: "เปิด 09.00 - 16.00 น.",
-              between: "2.2 กม. (22 นาที)",
-              image: require("../../../assets/shop2.jpg"),
-            },
-            {
-              key: "3",
-              name: "ร้านลุงเริง",
-              open: "เปิด 09.00 - 17.00 น.",
-              between: "7 กม. (30 นาที)",
-              image: require("../../../assets/shop3.jpg"),
-            },
-            // {
-            //   key: "4",
-            //   name: "ร้านป้าศรีซักยังไง",
-            //   open: "เปิด 09.00 - 18.00 น.",
-            //   between: "1.2 กม. (25 นาที)",
-            //   image: shop1,
-            // },
-            // {
-            //   key: "5",
-            //   name: "ร้านชูใจไข่ดาว",
-            //   open: "เปิด 09.00 - 16.00 น.",
-            //   between: "2.2 กม. (22 นาที)",
-            //   image: shop2,
-            // },
-            // {
-            //   key: "6",
-            //   name: "ร้านลุงเริง",
-            //   open: "เปิด 09.00 - 17.00 น.",
-            //   between: "7 กม. (30 นาที)",
-            //   image: shop3,
-            // },
-          ]}
+          data={requestList}
           renderItem={renderItem}
-          // keyExtractor={(item) => item.id_request}
+          keyExtractor={(item) => item.laundry_id}
         />
       </View>
     </View>
