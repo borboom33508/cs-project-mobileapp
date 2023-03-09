@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,12 +9,53 @@ import {
 } from "react-native";
 import { container, button, textButton } from "./SettingScreenStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import GetApi from "../../api/GetApi";
+import { useIsFocused } from "@react-navigation/native";
 
 const SettingScreen = ({ navigation, props }) => {
+  const [username, setUsername] = useState("");
+  // const [accountId, setAccountId] = useState("");
+  const isFocused = useIsFocused;
+
   const handleLogout = async () => {
     await AsyncStorage.removeItem("@account");
     NativeModules.DevSettings.reload();
     // navigation.navigate("Landing");
+  };
+
+  useEffect(() => {
+    getAccountData()
+  }, [isFocused]);
+
+  const fetchAccountData = async (accountId) => {
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/customer/GetAccountForSetting.php?cus_id= ${accountId}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          console.log(data);
+        } else {
+          console.log('wtf');
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getAccountData = async () => {
+    await AsyncStorage.getItem("@account").then((res) => {
+      let accountId = JSON.parse(res);
+      if (accountId == null) {
+        console.log(accountId);
+      } else {
+        fetchAccountData(accountId);
+        console.log(accountId);
+      }
+    });
   };
 
   const alertLogout = () => {
@@ -63,7 +104,9 @@ const SettingScreen = ({ navigation, props }) => {
               navigation.navigate("EditProfile");
             }}
           >
-            <Text style={{ fontSize: 14, fontFamily: "Kanit", color: "#4691FB" }}>
+            <Text
+              style={{ fontSize: 14, fontFamily: "Kanit", color: "#4691FB" }}
+            >
               {"แก้ไขข้อมูล"}
             </Text>
           </TouchableOpacity>
