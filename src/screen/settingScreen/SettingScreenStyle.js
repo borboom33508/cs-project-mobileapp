@@ -18,3 +18,9 @@ export const container = {
   flex: 1,
   backgroundColor: "#ffffff",
 };
+
+export const textButton = {
+  fontSize: 18,
+  color: "#ffffff",
+  fontFamily: "Kanit",
+};

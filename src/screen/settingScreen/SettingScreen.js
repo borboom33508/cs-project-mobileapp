@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import { container, button } from "./SettingScreenStyle";
+import { container, button, textButton } from "./SettingScreenStyle";
 
 const SettingScreen = ({ navigation, props }) => {
   return (
@@ -31,7 +31,7 @@ const SettingScreen = ({ navigation, props }) => {
             }}
           >
             <Text
-              style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
+              style={textButton}
             >
               {"แก้ไขข้อมูล"}
             </Text>
@@ -40,28 +40,34 @@ const SettingScreen = ({ navigation, props }) => {
       </View>
       <View>
         <TouchableOpacity style={button}>
-          <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
+          <Text style={textButton}>
             {"สะสมแต้ม"}
           </Text>
         </TouchableOpacity>
       </View>
       <View>
-        <TouchableOpacity style={button}>
-          <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
+        <TouchableOpacity style={button} onPress={() => {
+          navigation.navigate("SetPassword")
+        }}>
+          <Text style={textButton}>
             {"เปลี่ยนรหัสผ่าน"}
           </Text>
         </TouchableOpacity>
       </View>
       <View>
-        <TouchableOpacity style={button}>
-          <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
+        <TouchableOpacity style={button} onPress={() => {
+          navigation.navigate("Policy")
+        }}>
+          <Text style={textButton}>
             {"Policy / นโยบาย"}
           </Text>
         </TouchableOpacity>
       </View>
       <View>
-        <TouchableOpacity style={button}>
-          <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
+        <TouchableOpacity style={button} onPress={() => {
+          navigation.navigate("AboutUs")
+        }}>
+          <Text style={textButton}>
             {"เกี่ยวกับเรา"}
           </Text>
         </TouchableOpacity>

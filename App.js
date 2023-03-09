@@ -19,6 +19,12 @@ import EditProfileScreen from "./src/screen/settingScreen/EditProfileScreen";
 import MapTest from "./src/MapTest";
 import OrderScreen from "./src/screen/coreScreen/OrderScreen";
 import NotificationScreen from "./src/screen/coreScreen/NotificationScreen";
+import CreditScreen from "./src/screen/creditScreen/CreditScreen"; //new
+import DepositScreen from "./src/screen/creditScreen/DepositScreen"; //new
+import TransactionScreen from "./src/screen/creditScreen/TransactionScreen"; //new
+import SetPasswordScreen from "./src/screen/settingScreen/SetPasswordScreen"; //new 
+import AboutUsScreen from "./src/screen/settingScreen/AboutUsScreen"; //new
+import PolicyScreen from "./src/screen/settingScreen/PolicyScreen"; //new
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -209,6 +215,13 @@ export default function App() {
         <Stack.Screen name="Tab" component={TabScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="MapTest" component={MapTest} /> 
+
+        <Stack.Screen name="Credit" component={CreditScreen} />
+        <Stack.Screen name="Deposit" component={DepositScreen} />
+        <Stack.Screen name="Transaction" component={TransactionScreen} />
+        <Stack.Screen name="SetPassword" component={SetPasswordScreen} />
+        <Stack.Screen name="AboutUs" component={AboutUsScreen} />
+        <Stack.Screen name="Policy" component={PolicyScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
