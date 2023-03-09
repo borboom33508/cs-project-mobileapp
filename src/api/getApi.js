@@ -3,6 +3,8 @@ const baseUrl =
     ? "http://10.0.2.2/CS-PROJECT-BACKEND"
     : "http://localhost/CS-PROJECT-BACKEND";
 
+// const baseUrl = "https://a005-223-24-190-79.ap.ngrok.io/CS-PROJECT-BACKEND"
+
 const useFetch = async (method, body, path) => {
 
   var requestOptions = {

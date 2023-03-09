@@ -7,6 +7,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TextInput } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
 import GetApi from "../../api/GetApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignInScreen = ({ navigation, props }) => {
   const isFocused = useIsFocused();
@@ -32,7 +33,7 @@ const SignInScreen = ({ navigation, props }) => {
       ).then((res) => {
         let data = JSON.parse(res);
         if (data.success) {
-          navigation.navigate("Tab")
+          setUserLogin(data.request.cus_id);
         } else {
           setShowError(true);
           setPassword("");
@@ -40,6 +41,16 @@ const SignInScreen = ({ navigation, props }) => {
       });
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  const setUserLogin = async (data) => {
+    try {
+      await AsyncStorage.setItem("@account", JSON.stringify(data));
+    } catch (e) {
+      console.log(e);
+    } finally {
+      navigation.navigate("Main");
     }
   };
 

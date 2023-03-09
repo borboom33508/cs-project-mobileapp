@@ -4,21 +4,25 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import wash_machine from "../../../assets/washing-machine.png";
 import { text, image, container } from "./LandingScreenStyle";
+import { useIsFocused } from "@react-navigation/native";
 
 const LandingScreen = ({ navigation, props }) => {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  // const isFoucsed = useIsFocused();
 
   useEffect(() => {
-    // isLogin();
-    // console.log(navigation, props);
-    sleep(2000).then(() => {
-      navigation.navigate("Onboarding");
-    });
+    checkUserLogin();
   }, []);
 
-  const isLogin = async () => {
-    await AsyncStorage.getItem("@username").then((result) => {
-      console.log(result);
+  const checkUserLogin = async () => {
+    await sleep(2000);
+    await AsyncStorage.getItem("@account").then((res) => {
+      let account = JSON.parse(res);
+      if (account == null) {
+        navigation.navigate("Onboarding");
+      } else {
+        navigation.navigate("Main");
+      }
     });
   };
 

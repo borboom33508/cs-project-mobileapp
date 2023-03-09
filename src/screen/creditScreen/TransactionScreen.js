@@ -70,8 +70,7 @@ const TransactionScreen = ({ navigation, props }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ marginTop: getStatusBarHeight(), marginHorizontal: 10 }}>
-        <View style={{ marginTop: -40 }}>
+        <View style={{ marginHorizontal: 10, marginTop: 10 }}>
           <Text
             style={{
               fontSize: 28,
@@ -82,7 +81,6 @@ const TransactionScreen = ({ navigation, props }) => {
             {"ประวัติธุรกรรม"}
           </Text>
         </View>
-      </View>
       <View style={{ flex: 1, marginHorizontal: 5, marginBottom: 5 }}>
         <FlatList
           showsVerticalScrollIndicator={false}

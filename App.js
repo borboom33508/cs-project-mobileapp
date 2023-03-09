@@ -22,14 +22,14 @@ import NotificationScreen from "./src/screen/coreScreen/NotificationScreen";
 import CreditScreen from "./src/screen/creditScreen/CreditScreen"; //new
 import DepositScreen from "./src/screen/creditScreen/DepositScreen"; //new
 import TransactionScreen from "./src/screen/creditScreen/TransactionScreen"; //new
-import SetPasswordScreen from "./src/screen/settingScreen/SetPasswordScreen"; //new 
+import SetPasswordScreen from "./src/screen/settingScreen/SetPasswordScreen"; //new
 import AboutUsScreen from "./src/screen/settingScreen/AboutUsScreen"; //new
 import PolicyScreen from "./src/screen/settingScreen/PolicyScreen"; //new
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const TabScreen = ({ navigation }) => {
+const MainScreen = ({ navigation }) => {
   const [focused, setFocused] = useState("SelectShop");
 
   return (
@@ -49,7 +49,7 @@ const TabScreen = ({ navigation }) => {
               style={{
                 alignSelf: "center",
                 alignItems: "center",
-                width: "25%",
+                width: "20%",
               }}
               onPress={() => {
                 setFocused(route.name);
@@ -83,7 +83,7 @@ const TabScreen = ({ navigation }) => {
               style={{
                 alignSelf: "center",
                 alignItems: "center",
-                width: "25%",
+                width: "20%",
               }}
               onPress={() => {
                 setFocused(route.name);
@@ -92,7 +92,7 @@ const TabScreen = ({ navigation }) => {
             >
               <Ionicons
                 name={
-                  focused === "Order" ? "folder-open" : "folder-open-outline"
+                  focused === "Order" ? "md-reader" : "md-reader-outline"
                 }
                 color={focused === "Order" ? "#4691FB" : "#CACFD2"}
                 size={28}
@@ -111,6 +111,40 @@ const TabScreen = ({ navigation }) => {
         })}
       />
       <Tab.Screen
+        name="Credit"
+        component={CreditScreen}
+        options={({ route }) => ({
+          tabBarButton: (props) => (
+            <TouchableOpacity
+              style={{
+                alignSelf: "center",
+                alignItems: "center",
+                width: "20%",
+              }}
+              onPress={() => {
+                setFocused(route.name);
+                navigation.navigate("Credit", { namePage: focused });
+              }}
+            >
+              <Ionicons
+                name={focused === "Credit" ? "wallet" : "wallet-outline"}
+                color={focused === "Credit" ? "#4691FB" : "#CACFD2"}
+                size={28}
+              />
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: focused === "Credit" ? "#4691FB" : "#CACFD2",
+                  fontFamily: "Kanit",
+                }}
+              >
+                เครดิต
+              </Text>
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Tab.Screen
         name="Notification"
         component={NotificationScreen}
         options={({ route }) => ({
@@ -119,7 +153,7 @@ const TabScreen = ({ navigation }) => {
               style={{
                 alignSelf: "center",
                 alignItems: "center",
-                width: "25%",
+                width: "20%",
               }}
               onPress={() => {
                 setFocused(route.name);
@@ -157,7 +191,7 @@ const TabScreen = ({ navigation }) => {
               style={{
                 alignSelf: "center",
                 alignItems: "center",
-                width: "25%",
+                width: "20%",
               }}
               onPress={() => {
                 setFocused(route.name);
@@ -212,11 +246,9 @@ export default function App() {
         />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="OTPForm" component={OTPScreen} />
-        <Stack.Screen name="Tab" component={TabScreen} />
+        <Stack.Screen name="Main" component={MainScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-        <Stack.Screen name="MapTest" component={MapTest} /> 
-
-        <Stack.Screen name="Credit" component={CreditScreen} />
+        <Stack.Screen name="MapTest" component={MapTest} />
         <Stack.Screen name="Deposit" component={DepositScreen} />
         <Stack.Screen name="Transaction" component={TransactionScreen} />
         <Stack.Screen name="SetPassword" component={SetPasswordScreen} />
