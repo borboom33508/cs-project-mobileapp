@@ -4,9 +4,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 
-const Successpopup = ({ navigation, props }) => {
+const SuccessPopup = ({ navigation, props }) => {
   const [toggleClose, setToggleClose] = useState(true);
   const description = props.description;
+  const fromPage = props.fromPage;
 
   return (
     <View>
@@ -25,8 +26,8 @@ const Successpopup = ({ navigation, props }) => {
               padding: 12,
             }}
             onPress={() => {
+              fromPage == "SetPassword" ? navigation.navigate("Setting") : navigation.navigate("Onboarding");
               setToggleClose(!toggleClose);
-              navigation.navigate("Onboarding");
             }}
           >
             <Ionicons name="close" size={36} color="#4691FB" />
@@ -50,4 +51,4 @@ const Successpopup = ({ navigation, props }) => {
   );
 };
 
-export default Successpopup;
+export default SuccessPopup;

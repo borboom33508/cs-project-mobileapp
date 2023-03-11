@@ -13,7 +13,6 @@ import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GetApi from "../../api/GetApi";
 import SuccessPopUp from "../../components/SuccessPopUp";
-import Modal from "react-native-modal";
 
 const SetPasswordScreen = ({ navigation, props }) => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -79,7 +78,7 @@ const SetPasswordScreen = ({ navigation, props }) => {
         let data = JSON.parse(res);
         console.log(res);
         if (data.success) {
-          navigation.navigate("Setting");
+          setIsSuccess(!isSuccess);
         }
       });
     } catch (e) {
@@ -95,7 +94,6 @@ const SetPasswordScreen = ({ navigation, props }) => {
       newPasswordConfirm !== ""
     ) {
       postChangePassword();
-      // setIsSuccess(!isSuccess)
     } else {
       console.log("invalid");
       setShowError(true);
@@ -221,7 +219,7 @@ const SetPasswordScreen = ({ navigation, props }) => {
         </View>
         {isSuccess ? (
           <SuccessPopUp
-            props={{ description: description }}
+            props={{ description: "เปลี่ยนรหัสผ่านสำเร็จ", fromPage: "SetPassword" }}
             navigation={navigation}
           />
         ) : null}
