@@ -14,8 +14,8 @@ import { useIsFocused } from "@react-navigation/native";
 
 const SettingScreen = ({ navigation, props }) => {
   const [username, setUsername] = useState("");
-  // const [accountId, setAccountId] = useState("");
-  const isFocused = useIsFocused;
+  const [phone, setPhone] = useState("");
+  const isFocused = useIsFocused();
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem("@account");
@@ -24,7 +24,9 @@ const SettingScreen = ({ navigation, props }) => {
   };
 
   useEffect(() => {
-    getAccountData()
+    if (isFocused) {
+      getAccountData();
+    }
   }, [isFocused]);
 
   const fetchAccountData = async (accountId) => {
@@ -36,9 +38,10 @@ const SettingScreen = ({ navigation, props }) => {
       ).then((res) => {
         let data = JSON.parse(res);
         if (data.success) {
-          console.log(data);
+          setUsername(data.request.cus_name);
+          setPhone(data.request.cus_phone);
         } else {
-          console.log('wtf');
+          console.log(data);
         }
       });
     } catch (e) {
@@ -50,10 +53,10 @@ const SettingScreen = ({ navigation, props }) => {
     await AsyncStorage.getItem("@account").then((res) => {
       let accountId = JSON.parse(res);
       if (accountId == null) {
-        console.log(accountId);
+        console.log("not found");
       } else {
         fetchAccountData(accountId);
-        console.log(accountId);
+        // console.log(accountId);
       }
     });
   };
@@ -93,12 +96,8 @@ const SettingScreen = ({ navigation, props }) => {
           resizeMode="contain"
         />
         <View style={{ marginLeft: 16 }}>
-          <Text style={{ fontSize: 14, fontFamily: "Kanit" }}>
-            {"คุณด๊อบบี้"}
-          </Text>
-          <Text style={{ fontSize: 14, fontFamily: "Kanit" }}>
-            {"+66 0625491524"}
-          </Text>
+          <Text style={{ fontSize: 14, fontFamily: "Kanit" }}>{username}</Text>
+          <Text style={{ fontSize: 14, fontFamily: "Kanit" }}>{phone}</Text>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("EditProfile");

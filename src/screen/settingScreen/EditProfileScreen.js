@@ -1,16 +1,95 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
+import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Feather } from '@expo/vector-icons';
 import { container } from "./EditProfileScreenStyle";
 import { TextInput } from "react-native-paper";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import { useIsFocused } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import GetApi from "../../api/GetApi";
 
 const EditProfileScreen = ({ navigation, props }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const isFocused = useIsFocused;
+  const [accountId, setAccountId] = useState("")
+
+  useEffect(() => {
+    getAccountData();
+  }, [isFocused]);
+
+  const fetchAccountData = async (accountId) => {
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/customer/GetAccountForSetting.php?cus_id= ${accountId}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          setUsername(data.request.cus_name);
+          setPhone(data.request.cus_phone);
+          setEmail(data.request.cus_email);
+        } else {
+          console.log(data);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getAccountData = async () => {
+    await AsyncStorage.getItem("@account").then((res) => {
+      let accountId = JSON.parse(res);
+      if (accountId == null) {
+        console.log("not found");
+      } else {
+        fetchAccountData(accountId);
+        setAccountId(accountId)
+        // console.log(accountId);
+      }
+    });
+  };
+
+  const handleSaveButton = async () => {
+    var formdata = new FormData();
+    formdata.append("cus_id", accountId);
+    formdata.append("cus_name", username);
+    formdata.append("cus_email", email);
+    try {
+      await GetApi.useFetch(
+        "POST",
+        formdata,
+        `/customer/PostEditAccount.php`
+      ).then((res) => {
+        let data = JSON.parse(res)
+        console.log(res);
+        if (data.success) {
+          navigation.navigate("Setting")
+        }
+
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const alertConfirm = () => {
+    Alert.alert("ยืนยันความถูกตัอง", "", [
+      {
+        text: "ยืนยัน",
+        style: "default",
+        onPress: () => handleSaveButton(),
+      },
+      {
+        text: "ยกเลิก",
+        style: "cancel",
+      },
+     
+    ]);
+  };
 
   return (
     <View style={container}>
@@ -29,7 +108,7 @@ const EditProfileScreen = ({ navigation, props }) => {
           >
             <Ionicons name="arrow-back" size={30} color="#4691FB" />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => alertConfirm()}>
             <Text
               style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
             >
@@ -63,35 +142,10 @@ const EditProfileScreen = ({ navigation, props }) => {
               label={<Text style={{ fontFamily: "Kanit" }}>{"ชื่อ"}</Text>}
               mode="outlined"
               style={{ backgroundColor: "#ffffff", height: 60 }}
-              //   onChangeText={(text) => {
-              //     setAccount({
-              //       ...account,
-              //       name: { value: text, error: "" },
-              //     });
-              //   }}
-              //   value={account.name.value}
-              activeOutlineColor="#4691FB"
-              theme={{
-                fonts: {
-                  regular: {
-                    fontFamily: "Kanit",
-                  },
-                },
+              onChangeText={(text) => {
+                setUsername(text);
               }}
-            />
-          </View>
-          <View style={{ paddingVertical: 10 }}>
-            <TextInput
-              label={<Text style={{ fontFamily: "Kanit" }}>{"นามสกุล"}</Text>}
-              mode="outlined"
-              style={{ backgroundColor: "#ffffff", height: 60 }}
-              //   onChangeText={(text) => {
-              //     setAccount({
-              //       ...account,
-              //       name: { value: text, error: "" },
-              //     });
-              //   }}
-              //   value={account.name.value}
+              value={username}
               activeOutlineColor="#4691FB"
               theme={{
                 fonts: {
@@ -108,13 +162,7 @@ const EditProfileScreen = ({ navigation, props }) => {
               mode="outlined"
               disabled="true"
               style={{ backgroundColor: "#ffffff", height: 60 }}
-              //   onChangeText={(text) => {
-              //     setAccount({
-              //       ...account,
-              //       name: { value: text, error: "" },
-              //     });
-              //   }}
-              //   value={account.name.value}
+              value={phone}
               activeOutlineColor="#4691FB"
               theme={{
                 fonts: {
@@ -123,21 +171,17 @@ const EditProfileScreen = ({ navigation, props }) => {
                   },
                 },
               }}
-            >
-            </TextInput>
+            ></TextInput>
           </View>
           <View style={{ paddingVertical: 10 }}>
             <TextInput
               label={<Text style={{ fontFamily: "Kanit" }}>{"อีเมล"}</Text>}
               mode="outlined"
               style={{ backgroundColor: "#ffffff", height: 60 }}
-              //   onChangeText={(text) => {
-              //     setAccount({
-              //       ...account,
-              //       name: { value: text, error: "" },
-              //     });
-              //   }}
-              //   value={account.name.value}
+                onChangeText={(text) => {
+                  setEmail(text);
+                }}
+              value={email}
               activeOutlineColor="#4691FB"
               theme={{
                 fonts: {

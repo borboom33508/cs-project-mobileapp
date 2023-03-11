@@ -44,6 +44,15 @@ const SignInScreen = ({ navigation, props }) => {
     }
   };
 
+  const handleLogin = () => {
+    if (username !== "" && password !== "") {
+      userAuthentication()
+    }
+    else {
+      setShowError(true)
+    }
+  }
+
   const setUserLogin = async (data) => {
     try {
       await AsyncStorage.setItem("@account", JSON.stringify(data));
@@ -60,7 +69,9 @@ const SignInScreen = ({ navigation, props }) => {
         <View style={{ paddingHorizontal: 10 }}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Onboarding");
+              if (username !== "" && password !== ""){
+                navigation.navigate("Onboarding");
+              }
             }}
           >
             <Ionicons name="arrow-back" size={30} color="#4691FB" />
@@ -151,9 +162,7 @@ const SignInScreen = ({ navigation, props }) => {
 
           <TouchableOpacity
             style={button}
-            onPress={() => {
-              userAuthentication();
-            }}
+            onPress={() => handleLogin()}
           >
             <Text
               style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}

@@ -4,11 +4,16 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { container, button } from "./SetPasswordScreenStyle";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import { useIsFocused } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import GetApi from "../../api/GetApi";
+import SuccessPopUp from "../../components/SuccessPopUp";
+import Modal from "react-native-modal";
 
 const SetPasswordScreen = ({ navigation, props }) => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -16,6 +21,86 @@ const SetPasswordScreen = ({ navigation, props }) => {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [passwd, setPasswd] = useState("");
+  const [accountId, setAccountId] = useState("");
+  const isFocused = useIsFocused();
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    if (isFocused) {
+      getAccountData();
+      setShowError(false);
+    }
+  }, [isFocused]);
+
+  const getPasswordRequest = async (id) => {
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/customer/GetPasswordRequest.php?cus_id= ${id}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          console.log(data.request.cus_password);
+          setPasswd(data.request.cus_password);
+        } else {
+          console.log(data);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getAccountData = async () => {
+    await AsyncStorage.getItem("@account").then((res) => {
+      let data = JSON.parse(res);
+      if (data == null) {
+        console.log("not found");
+      } else {
+        console.log(data);
+        setAccountId(data);
+        getPasswordRequest(data);
+      }
+    });
+  };
+
+  const postChangePassword = async () => {
+    var formdata = new FormData();
+    formdata.append("cus_password", newPassword);
+    formdata.append("cus_id", accountId);
+    try {
+      await GetApi.useFetch(
+        "POST",
+        formdata,
+        `/customer/PostChangePassword.php`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        console.log(res);
+        if (data.success) {
+          navigation.navigate("Setting");
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (
+      passwd == currentPassword &&
+      newPassword == newPasswordConfirm &&
+      newPassword !== "" &&
+      newPasswordConfirm !== ""
+    ) {
+      postChangePassword();
+      // setIsSuccess(!isSuccess)
+    } else {
+      console.log("invalid");
+      setShowError(true);
+    }
+  };
 
   return (
     <View style={container}>
@@ -53,6 +138,7 @@ const SetPasswordScreen = ({ navigation, props }) => {
               }
               value={currentPassword}
               activeOutlineColor="#4691FB"
+              error={showError}
               theme={{
                 fonts: {
                   regular: {
@@ -80,6 +166,7 @@ const SetPasswordScreen = ({ navigation, props }) => {
               }
               value={newPassword}
               activeOutlineColor="#4691FB"
+              error={showError}
               theme={{
                 fonts: {
                   regular: {
@@ -107,6 +194,7 @@ const SetPasswordScreen = ({ navigation, props }) => {
               }
               value={newPasswordConfirm}
               activeOutlineColor="#4691FB"
+              error={showError}
               theme={{
                 fonts: {
                   regular: {
@@ -115,13 +203,15 @@ const SetPasswordScreen = ({ navigation, props }) => {
                 },
               }}
             />
+
+            {showError ? (
+              <Text
+                style={{ color: "#F91616", fontSize: 14, fontFamily: "Kanit" }}
+              >{`โปรดตรวจสอบความถูกต้อง`}</Text>
+            ) : null}
+            
           </View>
-          <TouchableOpacity
-            style={button}
-            // onPress={() => {
-            //   setIsSuccess(!isSuccess);
-            // }}
-          >
+          <TouchableOpacity style={button} onPress={() => handleSubmit()}>
             <Text
               style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}
             >
