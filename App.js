@@ -25,6 +25,7 @@ import TransactionScreen from "./src/screen/creditScreen/TransactionScreen"; //n
 import SetPasswordScreen from "./src/screen/settingScreen/SetPasswordScreen"; //new
 import AboutUsScreen from "./src/screen/settingScreen/AboutUsScreen"; //new
 import PolicyScreen from "./src/screen/settingScreen/PolicyScreen"; //new
+import SelectServiceScreen from "./src/screen/serviceScreen/SelectServiceScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -246,7 +247,7 @@ export default function App() {
         />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="OTPForm" component={OTPScreen} />
-        <Stack.Screen name="Main" component={MainScreen} />
+        <Stack.Screen name="Main" component={MainScreen} options={{ gestureEnabled: false }}/>
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="MapTest" component={MapTest} />
         <Stack.Screen name="Deposit" component={DepositScreen} />
@@ -254,6 +255,7 @@ export default function App() {
         <Stack.Screen name="SetPassword" component={SetPasswordScreen} />
         <Stack.Screen name="AboutUs" component={AboutUsScreen} />
         <Stack.Screen name="Policy" component={PolicyScreen} />
+        <Stack.Screen name="SelectService" component={SelectServiceScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

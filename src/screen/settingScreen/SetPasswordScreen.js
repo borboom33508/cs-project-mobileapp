@@ -3,6 +3,7 @@ import {
   Text,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { container, button } from "./SetPasswordScreenStyle";
@@ -94,6 +95,7 @@ const SetPasswordScreen = ({ navigation, props }) => {
       newPasswordConfirm !== ""
     ) {
       postChangePassword();
+      Keyboard.dismiss();
     } else {
       console.log("invalid");
       setShowError(true);

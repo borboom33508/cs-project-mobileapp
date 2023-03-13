@@ -11,15 +11,16 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import GetApi from "../../api/GetApi";
 import { useIsFocused } from "@react-navigation/native";
+import SelectServiceScreen from "../serviceScreen/SelectServiceScreen";
 
 const SelectShopScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
-  const [requestList, setRequestList] = useState({});
+  const [laundryList, setLaundryList] = useState({});
 
   useEffect(() => {
     if (isFocused) {
       getLaundryData();
-      // console.log(requestList);
+      // console.log(laundryList);
     }
   }, [isFocused]);
 
@@ -29,7 +30,7 @@ const SelectShopScreen = ({ navigation }) => {
         (res) => {
           let data = JSON.parse(res);
           if (data.success) {
-            setRequestList(data.request);
+            setLaundryList(data.request);
           }
         }
       );
@@ -55,7 +56,8 @@ const SelectShopScreen = ({ navigation }) => {
     >
       <TouchableOpacity
         onPress={() => {
-          console.log(item);
+          // console.log(item);
+          navigation.navigate("SelectService", { laundry_id: item.laundry_id });
         }}
       >
         <View style={{ flexDirection: "row" }}>
@@ -64,13 +66,13 @@ const SelectShopScreen = ({ navigation }) => {
               Platform.OS === "android"
                 ? {
                     uri:
-                      "http://10.0.2.2/CS-PROJECT-BACKEND" +
+                      "https://6b4b-223-24-95-137.ap.ngrok.io/CS-PROJECT-BACKEND" +
                       "/laundryAssets/" +
                       item.laundry_picture,
                   }
                 : {
                     uri:
-                      "http://localhost/CS-PROJECT-BACKEND" +
+                      "https://6b4b-223-24-95-137.ap.ngrok.io/CS-PROJECT-BACKEND" +
                       "/laundryAssets/" +
                       item.laundry_picture,
                   }
@@ -234,7 +236,7 @@ const SelectShopScreen = ({ navigation }) => {
       <View style={{ flex: 1, marginHorizontal: 5, marginBottom: 5 }}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={requestList}
+          data={laundryList}
           renderItem={renderItem}
           keyExtractor={(item) => item.laundry_id}
         />

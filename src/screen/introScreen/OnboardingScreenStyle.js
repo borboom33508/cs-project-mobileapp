@@ -10,7 +10,7 @@ export const text = {
 };
 
 export const image = {
-  marginTop: "15%",
+  marginTop: "12%",
   width: "60%",
   height: "40%",
 };

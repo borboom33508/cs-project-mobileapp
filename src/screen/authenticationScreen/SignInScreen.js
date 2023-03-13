@@ -46,12 +46,11 @@ const SignInScreen = ({ navigation, props }) => {
 
   const handleLogin = () => {
     if (username !== "" && password !== "") {
-      userAuthentication()
+      userAuthentication();
+    } else {
+      setShowError(true);
     }
-    else {
-      setShowError(true)
-    }
-  }
+  };
 
   const setUserLogin = async (data) => {
     try {
@@ -69,9 +68,7 @@ const SignInScreen = ({ navigation, props }) => {
         <View style={{ paddingHorizontal: 10 }}>
           <TouchableOpacity
             onPress={() => {
-              if (username !== "" && password !== ""){
-                navigation.navigate("Onboarding");
-              }
+              navigation.navigate("Onboarding");
             }}
           >
             <Ionicons name="arrow-back" size={30} color="#4691FB" />
@@ -160,10 +157,7 @@ const SignInScreen = ({ navigation, props }) => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
-            style={button}
-            onPress={() => handleLogin()}
-          >
+          <TouchableOpacity style={button} onPress={() => handleLogin()}>
             <Text
               style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}
             >

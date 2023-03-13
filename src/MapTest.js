@@ -1,14 +1,18 @@
-import { View, Dimensions, StyleSheet, Button } from "react-native";
+import { View, Dimensions, StyleSheet, Button, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
 
 const MapTest = () => {
   const [mapRegion, setMapRegion] = useState({
-    latitude: 13.845880018908929,
-    longitude: 100.5640425554577,
-    latitudeDelta: 0.04,
-    longitudeDelta: 0.05,
+    // latitude: 13.845880018908929,
+    // longitude: 100.5640425554577,
+    // latitudeDelta: 0.012,
+    // longitudeDelta: 0.013,
+    latitude: 13.807398684169788,
+    longitude: 100.55551417909844,
+    latitudeDelta: 0.012,
+    longitudeDelta: 0.013,
   });
 
   const userLocation = async () => {
@@ -20,33 +24,34 @@ const MapTest = () => {
       enableHighAccuracy: true,
     });
     setMapRegion({
-      latitude: 13.814960922983204,
-      longitude: 100.56503558421038,
-      latitudeDelta: 0.04,
-      longitudeDelta: 0.05,
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.012,
+      longitudeDelta: 0.013,
     });
+    // setMapRegion({
+    //   latitude: 13.807398684169788,
+    //   longitude: 100.55551417909844,
+    //   latitudeDelta: 0.012,
+    //   longitudeDelta: 0.013,
+    // });
     // console.log(location.coords.latitude, location.coords.longitude);
   };
 
   useEffect(() => {
     // userLocation();
-  }, []);
+    console.log("Test");
+  }, [mapRegion]);
 
   return (
     <View style={styles.container}>
       <MapView style={styles.map} region={mapRegion}>
         <Marker coordinate={mapRegion} title="marker" />
-        <Marker
-          coordinate={{
-            latitude: 13.814960922983204,
-            longitude: 100.56503558421038,
-            latitudeDelta: 0.04,
-            longitudeDelta: 0.05,
-          }}
-          title="marker"
-        />
       </MapView>
-      <Button title="Get Location" onPress={userLocation} />
+      <Button title="Get Location" onPress={() => userLocation()} />
+      <Text style={{ alignItems: "center", justifyContent: "center" }}>
+        Hello World
+      </Text>
     </View>
   );
 };
@@ -59,8 +64,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 100,
+    width: Dimensions.get("screen").width,
+    height: Dimensions.get("screen").height,
+    position: "absolute",
   },
 });
 

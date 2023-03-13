@@ -1,9 +1,9 @@
-const baseUrl =
-  Platform.OS === "android"
-    ? "http://10.0.2.2/CS-PROJECT-BACKEND"
-    : "http://localhost/CS-PROJECT-BACKEND";
+// const baseUrl =
+//   Platform.OS === "android"
+//     ? "http://10.0.2.2/CS-PROJECT-BACKEND"
+//     : "http://localhost/CS-PROJECT-BACKEND";
 
-// const baseUrl = "https://a005-223-24-190-79.ap.ngrok.io/CS-PROJECT-BACKEND"
+const baseUrl = "https://6b4b-223-24-95-137.ap.ngrok.io/CS-PROJECT-BACKEND"
 
 const useFetch = async (method, body, path) => {
 
