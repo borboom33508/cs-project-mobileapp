@@ -1,9 +1,17 @@
-// const baseUrl =
+// const BASEURL =
 //   Platform.OS === "android"
 //     ? "http://10.0.2.2/CS-PROJECT-BACKEND"
 //     : "http://localhost/CS-PROJECT-BACKEND";
 
-const baseUrl = "https://6b4b-223-24-95-137.ap.ngrok.io/CS-PROJECT-BACKEND"
+// SelectShopScreen line 66-74
+// SelectServiceScreen line 82
+
+const BASEURL = "https://acdc-27-55-64-37.ap.ngrok.io"
+
+export const API = {
+  url: BASEURL + "/CS-PROJECT-BACKEND",
+  urlImage: BASEURL + "/CS-PROJECT-BACKEND/laundryAssets/",
+};
 
 const useFetch = async (method, body, path) => {
 
@@ -13,7 +21,7 @@ const useFetch = async (method, body, path) => {
     redirect: "follow",
   };
 
-  return await fetch(baseUrl + path, requestOptions)
+  return await fetch(API.url + path, requestOptions)
     .then((response) => response.text())
     .then((result) => {
       return result;

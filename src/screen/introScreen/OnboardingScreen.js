@@ -10,8 +10,6 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { useIsFocused } from "@react-navigation/native";
-
-import wash_machine from "../../../assets/washing-machine.png";
 import {
   text,
   image,
@@ -64,7 +62,7 @@ const OnboardingScreen = ({ navigation, props }) => {
       </View>
 
       <View style={{ marginTop: getStatusBarHeight(), alignItems: "center" }}>
-        <Image source={wash_machine} style={image} resizeMode="contain" />
+        <Image source={require("../../../assets/washing-machine.png")} style={image} resizeMode="contain" />
         <Text style={text}>{"Suck&Reed"}</Text>
         <TouchableOpacity
           style={button}

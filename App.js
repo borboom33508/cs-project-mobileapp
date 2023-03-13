@@ -30,6 +30,8 @@ import RiderMainScreen from "./src/screen/riderScreen/RiderMainScreen";
 import ProfitScreen from "./src/screen/riderScreen/ProfitScreen";
 import WithdrawRiderScreen from "./src/screen/riderScreen/WithdrawRiderScreen";
 import JobHistoryScreen from "./src/screen/riderScreen/JobHistoryScreen";
+import CreateOrderScreen from "./src/screen/serviceScreen/CreateOrderScreen";
+import WaitingForRiderScreen from "./src/screen/serviceScreen/WaitingForRiderScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -264,6 +266,8 @@ export default function App() {
         <Stack.Screen name="ProfitRider" component={ProfitScreen} />
         <Stack.Screen name="WithdrawRider" component={WithdrawRiderScreen} />
         <Stack.Screen name="JobHistory" component={JobHistoryScreen} />
+        <Stack.Screen name="CreateOrder" component={CreateOrderScreen} />
+        <Stack.Screen name="WaitingForRider" component={WaitingForRiderScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

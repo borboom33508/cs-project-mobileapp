@@ -17,8 +17,8 @@ import {
 } from "./RiderMainScreenStyle";
 import MapView, { Marker } from "react-native-maps";
 import { FontAwesome } from "@expo/vector-icons";
-
 import * as Location from "expo-location";
+import { useIsFocused } from "@react-navigation/native";
 
 const RiderMainScreen = ({ navigation, props }) => {
   const [currentPosition, setCurrentPosition] = useState({});
@@ -27,10 +27,13 @@ const RiderMainScreen = ({ navigation, props }) => {
   const [rating, setRating] = useState("5.0");
   const [picture, setPicture] = useState("20230313191544_johnbeard.jpg");
   const [isActive, setIsActive] = useState(true);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getCurrentPosition();
-  }, []);
+    if (isFocused) {
+      getCurrentPosition();
+    }
+  }, [isFocused]);
 
   const getCurrentPosition = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -43,8 +46,8 @@ const RiderMainScreen = ({ navigation, props }) => {
     setCurrentPosition({
       latitude: 13.814960922983204, //change -> location.coords.latitude to test
       longitude: 100.56503558421038, //change -> location.coords.longitude to test
-      latitudeDelta: 0.04,
-      longitudeDelta: 0.05,
+      latitudeDelta: 0.012,
+      longitudeDelta: 0.013,
     });
   };
 
@@ -86,11 +89,11 @@ const RiderMainScreen = ({ navigation, props }) => {
           <Marker coordinate={currentPosition} title={"คุณอยู่ที่นี่"} />
         </MapView>
       </View>
-      <View style={{ alignItems: "center", marginTop: 30  }}>
+      <View style={{ alignItems: "center", marginTop: 30 }}>
         <TouchableOpacity
           style={isActive == true ? activeButton : inactiveButton}
           onPress={() => {
-            setIsActive(!isActive)
+            setIsActive(!isActive);
           }}
         >
           <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>

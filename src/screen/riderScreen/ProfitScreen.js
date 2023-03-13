@@ -1,15 +1,36 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert, NativeModules } from "react-native";
 import React, { useEffect, useState } from "react";
 import { container, text, button } from "./ProfitScreenStyle";
 import { useIsFocused } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfitScreen = ({ navigation, props }) => {
   const [credit, setCredit] = useState(0);
   const isFocused = useIsFocused();
 
-//   useEffect(() => {}, isFocused);
+  //   useEffect(() => {}, isFocused);
+
+  const alertLogout = () => {
+    Alert.alert("ออกจากระบบ", "", [
+      {
+        text: "ยกเลิก",
+        style: "cancel",
+      },
+      {
+        text: "ออกจากระบบ",
+        style: "destructive",
+        onPress: () => handleLogout(),
+      },
+    ]);
+  };
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("@account");
+    NativeModules.DevSettings.reload();
+    // navigation.navigate("Landing");
+  };
 
   return (
     <View style={container}>
@@ -55,6 +76,15 @@ const ProfitScreen = ({ navigation, props }) => {
                 style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}
               >
                 {"ประวัติการรับงาน"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ alignItems: "center", marginTop: 60 }}>
+            <TouchableOpacity onPress={() => alertLogout()}>
+              <Text
+                style={{ fontSize: 18, color: "#F91616", fontFamily: "Kanit" }}
+              >
+                {"ออกจากระบบ"}
               </Text>
             </TouchableOpacity>
           </View>

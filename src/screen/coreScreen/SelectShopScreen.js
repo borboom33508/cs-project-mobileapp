@@ -12,6 +12,7 @@ import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import GetApi from "../../api/GetApi";
 import { useIsFocused } from "@react-navigation/native";
 import SelectServiceScreen from "../serviceScreen/SelectServiceScreen";
+import { API } from "../../api/GetApi";
 
 const SelectShopScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -65,16 +66,10 @@ const SelectShopScreen = ({ navigation }) => {
             source={
               Platform.OS === "android"
                 ? {
-                    uri:
-                      "https://6b4b-223-24-95-137.ap.ngrok.io/CS-PROJECT-BACKEND" +
-                      "/laundryAssets/" +
-                      item.laundry_picture,
+                    uri: API.urlImage + item.laundry_picture,
                   }
                 : {
-                    uri:
-                      "https://6b4b-223-24-95-137.ap.ngrok.io/CS-PROJECT-BACKEND" +
-                      "/laundryAssets/" +
-                      item.laundry_picture,
+                    uri: API.urlImage + item.laundry_picture,
                   }
             }
             style={{ width: 130, height: 100 }}
@@ -105,7 +100,7 @@ const SelectShopScreen = ({ navigation }) => {
                   marginLeft: 5,
                 }}
               >
-                {item.laundry_rating}
+                {parseFloat(item.laundry_rating).toFixed(1)}
               </Text>
             </View>
             <View style={{ flexDirection: "row", marginBottom: 2 }}>
@@ -146,7 +141,7 @@ const SelectShopScreen = ({ navigation }) => {
         <View
           style={{
             width: 500,
-            height: Platform.OS === "android" ? 170 : 190,
+            height: Platform.OS === "android" ? 170 : 180,
             position: "absolute",
             backgroundColor: "#4691FB",
           }}

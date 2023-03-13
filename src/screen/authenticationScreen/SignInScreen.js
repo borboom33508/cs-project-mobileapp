@@ -33,10 +33,21 @@ const SignInScreen = ({ navigation, props }) => {
       ).then((res) => {
         let data = JSON.parse(res);
         if (data.success) {
-          setUserLogin(data.request.cus_id);
+          setUserLogin(data.request.cus_id, "Main");
         } else {
-          setShowError(true);
-          setPassword("");
+          GetApi.useFetch(
+            "GET",
+            "",
+            `/rider/GetLoginRider.php?rider_email=${username}&rider_phone=${username}&rider_password=${password}`
+          ).then((res) => {
+            let data = JSON.parse(res);
+            if (data.success) {
+              setUserLogin(data.request.rider_id, "RiderMain");
+            } else {
+              setShowError(true);
+              setPassword("");
+            }
+          });
         }
       });
     } catch (e) {
@@ -52,13 +63,13 @@ const SignInScreen = ({ navigation, props }) => {
     }
   };
 
-  const setUserLogin = async (data) => {
+  const setUserLogin = async (data, toPage) => {
     try {
       await AsyncStorage.setItem("@account", JSON.stringify(data));
     } catch (e) {
       console.log(e);
     } finally {
-      navigation.navigate("Main");
+      navigation.navigate(toPage);
     }
   };
 
