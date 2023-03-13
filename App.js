@@ -19,12 +19,16 @@ import EditProfileScreen from "./src/screen/settingScreen/EditProfileScreen";
 import MapTest from "./src/MapTest";
 import OrderScreen from "./src/screen/coreScreen/OrderScreen";
 import NotificationScreen from "./src/screen/coreScreen/NotificationScreen";
-import CreditScreen from "./src/screen/creditScreen/CreditScreen"; //new
-import DepositScreen from "./src/screen/creditScreen/DepositScreen"; //new
-import TransactionScreen from "./src/screen/creditScreen/TransactionScreen"; //new
-import SetPasswordScreen from "./src/screen/settingScreen/SetPasswordScreen"; //new
-import AboutUsScreen from "./src/screen/settingScreen/AboutUsScreen"; //new
-import PolicyScreen from "./src/screen/settingScreen/PolicyScreen"; //new
+import CreditScreen from "./src/screen/creditScreen/CreditScreen";
+import DepositScreen from "./src/screen/creditScreen/DepositScreen"; 
+import TransactionScreen from "./src/screen/creditScreen/TransactionScreen"; 
+import SetPasswordScreen from "./src/screen/settingScreen/SetPasswordScreen";
+import AboutUsScreen from "./src/screen/settingScreen/AboutUsScreen"; 
+import PolicyScreen from "./src/screen/settingScreen/PolicyScreen"; 
+import RiderMainScreen from "./src/screen/riderScreen/RiderMainScreen";
+import ProfitScreen from "./src/screen/riderScreen/ProfitScreen";
+import WithdrawRiderScreen from "./src/screen/riderScreen/WithdrawRiderScreen";
+import JobHistoryScreen from "./src/screen/riderScreen/JobHistoryScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -254,6 +258,10 @@ export default function App() {
         <Stack.Screen name="SetPassword" component={SetPasswordScreen} />
         <Stack.Screen name="AboutUs" component={AboutUsScreen} />
         <Stack.Screen name="Policy" component={PolicyScreen} />
+        <Stack.Screen name="RiderMain" component={RiderMainScreen} />
+        <Stack.Screen name="ProfitRider" component={ProfitScreen} />
+        <Stack.Screen name="WithdrawRider" component={WithdrawRiderScreen} />
+        <Stack.Screen name="JobHistory" component={JobHistoryScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
