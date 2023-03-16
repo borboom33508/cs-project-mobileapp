@@ -19,19 +19,25 @@ import MapView, { Marker } from "react-native-maps";
 import { FontAwesome } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { useIsFocused } from "@react-navigation/native";
+import GetApi , { API } from "../../api/GetApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const UNKNOWN_PICTURE = ""
 
 const RiderMainScreen = ({ navigation, props }) => {
   const [currentPosition, setCurrentPosition] = useState({});
-  const [fname, setFname] = useState("จอห์น");
-  const [lname, setLname] = useState("เบียร์ด");
-  const [rating, setRating] = useState("5.0");
-  const [picture, setPicture] = useState("20230313191544_johnbeard.jpg");
+  const [riderId, setRiderId] = useState("")
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [rating, setRating] = useState("");
+  const [picture, setPicture] = useState("");
   const [isActive, setIsActive] = useState(true);
   const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isFocused) {
       getCurrentPosition();
+      getRiderData();
     }
   }, [isFocused]);
 
@@ -51,6 +57,40 @@ const RiderMainScreen = ({ navigation, props }) => {
     });
   };
 
+  const fetchRiderData = async (riderId) => {
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/rider/GetMainRiderRequest.php?rider_id= ${riderId}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          setFname(data.request.rider_fname);
+          setLname(data.request.rider_lname);
+          setRating(data.request.rider_rating);
+          setPicture(data.request.rider_picture);
+        } else {
+          console.log(data);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  
+  const getRiderData = async () => {
+    await AsyncStorage.getItem("@account").then((res) => {
+      let riderId = JSON.parse(res);
+      if (riderId == null) {
+        console.log("not found");
+      } else {
+        fetchRiderData(riderId);
+        setRiderId(riderId)
+      }
+    });
+  };
+
   return (
     <View style={container}>
       <View style={content1}>
@@ -66,13 +106,13 @@ const RiderMainScreen = ({ navigation, props }) => {
         </TouchableOpacity>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Image
-            source={require("../../../assets/unknown-user.png")}
+            source={ picture == "" ? { uri: API.urlRiderImage + picture } : require("../../../assets/unknown-user.png")}
             style={{ width: 80, height: 80 }}
           />
           <Text>{fname + " " + lname}</Text>
           <View style={{ flexDirection: "row" }}>
             <FontAwesome name="star" color="orange" />
-            <Text style={{ marginLeft: 8 }}>{rating}</Text>
+            <Text style={{ marginLeft: 8 }}>{parseFloat(rating).toFixed(1)}</Text>
           </View>
         </View>
       </View>

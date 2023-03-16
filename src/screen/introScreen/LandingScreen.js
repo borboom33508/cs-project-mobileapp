@@ -7,7 +7,6 @@ import { text, image, container } from "./LandingScreenStyle";
 import { useIsFocused } from "@react-navigation/native";
 
 const LandingScreen = ({ navigation, props }) => {
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   // const isFoucsed = useIsFocused();
 
   useEffect(() => {
@@ -15,15 +14,23 @@ const LandingScreen = ({ navigation, props }) => {
   }, []);
 
   const checkUserLogin = async () => {
-    await sleep(2000);
-    await AsyncStorage.getItem("@account").then((res) => {
-      let account = JSON.parse(res);
-      if (account == null) {
-        navigation.navigate("Onboarding");
-      } else {
-        navigation.navigate("Main");
-      }
-    });
+    setTimeout(async () => {
+      await AsyncStorage.getItem("@account").then((res) => {
+        let account = JSON.parse(res);
+        let whoami;
+        if (account !== null) {
+          whoami = account.split(",")[1];
+        }
+        console.log(whoami);
+        if (account == null) {
+          navigation.navigate("Onboarding");
+        } else if (whoami == "customer") {
+          navigation.navigate("Main");
+        } else if (whoami == "rider") {
+          navigation.navigate("RiderMain");
+        }
+      });
+    }, 2000);
   };
 
   return (
