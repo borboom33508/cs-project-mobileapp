@@ -19,7 +19,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
   const [isEnabled, setIsEnabled] = useState(false);
 
   useEffect(() => {
-    console.log(laundryService);
+    // console.log(laundryService);
   }, []);
 
   return (

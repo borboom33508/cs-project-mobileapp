@@ -17,11 +17,11 @@ import { API } from "../../api/GetApi";
 const SelectShopScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [laundryList, setLaundryList] = useState({});
+  const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
     if (isFocused) {
       getLaundryData();
-      // console.log(laundryList);
     }
   }, [isFocused]);
 
@@ -38,6 +38,12 @@ const SelectShopScreen = ({ navigation }) => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const onRefresh = async () => {
+    setIsFetching(true);
+    await getLaundryData();
+    setIsFetching(false);
   };
 
   const renderItem = ({ item }) => (
@@ -234,6 +240,8 @@ const SelectShopScreen = ({ navigation }) => {
           data={laundryList}
           renderItem={renderItem}
           keyExtractor={(item) => item.laundry_id}
+          onRefresh={() => onRefresh()}
+          refreshing={isFetching}
         />
       </View>
     </View>

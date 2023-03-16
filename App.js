@@ -2,8 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity, Text } from "react-native";
-import React, { useState } from "react";
+import { Text, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import LandingScreen from "./src/screen/introScreen/LandingScreen";
@@ -21,208 +20,72 @@ import OrderScreen from "./src/screen/coreScreen/OrderScreen";
 import NotificationScreen from "./src/screen/coreScreen/NotificationScreen";
 import SelectServiceScreen from "./src/screen/serviceScreen/SelectServiceScreen";
 import CreditScreen from "./src/screen/creditScreen/CreditScreen";
-import DepositScreen from "./src/screen/creditScreen/DepositScreen"; 
-import TransactionScreen from "./src/screen/creditScreen/TransactionScreen"; 
+import DepositScreen from "./src/screen/creditScreen/DepositScreen";
+import TransactionScreen from "./src/screen/creditScreen/TransactionScreen";
 import SetPasswordScreen from "./src/screen/settingScreen/SetPasswordScreen";
-import AboutUsScreen from "./src/screen/settingScreen/AboutUsScreen"; 
-import PolicyScreen from "./src/screen/settingScreen/PolicyScreen"; 
+import AboutUsScreen from "./src/screen/settingScreen/AboutUsScreen";
+import PolicyScreen from "./src/screen/settingScreen/PolicyScreen";
 import RiderMainScreen from "./src/screen/riderScreen/RiderMainScreen";
 import ProfitScreen from "./src/screen/riderScreen/ProfitScreen";
 import WithdrawRiderScreen from "./src/screen/riderScreen/WithdrawRiderScreen";
 import JobHistoryScreen from "./src/screen/riderScreen/JobHistoryScreen";
 import CreateOrderScreen from "./src/screen/serviceScreen/CreateOrderScreen";
 import WaitingForRiderScreen from "./src/screen/serviceScreen/WaitingForRiderScreen";
+import FoundRiderScreen from "./src/screen/orderScreen/FoundRiderScreen";
+import AssignRatingRiderScreen from "./src/screen/orderScreen/AssignRatingRiderScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const MainScreen = ({ navigation }) => {
-  const [focused, setFocused] = useState("SelectShop");
-
+const MainScreen = () => {
   return (
     <Tab.Navigator
-      initialRouteName="SelectShop"
-      screenOptions={{
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          let pageName;
+          if (route.name === "SelectShop") {
+            iconName = focused ? "home" : "home-outline";
+            pageName = "หน้าแรก";
+          } else if (route.name === "Order") {
+            iconName = focused ? "md-reader" : "md-reader-outline";
+            pageName = "รายการ";
+          } else if (route.name === "Credit") {
+            iconName = focused ? "wallet" : "wallet-outline";
+            pageName = "เครดิต";
+          } else if (route.name === "Notification") {
+            iconName = focused ? "notifications" : "notifications-outline";
+            pageName = "แจ้งเตือน";
+          } else if (route.name === "Setting") {
+            iconName = focused ? "settings" : "settings-outline";
+            pageName = "ตั้งค่า";
+          }
+          return (
+            <View style={{ alignItems: "center" }}>
+              <Ionicons name={iconName} size={size} color={color} />
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: color,
+                  fontFamily: "Kanit",
+                }}
+              >
+                {pageName}
+              </Text>
+            </View>
+          );
+        },
         headerShown: false,
-        tabBarActiveTintColor: "black",
-      }}
+        tabBarActiveTintColor: "#4691FB",
+        tabBarInactiveTintColor: "#CACFD2",
+        tabBarShowLabel: false,
+      })}
     >
-      <Tab.Screen
-        name="SelectShop"
-        component={SelectShopScreen}
-        options={({ route }) => ({
-          tabBarButton: (props) => (
-            <TouchableOpacity
-              style={{
-                alignSelf: "center",
-                alignItems: "center",
-                width: "20%",
-              }}
-              onPress={() => {
-                setFocused(route.name);
-                navigation.navigate("SelectShop", { namePage: focused });
-              }}
-            >
-              <Ionicons
-                name={focused === "SelectShop" ? "home" : "home-outline"}
-                color={focused === "SelectShop" ? "#4691FB" : "#CACFD2"}
-                size={28}
-              />
-              <Text
-                style={{
-                  fontSize: 10,
-                  color: focused === "SelectShop" ? "#4691FB" : "#CACFD2",
-                  fontFamily: "Kanit",
-                }}
-              >
-                หน้าแรก
-              </Text>
-            </TouchableOpacity>
-          ),
-        })}
-      />
-      <Tab.Screen
-        name="Order"
-        component={OrderScreen}
-        options={({ route }) => ({
-          tabBarButton: (props) => (
-            <TouchableOpacity
-              style={{
-                alignSelf: "center",
-                alignItems: "center",
-                width: "20%",
-              }}
-              onPress={() => {
-                setFocused(route.name);
-                navigation.navigate("Order", { namePage: focused });
-              }}
-            >
-              <Ionicons
-                name={
-                  focused === "Order" ? "md-reader" : "md-reader-outline"
-                }
-                color={focused === "Order" ? "#4691FB" : "#CACFD2"}
-                size={28}
-              />
-              <Text
-                style={{
-                  fontSize: 10,
-                  color: focused === "Order" ? "#4691FB" : "#CACFD2",
-                  fontFamily: "Kanit",
-                }}
-              >
-                รายการ
-              </Text>
-            </TouchableOpacity>
-          ),
-        })}
-      />
-      <Tab.Screen
-        name="Credit"
-        component={CreditScreen}
-        options={({ route }) => ({
-          tabBarButton: (props) => (
-            <TouchableOpacity
-              style={{
-                alignSelf: "center",
-                alignItems: "center",
-                width: "20%",
-              }}
-              onPress={() => {
-                setFocused(route.name);
-                navigation.navigate("Credit", { namePage: focused });
-              }}
-            >
-              <Ionicons
-                name={focused === "Credit" ? "wallet" : "wallet-outline"}
-                color={focused === "Credit" ? "#4691FB" : "#CACFD2"}
-                size={28}
-              />
-              <Text
-                style={{
-                  fontSize: 10,
-                  color: focused === "Credit" ? "#4691FB" : "#CACFD2",
-                  fontFamily: "Kanit",
-                }}
-              >
-                เครดิต
-              </Text>
-            </TouchableOpacity>
-          ),
-        })}
-      />
-      <Tab.Screen
-        name="Notification"
-        component={NotificationScreen}
-        options={({ route }) => ({
-          tabBarButton: (props) => (
-            <TouchableOpacity
-              style={{
-                alignSelf: "center",
-                alignItems: "center",
-                width: "20%",
-              }}
-              onPress={() => {
-                setFocused(route.name);
-                navigation.navigate("Notification", { namePage: focused });
-              }}
-            >
-              <Ionicons
-                name={
-                  focused === "Notification"
-                    ? "notifications"
-                    : "notifications-outline"
-                }
-                color={focused === "Notification" ? "#4691FB" : "#CACFD2"}
-                size={28}
-              />
-              <Text
-                style={{
-                  fontSize: 10,
-                  color: focused === "Notification" ? "#4691FB" : "#CACFD2",
-                  fontFamily: "Kanit",
-                }}
-              >
-                แจ้งเตือน
-              </Text>
-            </TouchableOpacity>
-          ),
-        })}
-      />
-      <Tab.Screen
-        name="Setting"
-        component={SettingScreen}
-        options={({ route }) => ({
-          tabBarButton: (props) => (
-            <TouchableOpacity
-              style={{
-                alignSelf: "center",
-                alignItems: "center",
-                width: "20%",
-              }}
-              onPress={() => {
-                setFocused(route.name);
-                navigation.navigate("Setting", { namePage: focused });
-              }}
-            >
-              <Ionicons
-                name={focused === "Setting" ? "settings" : "settings-outline"}
-                size={28}
-                color={focused === "Setting" ? "#4691FB" : "#CACFD2"}
-              />
-              <Text
-                style={{
-                  fontSize: 10,
-                  color: focused === "Setting" ? "#4691FB" : "#CACFD2",
-                  fontFamily: "Kanit",
-                }}
-              >
-                ตั้งค่า
-              </Text>
-            </TouchableOpacity>
-          ),
-        })}
-      />
+      <Tab.Screen name="SelectShop" component={SelectShopScreen} />
+      <Tab.Screen name="Order" component={OrderScreen} />
+      <Tab.Screen name="Credit" component={CreditScreen} />
+      <Tab.Screen name="Notification" component={NotificationScreen} />
+      <Tab.Screen name="Setting" component={SettingScreen} />
     </Tab.Navigator>
   );
 };
@@ -253,7 +116,11 @@ export default function App() {
         />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="OTPForm" component={OTPScreen} />
-        <Stack.Screen name="Main" component={MainScreen} options={{ gestureEnabled: false }}/>
+        <Stack.Screen
+          name="Main"
+          component={MainScreen}
+          options={{ gestureEnabled: false }}
+        />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="MapTest" component={MapTest} />
         <Stack.Screen name="Deposit" component={DepositScreen} />
@@ -267,7 +134,12 @@ export default function App() {
         <Stack.Screen name="WithdrawRider" component={WithdrawRiderScreen} />
         <Stack.Screen name="JobHistory" component={JobHistoryScreen} />
         <Stack.Screen name="CreateOrder" component={CreateOrderScreen} />
-        <Stack.Screen name="WaitingForRider" component={WaitingForRiderScreen} />
+        <Stack.Screen
+          name="WaitingForRider"
+          component={WaitingForRiderScreen}
+        />
+        <Stack.Screen name="FoundRider" component={FoundRiderScreen} />
+        <Stack.Screen name="AssignRatingRider" component={AssignRatingRiderScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
