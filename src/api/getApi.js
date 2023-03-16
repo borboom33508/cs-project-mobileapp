@@ -6,11 +6,11 @@
 // SelectShopScreen line 66-74
 // SelectServiceScreen line 82
 
-const BASEURL = "https://acdc-27-55-64-37.ap.ngrok.io"
+const BASEURL = "https://8753-223-24-184-224.ap.ngrok.io"
 
 export const API = {
   url: BASEURL + "/CS-PROJECT-BACKEND",
-  urlImage: BASEURL + "/CS-PROJECT-BACKEND/laundryAssets/",
+  urlLaundryImage: BASEURL + "/CS-PROJECT-BACKEND/laundryAssets/",
 };
 
 const useFetch = async (method, body, path) => {

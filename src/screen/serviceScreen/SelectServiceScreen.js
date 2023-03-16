@@ -77,7 +77,7 @@ const SelectServiceScreen = ({ navigation, props, route }) => {
       <View style={{ padding: 10, paddingTop: 40 }}>
         <View style={{ alignItems: "center" }}>
           <Image
-            source={{ uri: API.urlImage + laundryService.laundry_picture }}
+            source={{ uri: API.urlLaundryImage + laundryService.laundry_picture }}
             style={{ height: 200, width: 300 }}
           />
         </View>
