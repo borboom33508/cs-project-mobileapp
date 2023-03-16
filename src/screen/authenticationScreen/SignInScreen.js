@@ -33,7 +33,7 @@ const SignInScreen = ({ navigation, props }) => {
       ).then((res) => {
         let data = JSON.parse(res);
         if (data.success) {
-          setUserLogin(data.request.cus_id, "Main");
+          setUserLogin(data.request.cus_id, "customer", "Main");
         } else {
           GetApi.useFetch(
             "GET",
@@ -42,7 +42,7 @@ const SignInScreen = ({ navigation, props }) => {
           ).then((res) => {
             let data = JSON.parse(res);
             if (data.success) {
-              setUserLogin(data.request.rider_id, "RiderMain");
+              setUserLogin(data.request.rider_id, "rider", "RiderMain");
             } else {
               setShowError(true);
               setPassword("");
@@ -63,12 +63,16 @@ const SignInScreen = ({ navigation, props }) => {
     }
   };
 
-  const setUserLogin = async (data, toPage) => {
+  const setUserLogin = async (data, role, toPage) => {
     try {
-      await AsyncStorage.setItem("@account", JSON.stringify(data));
+      await AsyncStorage.setItem("@account",JSON.stringify(data + "," +role));
     } catch (e) {
       console.log(e);
     } finally {
+      await AsyncStorage.getItem("@account").then((res) => {
+        let account = JSON.parse(res);
+        console.log(account);
+      });
       navigation.navigate(toPage);
     }
   };

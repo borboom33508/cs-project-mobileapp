@@ -5,12 +5,47 @@ import { useIsFocused } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import GetApi from "../../api/GetApi";
 
 const ProfitScreen = ({ navigation, props }) => {
-  const [credit, setCredit] = useState(0);
+  const [riderId, setRiderId] = useState("")
+  const [credit, setCredit] = useState("");
   const isFocused = useIsFocused();
 
-  //   useEffect(() => {}, isFocused);
+    useEffect(() => {
+      getRiderData();
+    }, [isFocused]);
+
+    const fetchRiderData = async (riderId) => {
+      try {
+        await GetApi.useFetch(
+          "GET",
+          "",
+          `/rider/GetCreditRider.php?rider_id= ${riderId}`
+        ).then((res) => {
+          let data = JSON.parse(res);
+          if (data.success) {
+            setCredit(data.request.rider_credit);
+          } else {
+            console.log(data);
+          }
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    
+    const getRiderData = async () => {
+      await AsyncStorage.getItem("@account").then((res) => {
+        let riderId = JSON.parse(res);
+        if (riderId == null) {
+          console.log("not found");
+        } else {
+          fetchRiderData(riderId);
+          setRiderId(riderId)
+        }
+      });
+    };
 
   const alertLogout = () => {
     Alert.alert("ออกจากระบบ", "", [

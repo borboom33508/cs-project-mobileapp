@@ -66,10 +66,10 @@ const SelectShopScreen = ({ navigation }) => {
             source={
               Platform.OS === "android"
                 ? {
-                    uri: API.urlImage + item.laundry_picture,
+                    uri: API.urlLaundryImage + item.laundry_picture,
                   }
                 : {
-                    uri: API.urlImage + item.laundry_picture,
+                    uri: API.urlLaundryImage + item.laundry_picture,
                   }
             }
             style={{ width: 130, height: 100 }}
