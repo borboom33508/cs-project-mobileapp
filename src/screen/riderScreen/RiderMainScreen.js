@@ -106,7 +106,7 @@ const RiderMainScreen = ({ navigation, props }) => {
         </TouchableOpacity>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Image
-            source={ picture == "" ? { uri: API.urlRiderImage + picture } : require("../../../assets/unknown-user.png")}
+            source={{ uri: API.urlRiderImage + picture }}
             style={{ width: 80, height: 80 }}
           />
           <Text>{fname + " " + lname}</Text>
