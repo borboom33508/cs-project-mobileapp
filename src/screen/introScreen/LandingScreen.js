@@ -18,11 +18,10 @@ const LandingScreen = ({ navigation, props }) => {
       await AsyncStorage.getItem("@account").then((res) => {
         let account = JSON.parse(res);
         let whoami;
-        if (account !== undefined || account !== null) {
+        if (account !== null) {
           whoami = account.split(",")[1];
         }
-        console.log(whoami);
-        if (account !== undefined || account !== null) {
+        if (account == null) {
           navigation.navigate("Onboarding");
         } else if (whoami == "customer") {
           navigation.navigate("Main");
