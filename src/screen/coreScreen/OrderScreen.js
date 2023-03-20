@@ -3,7 +3,7 @@ import React from "react";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
-const OrderScreen = () => {
+const OrderScreen = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <View
       style={{
@@ -19,7 +19,7 @@ const OrderScreen = () => {
         paddingHorizontal: 10,
       }}
     >
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=> navigation.navigate("OrderDetail")}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Ionicons
             name="document-text-outline"

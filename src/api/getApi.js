@@ -7,7 +7,7 @@
 // SelectServiceScreen line 82
 
 
-const BASEURL = "https://4092-2405-9800-b670-16-ed35-2758-db42-c65f.ap.ngrok.io"
+const BASEURL = "https://8697-27-55-65-119.ap.ngrok.io"
 
 
 export const API = {
