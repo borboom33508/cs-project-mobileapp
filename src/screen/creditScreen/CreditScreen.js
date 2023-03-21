@@ -8,7 +8,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 const CreditScreen = ({ navigation, props }) => {
   const [credit, setCredit] = useState(0);
-  const isFocused = useIsFocused;
+  const isFocused = useIsFocused();
 
 
   useEffect(() => {
