@@ -6,17 +6,22 @@ import { TextInput } from "react-native-paper";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GetApi from "../../api/GetApi";
+import GetApi, { API } from "../../api/GetApi";
 
 const EditProfileScreen = ({ navigation, props }) => {
+  const [accountId, setAccountId] = useState("");
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const isFocused = useIsFocused;
-  const [accountId, setAccountId] = useState("")
+  const [picture, setPicture] = useState("");
+  const isFocused = useIsFocused();
+  const [findPicture, setFindPicture] = useState(true);
 
   useEffect(() => {
-    getAccountData();
+    if (isFocused) {
+      getAccountData();
+    } else {
+    }
   }, [isFocused]);
 
   const fetchAccountData = async (accountId) => {
@@ -31,10 +36,11 @@ const EditProfileScreen = ({ navigation, props }) => {
           setUsername(data.request.cus_name);
           setPhone(data.request.cus_phone);
           setEmail(data.request.cus_email);
+          setPicture(data.request.cus_picture);
         } else {
           console.log(data);
         }
-      });
+      })
     } catch (e) {
       console.log(e);
     }
@@ -47,15 +53,14 @@ const EditProfileScreen = ({ navigation, props }) => {
         console.log("not found");
       } else {
         fetchAccountData(accountId);
-        setAccountId(accountId)
-        // console.log(accountId);
+        setAccountId(accountId);
       }
     });
   };
 
   const handleSaveButton = async () => {
     var formdata = new FormData();
-    formdata.append("cus_id", accountId);
+    formdata.append("cus_id", accountId.split(",")[0]);
     formdata.append("cus_name", username);
     formdata.append("cus_email", email);
     try {
@@ -64,12 +69,11 @@ const EditProfileScreen = ({ navigation, props }) => {
         formdata,
         `/customer/PostEditAccount.php`
       ).then((res) => {
-        let data = JSON.parse(res)
+        let data = JSON.parse(res);
         console.log(res);
         if (data.success) {
-          navigation.navigate("Setting")
+          navigation.navigate("Setting");
         }
-
       });
     } catch (e) {
       console.log(e);
@@ -87,7 +91,6 @@ const EditProfileScreen = ({ navigation, props }) => {
         text: "ยกเลิก",
         style: "cancel",
       },
-     
     ]);
   };
 
@@ -123,10 +126,30 @@ const EditProfileScreen = ({ navigation, props }) => {
             alignItems: "center",
           }}
         >
-          <Image
-            source={require("../../../assets/unknown-user.png")}
-            style={{ width: 200, height: 200 }}
-          />
+          {findPicture ? (
+            <Image
+              source={{ uri: API.urlCustomerImage + picture }}
+              style={{
+                width: 190,
+                height: 190,
+                borderWidth: 1,
+                borderColor: "#000000",
+              }}
+              resizeMode="contain"
+            />
+          ) : (
+            <Image
+              source={require("../../../assets/unknown-user.png")}
+              style={{
+                width: 190,
+                height: 190,
+                borderWidth: 1,
+                borderColor: "#000000",
+              }}
+              resizeMode="contain"
+            />
+          )}
+
           <TouchableOpacity>
             <Text
               style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
@@ -178,9 +201,9 @@ const EditProfileScreen = ({ navigation, props }) => {
               label={<Text style={{ fontFamily: "Kanit" }}>{"อีเมล"}</Text>}
               mode="outlined"
               style={{ backgroundColor: "#ffffff", height: 60 }}
-                onChangeText={(text) => {
-                  setEmail(text);
-                }}
+              onChangeText={(text) => {
+                setEmail(text);
+              }}
               value={email}
               activeOutlineColor="#4691FB"
               theme={{

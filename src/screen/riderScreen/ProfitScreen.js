@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, Alert, NativeModules } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  NativeModules,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { container, text, button } from "./ProfitScreenStyle";
 import { useIsFocused } from "@react-navigation/native";
@@ -8,44 +14,44 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import GetApi from "../../api/GetApi";
 
 const ProfitScreen = ({ navigation, props }) => {
-  const [riderId, setRiderId] = useState("")
+  const [riderId, setRiderId] = useState("");
   const [credit, setCredit] = useState("");
   const isFocused = useIsFocused();
 
-    useEffect(() => {
-      getRiderData();
-    }, [isFocused]);
+  useEffect(() => {
+    getRiderData();
+  }, [isFocused]);
 
-    const fetchRiderData = async (riderId) => {
-      try {
-        await GetApi.useFetch(
-          "GET",
-          "",
-          `/rider/GetCreditRider.php?rider_id= ${riderId}`
-        ).then((res) => {
-          let data = JSON.parse(res);
-          if (data.success) {
-            setCredit(data.request.rider_credit);
-          } else {
-            console.log(data);
-          }
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    
-    const getRiderData = async () => {
-      await AsyncStorage.getItem("@account").then((res) => {
-        let riderId = JSON.parse(res);
-        if (riderId == null) {
-          console.log("not found");
+  const fetchRiderData = async (riderId) => {
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/rider/GetCreditRider.php?rider_id= ${riderId}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          setCredit(data.request.rider_credit);
         } else {
-          fetchRiderData(riderId);
-          setRiderId(riderId)
+          console.log(data);
         }
       });
-    };
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getRiderData = async () => {
+    await AsyncStorage.getItem("@account").then((res) => {
+      let riderId = JSON.parse(res);
+      if (riderId == null) {
+        console.log("not found");
+      } else {
+        fetchRiderData(riderId);
+        setRiderId(riderId);
+      }
+    });
+  };
 
   const alertLogout = () => {
     Alert.alert("ออกจากระบบ", "", [
@@ -96,6 +102,20 @@ const ProfitScreen = ({ navigation, props }) => {
                 style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}
               >
                 {"ถอนเงิน"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity
+              style={button}
+              onPress={() => {
+                // navigation.navigate("WithdrawRider");
+              }}
+            >
+              <Text
+                style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}
+              >
+                {"ประวัติธุรกรรม"}
               </Text>
             </TouchableOpacity>
           </View>

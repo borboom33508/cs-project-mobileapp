@@ -26,7 +26,20 @@ const SuccessPopup = ({ navigation, props }) => {
               padding: 12,
             }}
             onPress={() => {
-              fromPage == "SetPassword" ? navigation.navigate("Setting") : navigation.navigate("Onboarding");
+              console.log(fromPage);
+              if (fromPage == "SetPassword") {
+                navigation.navigate("Setting")
+              }
+              else if (fromPage == "Deposit") {
+                navigation.navigate("Credit")
+              }
+              else if (fromPage == "WithdrawRider") {
+                navigation.navigate("ProfitRider")
+              }
+              else {
+                navigation.navigate("Onboarding")
+              }
+              // fromPage == "SetPassword" ? navigation.navigate("Setting") : navigation.navigate("Onboarding");
               setToggleClose(!toggleClose);
             }}
           >

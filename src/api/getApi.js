@@ -7,11 +7,12 @@
 // SelectServiceScreen line 82
 
 
-const BASEURL = "https://4092-2405-9800-b670-16-ed35-2758-db42-c65f.ap.ngrok.io"
+const BASEURL = "https://bcaa-2405-9800-b670-16-9951-18dd-cee6-6423.ap.ngrok.io"
 
 
 export const API = {
   url: BASEURL + "/CS-PROJECT-BACKEND",
+  urlCustomerImage: BASEURL + "/CS-PROJECT-BACKEND/customerAssets/",
   urlLaundryImage: BASEURL + "/CS-PROJECT-BACKEND/laundryAssets/",
   urlRiderImage: BASEURL + "/CS-PROJECT-BACKEND/riderAssets/",
 };
