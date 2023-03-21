@@ -8,7 +8,7 @@ const useFetch = (phonenumber, otp_code) => {
     path: "/sms/2/text/advanced",
     headers: {
       Authorization:
-        "App 7c81c14349ae51db3737ed6d39ef5934-d8d7e0d1-3ece-4fca-9311-6d7835dc63ab",
+        "App 4f984a95564887480f80c719347b2656-151ff6fb-5a39-4352-a684-658365c4a0f5",
       "Content-Type": "application/json",
       Accept: "application/json",
     },

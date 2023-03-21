@@ -14,6 +14,7 @@ import { useIsFocused } from "@react-navigation/native";
 import SuccessPopup from "../../components/SuccessPopUp";
 import GetApi from "../../api/GetApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from "moment";
 
 const DepositScreen = ({ navigation, props }) => {
   const [balance, setBalance] = useState("0");
@@ -21,6 +22,7 @@ const DepositScreen = ({ navigation, props }) => {
   const [isPress, setIsPress] = useState(false);
   const [showError, setShowError] = useState(false);
   const [accountId, setAccountId] = useState("");
+  const [timestamp, setTimestamp] = useState(""); //timestamp
   const [qrCodeUri, setQrcodeUri] = useState(
     "https://promptpay.io/0625491524/"
   );
@@ -28,7 +30,6 @@ const DepositScreen = ({ navigation, props }) => {
 
   useEffect(() => {
     if (isFocused) {
-      console.log("hello");
       getAccountData();
       setShowError(false);
     } else {
@@ -38,17 +39,24 @@ const DepositScreen = ({ navigation, props }) => {
     }
   }, [isFocused]);
 
+  const formatterTimestamp = (unix_time) => {
+    var timestamp = moment(unix_time).format("YYYY-MM-DD HH-mm-ss");
+    console.log(timestamp);
+    setTimestamp(timestamp);
+  };
+
   const validateInput = (x) => {
     if (x > 99) {
       setBalance(x);
       setIsPress(true);
       console.log(qrCodeUri + x);
       setTimeout(() => {
+        formatterTimestamp(Date.now());
         postCreditCustomer();
       }, 3000);
     } else {
       console.log("Invalid Input");
-      setShowError(true)
+      setShowError(true);
     }
   };
 
@@ -108,7 +116,11 @@ const DepositScreen = ({ navigation, props }) => {
           </Text>
           <View style={{ paddingVertical: 28 }}>
             <TextInput
-              label={<Text style={{ fontFamily: "Kanit" }}>{"ยอดขั้นต่ำ 100 บาท"}</Text>}
+              label={
+                <Text style={{ fontFamily: "Kanit" }}>
+                  {"ยอดขั้นต่ำ 100 บาท"}
+                </Text>
+              }
               mode="outlined"
               style={{ backgroundColor: "#ffffff", height: 60 }}
               onChangeText={setBalance}
