@@ -5,8 +5,6 @@ import {
   FontAwesome,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { getStatusBarHeight } from "react-native-status-bar-height";
-import { Divider, TextInput } from "react-native-paper";
 import {
   button1,
   content1,
@@ -16,6 +14,10 @@ import {
   content5,
   text,
 } from "./CreateOrderStyle";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { Divider, TextInput } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import GetApi from "../../api/GetApi";
 
 const CreateOrderScreen = ({ navigation, route }) => {
   const laundryId = route.params.laundry_id;
@@ -27,12 +29,47 @@ const CreateOrderScreen = ({ navigation, route }) => {
     washingKgValue: 1,
     description: "",
   });
+  
+  const postCreateOrder = async () => {
+    let account;
+    await AsyncStorage.getItem("@account").then((res) => {
+      account = JSON.parse(res).split(",")[0];
+    });
 
-  // useEffect(() => {
-  //   console.log(laundryId);
-  //   console.log(laundryService);
-  //   console.log(serviceId);
-  // }, []);
+    var formdata = new FormData();
+    formdata.append("laundry_id", laundryId);
+    formdata.append("cus_id", account);
+    formdata.append("order_service_type", serviceId);
+    formdata.append("order_washingKg", orderData.washingKgValue);
+    formdata.append("order_isReed", isEnabled.reed);
+    formdata.append("order_description", orderData.description);
+    formdata.append("order_fixedCost_by_laundry", calculateEstimateCost());
+    formdata.append("order_firstRideCost", 40);
+    formdata.append("order_secondRideCost", 40);
+    formdata.append("order_status", "รอร้านยืนยันรายการ");
+    formdata.append(
+      "order_source_location",
+      "13.81480277932051,100.56665129748043"
+    );
+    formdata.append(
+      "order_dest_location",
+      "13.793047980709705,100.57274527599726"
+    );
+    // console.log(formdata);
+    try {
+      await GetApi.useFetch(
+        "POST",
+        formdata,
+        `/order/PostCreateOrder.php`
+      ).then((data) => {
+        console.log(data);
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      navigation.navigate("WaitingForRider");
+    }
+  };
 
   const calculateEstimateCost = () => {
     if (isEnabled.reed) {
@@ -205,8 +242,12 @@ const CreateOrderScreen = ({ navigation, route }) => {
 
       <View style={content5}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("WaitingForRider")}
-          style={{ backgroundColor: isEnabled.QR ? "#4691FB" : "#767577", padding: 10, borderRadius: 5 }}
+          onPress={() => postCreateOrder()}
+          style={{
+            backgroundColor: isEnabled.QR ? "#4691FB" : "#767577",
+            padding: 10,
+            borderRadius: 5,
+          }}
           disabled={!isEnabled.QR}
         >
           <View style={[content3, { marginHorizontal: 5 }]}>
