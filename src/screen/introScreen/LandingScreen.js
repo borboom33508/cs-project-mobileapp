@@ -21,7 +21,6 @@ const LandingScreen = ({ navigation, props }) => {
         if (account !== null) {
           whoami = account.split(",")[1];
         }
-        console.log(whoami);
         if (account == null) {
           navigation.navigate("Onboarding");
         } else if (whoami == "customer") {

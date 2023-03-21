@@ -33,6 +33,7 @@ import CreateOrderScreen from "./src/screen/serviceScreen/CreateOrderScreen";
 import WaitingForRiderScreen from "./src/screen/serviceScreen/WaitingForRiderScreen";
 import FoundRiderScreen from "./src/screen/orderScreen/FoundRiderScreen";
 import AssignRatingRiderScreen from "./src/screen/orderScreen/AssignRatingRiderScreen";
+import OrderDetailScreen from "./src/screen/orderScreen/OrderDetailScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -140,6 +141,7 @@ export default function App() {
         />
         <Stack.Screen name="FoundRider" component={FoundRiderScreen} />
         <Stack.Screen name="AssignRatingRider" component={AssignRatingRiderScreen} />
+        <Stack.Screen name="OrderDetail" component={OrderDetailScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
