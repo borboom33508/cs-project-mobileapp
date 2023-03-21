@@ -5,14 +5,101 @@ import { container, button } from "./WithdrawRiderScreenStyle";
 import { TextInput } from "react-native-paper";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { useIsFocused } from "@react-navigation/native";
+import GetApi from "../../api/GetApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SuccessPopup from "../../components/SuccessPopUp";
 
 const WithdrawRiderScreen = ({ navigation, props }) => {
+  const [riderId, setRiderId] = useState("")
   const [credit, setCredit] = useState(0);
   const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [accountNumber, setAccountNumber] = useState("1234559122");
-  const [bank, setBank] = useState("ธนาคารกสิกรไทย");
-  const [fname, setFname] = useState("จอห์น");
-  const [lname, setLname] = useState("เบียร์ด");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [bank, setBank] = useState("");
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const isFocused = useIsFocused();
+  const [isPress, setIsPress] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    if (isFocused) {
+      getRiderAccountData();
+    }
+  }, [isFocused]);
+
+  const fetchRiderAccountData = async (accountId) => {
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/rider/GetRiderWithdrawData.php?rider_id= ${accountId}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          setCredit(data.request.rider_credit);
+          setAccountNumber(data.request.rider_accountNumber);
+          setBank(data.request.rider_bankName);
+          setFname(data.request.rider_fname);
+          setLname(data.request.rider_lname);
+        } else {
+          console.log(data);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getRiderAccountData = async () => {
+    await AsyncStorage.getItem("@account").then((res) => {
+      let riderId = JSON.parse(res);
+      if (riderId == null) {
+        console.log("not found");
+      } else {
+        fetchRiderAccountData(riderId);
+        setRiderId(riderId)
+      }
+    });
+  };
+
+  const validateInput = (x) => {
+    console.log(credit);
+    if (x > 99 && x <= credit) {
+      setWithdrawAmount(x);
+      setIsPress(true);
+      setTimeout(() => {
+        postWithdrawRider();
+      }, 3000);
+    } else {
+      console.log("Invalid Input");
+      setShowError(true);
+    }
+  };
+
+  const postWithdrawRider = async () => {
+    var formdata = new FormData();
+    console.log("account " + riderId.split(",")[0]);
+    console.log("withdraw " + withdrawAmount);
+    formdata.append("rider_id", riderId.split(",")[0]);
+    formdata.append("withdraw", withdrawAmount);
+
+    try {
+      await GetApi.useFetch(
+        "POST",
+        formdata,
+        `/rider/WithdrawCreditRider.php`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        console.log(res);
+        if (data.success) {
+          setIsSuccess(!isSuccess);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <View style={container}>
@@ -43,11 +130,10 @@ const WithdrawRiderScreen = ({ navigation, props }) => {
               label={<Text style={{ fontFamily: "Kanit" }}>{"ยอดถอน"}</Text>}
               mode="outlined"
               style={{ backgroundColor: "#ffffff", height: 60 }}
-              onChangeText={(text) => {
-                setWithdrawAmount(text);
-              }}
+              onChangeText={setWithdrawAmount}
               value={withdrawAmount}
               activeOutlineColor="#4691FB"
+              disabled={isPress}
               theme={{
                 fonts: {
                   regular: {
@@ -56,6 +142,11 @@ const WithdrawRiderScreen = ({ navigation, props }) => {
                 },
               }}
             />
+            {showError ? (
+              <Text
+                style={{ color: "#F91616", fontSize: 14, fontFamily: "Kanit" }}
+              >{`โปรดตรวจสอบความถูกต้อง`}</Text>
+            ) : null}
           </View>
           <View style={{ paddingVertical: 10 }}>
             <TextInput
@@ -110,12 +201,26 @@ const WithdrawRiderScreen = ({ navigation, props }) => {
               }}
             />
           </View>
-          <View style={{justifyContent: "center", alignItems: "center", marginTop: 40}}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 40,
+            }}
+          >
             <Text style={{ fontSize: 12, fontFamily: "Kanit" }}>
-              {"โปรดตรวจสอบข้อมูลให้ถูกต้องครบถ้วน\n   ใช้เวลาในการถอนประมาณ 24 ชั่วโมง"}
+              {
+                "โปรดตรวจสอบข้อมูลให้ถูกต้องครบถ้วน\n   ใช้เวลาในการถอนประมาณ 24 ชั่วโมง"
+              }
             </Text>
           </View>
-          <TouchableOpacity style={button}>
+          <TouchableOpacity
+            style={button}
+            onPress={() => {
+              validateInput(withdrawAmount);
+            }}
+            disabled={isPress}
+          >
             <Text
               style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}
             >
@@ -124,6 +229,15 @@ const WithdrawRiderScreen = ({ navigation, props }) => {
           </TouchableOpacity>
         </View>
       </View>
+      {isSuccess ? (
+        <SuccessPopup
+          props={{
+            description: "ส่งคำขอการถอนเงินเรียบร้อย",
+            fromPage: "WithdrawRider",
+          }}
+          navigation={navigation}
+        />
+      ) : null}
     </View>
   );
 };

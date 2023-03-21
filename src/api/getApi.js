@@ -6,11 +6,11 @@
 // SelectShopScreen line 66-74
 // SelectServiceScreen line 82
 
-
 const BASEURL = "https://8d8a-223-24-93-16.ap.ngrok.io"
 
 export const API = {
   url: BASEURL + "/CS-PROJECT-BACKEND",
+  urlCustomerImage: BASEURL + "/CS-PROJECT-BACKEND/customerAssets/",
   urlLaundryImage: BASEURL + "/CS-PROJECT-BACKEND/laundryAssets/",
   urlRiderImage: BASEURL + "/CS-PROJECT-BACKEND/riderAssets/",
 };

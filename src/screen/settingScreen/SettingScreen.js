@@ -9,12 +9,14 @@ import {
 } from "react-native";
 import { container, button, textButton } from "./SettingScreenStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GetApi from "../../api/GetApi";
+import GetApi, { API } from "../../api/GetApi";
 import { useIsFocused } from "@react-navigation/native";
 
 const SettingScreen = ({ navigation, props }) => {
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
+  const [picture, setPicture] = useState("");
+  const [findPicture, setFindPicture] = useState(true);
   const isFocused = useIsFocused();
 
   const handleLogout = async () => {
@@ -26,6 +28,7 @@ const SettingScreen = ({ navigation, props }) => {
   useEffect(() => {
     if (isFocused) {
       getAccountData();
+    } else {
     }
   }, [isFocused]);
 
@@ -40,6 +43,7 @@ const SettingScreen = ({ navigation, props }) => {
         if (data.success) {
           setUsername(data.request.cus_name);
           setPhone(data.request.cus_phone);
+          setPicture(data.request.cus_picture);
         } else {
           console.log(data);
         }
@@ -85,16 +89,30 @@ const SettingScreen = ({ navigation, props }) => {
           marginHorizontal: 10,
         }}
       >
-        <Image
-          source={require("../../../assets/unknown-user.png")}
-          style={{
-            width: 190,
-            height: 190,
-            borderWidth: 1,
-            borderColor: "#000000",
-          }}
-          resizeMode="contain"
-        />
+        {findPicture ? (
+          <Image
+            source={{ uri: API.urlCustomerImage + picture }}
+            style={{
+              width: 190,
+              height: 190,
+              borderWidth: 1,
+              borderColor: "#000000",
+            }}
+            resizeMode="contain"
+          />
+        ) : (
+          <Image
+            source={require("../../../assets/unknown-user.png")}
+            style={{
+              width: 190,
+              height: 190,
+              borderWidth: 1,
+              borderColor: "#000000",
+            }}
+            resizeMode="contain"
+          />
+        )}
+
         <View style={{ marginLeft: 16 }}>
           <Text style={{ fontSize: 14, fontFamily: "Kanit" }}>{username}</Text>
           <Text style={{ fontSize: 14, fontFamily: "Kanit" }}>{phone}</Text>

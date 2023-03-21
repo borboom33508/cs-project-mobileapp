@@ -69,7 +69,7 @@ const SetPasswordScreen = ({ navigation, props }) => {
   const postChangePassword = async () => {
     var formdata = new FormData();
     formdata.append("cus_password", newPassword);
-    formdata.append("cus_id", accountId);
+    formdata.append("cus_id", accountId.split(",")[0]);
     try {
       await GetApi.useFetch(
         "POST",
