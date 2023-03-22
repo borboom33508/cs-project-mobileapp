@@ -16,7 +16,6 @@ const SettingScreen = ({ navigation, props }) => {
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [picture, setPicture] = useState("");
-  const [findPicture, setFindPicture] = useState(true);
   const isFocused = useIsFocused();
 
   const handleLogout = async () => {
@@ -27,6 +26,7 @@ const SettingScreen = ({ navigation, props }) => {
 
   useEffect(() => {
     if (isFocused) {
+      setPicture("");
       getAccountData();
     } else {
     }
@@ -44,6 +44,12 @@ const SettingScreen = ({ navigation, props }) => {
           setUsername(data.request.cus_name);
           setPhone(data.request.cus_phone);
           setPicture(data.request.cus_picture);
+          if (
+            data.request.cus_picture == "" ||
+            data.request.cus_picture == null
+          ) {
+            setPicture("unknown-user.png");
+          }
         } else {
           console.log(data);
         }
@@ -89,29 +95,16 @@ const SettingScreen = ({ navigation, props }) => {
           marginHorizontal: 10,
         }}
       >
-        {findPicture ? (
-          <Image
-            source={{ uri: API.urlCustomerImage + picture }}
-            style={{
-              width: 190,
-              height: 190,
-              borderWidth: 1,
-              borderColor: "#000000",
-            }}
-            resizeMode="contain"
-          />
-        ) : (
-          <Image
-            source={require("../../../assets/unknown-user.png")}
-            style={{
-              width: 190,
-              height: 190,
-              borderWidth: 1,
-              borderColor: "#000000",
-            }}
-            resizeMode="contain"
-          />
-        )}
+        <Image
+          source={{ uri: API.urlCustomerImage + picture }}
+          style={{
+            width: 190,
+            height: 190,
+            borderWidth: 1,
+            borderColor: "#000000",
+          }}
+          resizeMode="contain"
+        />
 
         <View style={{ marginLeft: 16 }}>
           <Text style={{ fontSize: 14, fontFamily: "Kanit" }}>{username}</Text>

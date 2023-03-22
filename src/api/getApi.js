@@ -6,7 +6,7 @@
 // SelectShopScreen line 66-74
 // SelectServiceScreen line 82
 
-const BASEURL = "https://8d8a-223-24-93-16.ap.ngrok.io"
+const BASEURL = "https://6453-2405-9800-b670-16-7510-427-5498-9139.ap.ngrok.io"
 
 export const API = {
   url: BASEURL + "/CS-PROJECT-BACKEND",
