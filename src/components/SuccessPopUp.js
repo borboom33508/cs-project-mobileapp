@@ -36,6 +36,12 @@ const SuccessPopup = ({ navigation, props }) => {
               else if (fromPage == "WithdrawRider") {
                 navigation.navigate("ProfitRider")
               }
+              else if (fromPage == "SupportLaundry") {
+                navigation.navigate("LaundryMain")
+              }
+              else if (fromPage == "WithdrawLaundry") {
+                navigation.navigate("CreditLaundry")
+              }
               else {
                 navigation.navigate("Onboarding")
               }

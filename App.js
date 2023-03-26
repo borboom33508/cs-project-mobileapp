@@ -34,6 +34,12 @@ import WaitingForRiderScreen from "./src/screen/serviceScreen/WaitingForRiderScr
 import FoundRiderScreen from "./src/screen/orderScreen/FoundRiderScreen";
 import AssignRatingRiderScreen from "./src/screen/orderScreen/AssignRatingRiderScreen";
 import OrderDetailScreen from "./src/screen/orderScreen/OrderDetailScreen";
+import LaundryMainScreen from "./src/screen/laundryScreen/LaundryMainScreen";
+import AddRiderAccScreen from "./src/screen/laundryScreen/AddRiderAccScreen";
+import WithdrawLaundryScreen from "./src/screen/laundryScreen/WithdrawLaundryScreen";
+import CreditLaundryScreen from "./src/screen/laundryScreen/CreditLaundryScreen";
+import OrderLaundryScreen from "./src/screen/laundryScreen/OrderLaundryScreen";
+import SupportScreen from "./src/screen/laundryScreen/SupportScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -91,6 +97,55 @@ const MainScreen = () => {
   );
 };
 
+const LaundryScreen = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          let pageName;
+          if (route.name === "LaundryMain") {
+            iconName = focused ? "home" : "home-outline";
+            pageName = "หน้าแรก";
+          } else if (route.name === "OrderLaundry") {
+            iconName = focused ? "md-reader" : "md-reader-outline";
+            pageName = "รายการ";
+          } else if (route.name === "CreditLaundry") {
+            iconName = focused ? "wallet" : "wallet-outline";
+            pageName = "เครดิต";
+          } else if (route.name === "SupportLaundry") {
+            iconName = focused ? "help-circle-outline" : "help-circle-outline";
+            pageName = "ช่วยเหลือ";
+          }
+          return (
+            <View style={{ alignItems: "center" }}>
+              <Ionicons name={iconName} size={size} color={color} />
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: color,
+                  fontFamily: "Kanit",
+                }}
+              >
+                {pageName}
+              </Text>
+            </View>
+          );
+        },
+        headerShown: false,
+        tabBarActiveTintColor: "#4691FB",
+        tabBarInactiveTintColor: "#CACFD2",
+        tabBarShowLabel: false,
+      })}
+    >
+      <Tab.Screen name="LaundryMain" component={LaundryMainScreen} />
+      <Tab.Screen name="OrderLaundry" component={OrderLaundryScreen} />
+      <Tab.Screen name="CreditLaundry" component={CreditLaundryScreen} />
+      <Tab.Screen name="SupportLaundry" component={SupportScreen} />
+    </Tab.Navigator>
+  );
+};
+
 export default function App() {
   const [fontsLoading] = useFonts({
     Montserrat: require("./assets/fonts/Montserrat-Regular.ttf"),
@@ -140,8 +195,15 @@ export default function App() {
           component={WaitingForRiderScreen}
         />
         <Stack.Screen name="FoundRider" component={FoundRiderScreen} />
-        <Stack.Screen name="AssignRatingRider" component={AssignRatingRiderScreen} />
-        <Stack.Screen name="OrderDetail" component={OrderDetailScreen}/>
+        <Stack.Screen
+          name="AssignRatingRider"
+          component={AssignRatingRiderScreen}
+        />
+        <Stack.Screen name="OrderDetail" component={OrderDetailScreen} />
+        <Stack.Screen name="Laundry" component={LaundryScreen} options={{ gestureEnabled: false }} />
+        <Stack.Screen name="WithdrawLaundry" component={WithdrawLaundryScreen} />
+        <Stack.Screen name="AddRiderAcc" component={AddRiderAccScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

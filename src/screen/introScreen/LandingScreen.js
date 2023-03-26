@@ -27,6 +27,8 @@ const LandingScreen = ({ navigation, props }) => {
           navigation.navigate("Main");
         } else if (whoami == "rider") {
           navigation.navigate("RiderMain");
+        } else if (whoami == "laundry") {
+          navigation.navigate("Laundry");
         }
       });
     }, 2000);

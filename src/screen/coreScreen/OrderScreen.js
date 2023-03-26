@@ -2,22 +2,12 @@ import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import React from "react";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { screen } from "./OrderScreenStyle";
 
 const OrderScreen = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <View
-      style={{
-        borderRadius: 10,
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 5,
-        elevation: 2,
-        backgroundColor: "#ffffff",
-        marginVertical: 5,
-        marginHorizontal: 5,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-      }}
+      style={screen}
     >
       <TouchableOpacity onPress={()=> navigation.navigate("OrderDetail")}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
