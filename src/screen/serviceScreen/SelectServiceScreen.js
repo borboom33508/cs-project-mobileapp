@@ -93,7 +93,6 @@ const SelectServiceScreen = ({ navigation, props, route }) => {
                   laundry_id: laundryId,
                   laundry_name: laundryData.laundry_name,
                   laundry_service: laundryData.service_1,
-                  serviceId: 1,
                 })
               }
               style={button}
@@ -115,7 +114,6 @@ const SelectServiceScreen = ({ navigation, props, route }) => {
                   laundry_id: laundryId,
                   laundry_name: laundryData.laundry_name,
                   laundry_service: laundryData.service_2,
-                  serviceId: 2,
                 })
               }
               style={button}
@@ -137,7 +135,6 @@ const SelectServiceScreen = ({ navigation, props, route }) => {
                   laundry_id: laundryId,
                   laundry_name: laundryData.laundry_name,
                   laundry_service: laundryData.service_3,
-                  serviceId: 3,
                 })
               }
               style={button}

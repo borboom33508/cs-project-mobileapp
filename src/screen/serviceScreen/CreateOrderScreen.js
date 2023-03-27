@@ -23,7 +23,6 @@ const CreateOrderScreen = ({ navigation, route }) => {
   const laundryId = route.params.laundry_id;
   const laundryName = route.params.laundry_name;
   const laundryService = route.params.laundry_service;
-  const serviceId = route.params.serviceId;
   const [isEnabled, setIsEnabled] = useState({ reed: false, QR: false });
   const [orderData, setOrderData] = useState({
     washingKgValue: 1,
@@ -39,7 +38,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
     var formdata = new FormData();
     formdata.append("laundry_id", laundryId);
     formdata.append("cus_id", account);
-    formdata.append("order_service_type", serviceId);
+    formdata.append("order_service_type", laundryService);
     formdata.append("order_washingKg", orderData.washingKgValue);
     formdata.append("order_isReed", isEnabled.reed);
     formdata.append("order_description", orderData.description);
