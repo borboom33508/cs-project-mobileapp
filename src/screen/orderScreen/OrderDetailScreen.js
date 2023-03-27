@@ -3,29 +3,55 @@ import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Divider } from "react-native-paper";
+import { useIsFocused } from "@react-navigation/native";
+import GetApi from "../../api/GetApi";
+import {
+  container,
+  content1,
+  content2,
+  content3,
+  text,
+} from "./OrderDetailScreenStyle";
 
-const OrderDetailScreen = ({ navigation }) => {
+const OrderDetailScreen = ({ navigation, route }) => {
+  const isFocused = useIsFocused();
+  const orderId = route.params.order_id;
+  const [orderData, setOrderData] = useState({});
+
+  useEffect(() => {
+    if (isFocused) {
+      getOrderDetail();
+      // console.log(orderData);
+    }
+  }, [isFocused]);
+
+  const getOrderDetail = async () => {
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/order/GetOrderDataCustomer.php?order_id=${orderId}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          setOrderData(data.request);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
-    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
+    <View style={container}>
       <View style={{ marginTop: getStatusBarHeight() }}>
         <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
           <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Order");
-            }}
+            onPress={() => navigation.navigate("Order")}
             style={{ alignItems: "center", flexDirection: "row" }}
           >
             <Ionicons name="arrow-back" size={30} color="#4691FB" />
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-                marginLeft: 10,
-              }}
-            >
-              {`รายการทั้งหมด`}
-            </Text>
+            <Text style={[text, { marginLeft: 10 }]}>{`รายการทั้งหมด`}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -33,232 +59,81 @@ const OrderDetailScreen = ({ navigation }) => {
       <View style={{ margin: 10, marginTop: 20 }}>
         <View style={{ marginHorizontal: 5, marginBottom: 10 }}>
           <Text
-            style={{
-              fontSize: 18,
-              color: "#000000",
-              fontFamily: "Kanit",
-            }}
-          >
-            {`Order Number: 0912`}
-          </Text>
+            style={[text, { fontSize: 18 }]}
+          >{`Order Number: ${orderId}`}</Text>
         </View>
-        <View
-          style={{
-            borderRadius: 10,
-            shadowOpacity: 0.2,
-            shadowOffset: { width: 0, height: 2 },
-            shadowRadius: 5,
-            elevation: 5,
-            backgroundColor: "#ffffff",
-            marginVertical: 5,
-            marginHorizontal: 5,
-            paddingVertical: 10,
-            paddingHorizontal: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 18,
-              color: "#000000",
-              fontFamily: "Kanit",
-            }}
-          >
-            {`รายละเอียดการส่งซัก`}
-          </Text>
+        <View style={content1}>
+          <Text style={[text, { fontSize: 18 }]}>{`รายละเอียดการส่งซัก`}</Text>
           <View style={{ marginHorizontal: 10, marginTop: 5 }}>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >
-              {`*ส่งคืนภายใน 24 ชั่วโมง`}
-            </Text>
+            <Text style={text}>{`*ส่งคืนภายใน ${
+              orderData.order_service_type?.split("_")[0]
+            } ชั่วโมง`}</Text>
             <View style={{ marginHorizontal: 15 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: "#000000",
-                    fontFamily: "Kanit",
-                  }}
-                >
-                  {`ซักผ้า`}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: "#000000",
-                    fontFamily: "Kanit",
-                  }}
-                >
-                  {`2 กิโล`}
-                </Text>
+              <View style={content2}>
+                <Text style={text}>{`ซักผ้า`}</Text>
+                <Text style={text}>{`${orderData.order_washingKg} กิโล`}</Text>
               </View>
-              <Text
-                style={{
-                  fontSize: 16,
-                  color: "#000000",
-                  fontFamily: "Kanit",
-                }}
-              >
-                {`รีด`}
-              </Text>
+              {orderData.order_isReed ? (
+                <Text style={text}>{`รีด`}</Text>
+              ) : null}
             </View>
 
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >
-              {`คำแนะนำเพิ่มเติม: แยกสีผ้าให้ด้วยนะครับ`}
+            <Text style={text}>
+              {`คำแนะนำเพิ่มเติม: ${orderData.order_description}`}
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
+            <View style={content2}>
+              <Text style={text}>{`ราคาโดยประมาณ`}</Text>
               <Text
-                style={{
-                  fontSize: 16,
-                  color: "#000000",
-                  fontFamily: "Kanit",
-                }}
-              >
-                {`ราคาโดยประมาณ`}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 16,
-                  color: "#000000",
-                  fontFamily: "Kanit",
-                }}
-              >
-                {`<= 260 บาท`}
-              </Text>
+                style={text}
+              >{`<= ${orderData.order_fixedCost_by_laundry} บาท`}</Text>
             </View>
           </View>
         </View>
 
-        <View
-          style={{
-            borderRadius: 10,
-            shadowOpacity: 0.2,
-            shadowOffset: { width: 0, height: 2 },
-            shadowRadius: 5,
-            elevation: 5,
-            backgroundColor: "#ffffff",
-            marginVertical: 5,
-            marginHorizontal: 5,
-            paddingVertical: 10,
-            paddingHorizontal: 10,
-          }}
-        >
+        <View style={content1}>
           <View style={{ marginHorizontal: 10, marginTop: 5 }}>
+            <Text style={text}>{`สถานะผ้า: ${orderData.order_status}`}</Text>
+            <Text style={text}>{`ชำระเงิน: ${orderData.order_payment}`}</Text>
             <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >
-              {`สถานะผ้า: กำลังไปส่งผ้า`}
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >
-              {`ชำระเงิน: รอการชำระเงิน`}
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >
-              {`เวลาทำการ: 9.00 - 20.00 น.`}
-            </Text>
+              style={text}
+            >{`เวลาทำการ: ${orderData.laundry_hours} น.`}</Text>
           </View>
         </View>
       </View>
-      <View
-        style={{
-          flex: 1,
-          marginVertical: "2%",
-          marginBottom: "7%",
-          width: "90%",
-          alignSelf: "center",
-          justifyContent: "flex-end",
-        }}
-      >
+      <View style={content3}>
         <View style={{ marginHorizontal: 5, marginBottom: 5 }}>
-          <Text
-            style={{
-              fontSize: 16,
-              color: "#000000",
-              fontFamily: "Kanit",
-            }}
-          >
-            {`เครดิตคงเหลือ: 300`}
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >
-              {`ราคาที่ต้องชำระ`}
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >
-              {`260 บาท`}
-            </Text>
+          <View style={content2}>
+            <Text style={text}>{`เครดิตคงเหลือ:`}</Text>
+            <View style={[content2, { alignItems: "center" }]}>
+              <Text style={text}>{`฿${orderData.cus_credit}`}</Text>
+              <TouchableOpacity
+                style={{ marginLeft: 5 }}
+                onPress={() => navigation.navigate("Deposit")}
+              >
+                <Ionicons name="add-circle-outline" size={20} color="#4691FB" />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={content2}>
+            <Text style={text}>{`ราคาที่ต้องชำระ`}</Text>
+            {orderData.order_finalCost ? (
+              <Text style={text}>{`${orderData.order_finalCost} บาท`}</Text>
+            ) : (
+              <Text style={text}>{`กำลังดำเนินการ`}</Text>
+            )}
           </View>
         </View>
         <TouchableOpacity
-        //   onPress={() => navigation.navigate("WaitingForRider")}
-          style={{ backgroundColor: "#4691FB", padding: 10, borderRadius: 5 }}
+          //   onPress={() => navigation.navigate("WaitingForRider")}
+          style={{
+            backgroundColor: orderData.order_finalCost ? "#4691FB" : "#767577",
+            padding: 10,
+            borderRadius: 5,
+          }}
+          disabled={orderData.order_finalCost ? false : true}
         >
-          <View
-            style={{
-              alignItems: "center",
-              marginHorizontal: 5,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#ffffff",
-                fontFamily: "Kanit",
-              }}
-            >
-              {`ชำระเงิน`}
-            </Text>
+          <View style={{ alignItems: "center", marginHorizontal: 5 }}>
+            <Text style={[text, { color: "#ffffff" }]}>{`ชำระเงิน`}</Text>
           </View>
         </TouchableOpacity>
       </View>

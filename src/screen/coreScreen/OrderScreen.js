@@ -1,26 +1,64 @@
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
+import GetApi from "../../api/GetApi";
+import {
+  container,
+  content1,
+  content2,
+  content3,
+  text,
+} from "./OrderScreenStyle";
 
 const OrderScreen = ({ navigation }) => {
+  const isFocused = useIsFocused();
+  const [orderData, setOrderData] = useState();
+  const [isFetching, setIsFetching] = useState(false);
+
+  useEffect(() => {
+    if (isFocused) {
+      getOrderDetail();
+    }
+  }, [isFocused]);
+
+  const getOrderDetail = async () => {
+    let account;
+    await AsyncStorage.getItem("@account").then((res) => {
+      account = JSON.parse(res).split(",")[0];
+    });
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/order/GetAllOrderDataCustomer.php?cus_id=${account}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          setOrderData(data.request);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onRefresh = async () => {
+    setIsFetching(true);
+    await getOrderDetail();
+    setIsFetching(false);
+  };
+
   const renderItem = ({ item }) => (
-    <View
-      style={{
-        borderRadius: 10,
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 5,
-        elevation: 2,
-        backgroundColor: "#ffffff",
-        marginVertical: 5,
-        marginHorizontal: 5,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-      }}
-    >
-      <TouchableOpacity onPress={()=> navigation.navigate("OrderDetail")}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <View style={content2}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("OrderDetail", { order_id: item.order_id })
+        }
+      >
+        <View style={content3}>
           <Ionicons
             name="document-text-outline"
             size={60}
@@ -28,27 +66,9 @@ const OrderScreen = ({ navigation }) => {
             style={{ marginLeft: 4 }}
           />
           <View style={{ marginLeft: 16 }}>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >{`Order Number: ${item.orderNumber}`}</Text>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >{`สถานะผ้า: ${item.status}`}</Text>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >{`ชำระเงิน: ${item.payment}`}</Text>
+            <Text style={text}>{`Order Number: ${item.order_id}`}</Text>
+            <Text style={text}>{`สถานะ: ${item.order_status}`}</Text>
+            <Text style={text}>{`ชำระเงิน: ${item.order_payment}`}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -56,45 +76,20 @@ const OrderScreen = ({ navigation }) => {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
+    <View style={container}>
       <View style={{ marginTop: getStatusBarHeight(), marginHorizontal: 10 }}>
         <View style={{ marginTop: 10 }}>
-          <Text
-            style={{
-              fontSize: 28,
-              color: "#000000",
-              fontFamily: "Kanit",
-            }}
-          >
-            รายการทั้งหมด
-          </Text>
+          <Text style={[text, { fontSize: 28 }]}>รายการทั้งหมด</Text>
         </View>
       </View>
-      <View style={{ flex: 1, marginHorizontal: 5, marginBottom: 5 }}>
+      <View style={content1}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={[
-            {
-              key: "1",
-              orderNumber: "0110",
-              status: "กำลังไปส่งผ้า",
-              payment: "รอการชำระเงิน...",
-            },
-            {
-              key: "2",
-              orderNumber: "0125",
-              status: "กำลังไปรับผ้า",
-              payment: "รอการชำระเงิน...",
-            },
-            {
-              key: "3",
-              orderNumber: "1529",
-              status: "ถึงร้านแล้ว",
-              payment: "รอการชำระเงิน...",
-            },
-          ]}
+          data={orderData}
           renderItem={renderItem}
-          // keyExtractor={(item) => item.id_request}
+          keyExtractor={(item) => item.order_id}
+          onRefresh={() => onRefresh()}
+          refreshing={isFetching}
         />
       </View>
     </View>
