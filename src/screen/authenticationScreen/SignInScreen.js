@@ -44,8 +44,19 @@ const SignInScreen = ({ navigation, props }) => {
             if (data.success) {
               setUserLogin(data.request.rider_id, "rider", "RiderMain");
             } else {
-              setShowError(true);
-              setPassword("");
+              GetApi.useFetch(
+                "GET",
+                "",
+                `/laundry/GetLoginLaundry.php?laundry_email=${username}&laundry_phone=${username}&laundry_password=${password}`
+              ).then((res) => {
+                let data = JSON.parse(res);
+                if (data.success) {
+                  setUserLogin(data.request.laundry_id, "laundry", "Laundry");
+                } else {
+                  setShowError(true);
+                  setPassword("");
+                }
+              });
             }
           });
         }
@@ -65,7 +76,7 @@ const SignInScreen = ({ navigation, props }) => {
 
   const setUserLogin = async (data, role, toPage) => {
     try {
-      await AsyncStorage.setItem("@account",JSON.stringify(data + "," +role));
+      await AsyncStorage.setItem("@account", JSON.stringify(data + "," + role));
     } catch (e) {
       console.log(e);
     } finally {

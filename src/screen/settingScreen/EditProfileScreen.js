@@ -15,10 +15,10 @@ const EditProfileScreen = ({ navigation, props }) => {
   const [email, setEmail] = useState("");
   const [picture, setPicture] = useState("");
   const isFocused = useIsFocused();
-  const [findPicture, setFindPicture] = useState(true);
 
   useEffect(() => {
     if (isFocused) {
+      setPicture("");
       getAccountData();
     } else {
     }
@@ -37,10 +37,16 @@ const EditProfileScreen = ({ navigation, props }) => {
           setPhone(data.request.cus_phone);
           setEmail(data.request.cus_email);
           setPicture(data.request.cus_picture);
+          if (
+            data.request.cus_picture == "" ||
+            data.request.cus_picture == null
+          ) {
+            setPicture("unknown-user.png");
+          }
         } else {
           console.log(data);
         }
-      })
+      });
     } catch (e) {
       console.log(e);
     }
@@ -126,29 +132,16 @@ const EditProfileScreen = ({ navigation, props }) => {
             alignItems: "center",
           }}
         >
-          {findPicture ? (
-            <Image
-              source={{ uri: API.urlCustomerImage + picture }}
-              style={{
-                width: 190,
-                height: 190,
-                borderWidth: 1,
-                borderColor: "#000000",
-              }}
-              resizeMode="contain"
-            />
-          ) : (
-            <Image
-              source={require("../../../assets/unknown-user.png")}
-              style={{
-                width: 190,
-                height: 190,
-                borderWidth: 1,
-                borderColor: "#000000",
-              }}
-              resizeMode="contain"
-            />
-          )}
+          <Image
+            source={{ uri: API.urlCustomerImage + picture }}
+            style={{
+              width: 190,
+              height: 190,
+              borderWidth: 1,
+              borderColor: "#000000",
+            }}
+            resizeMode="contain"
+          />
 
           <TouchableOpacity>
             <Text
