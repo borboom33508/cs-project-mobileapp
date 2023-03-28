@@ -80,10 +80,10 @@ const WithdrawRiderScreen = ({ navigation, props }) => {
 
   const postWithdrawRider = async () => {
     var formdata = new FormData();
-    console.log("account " + riderId.split(",")[0]);
-    console.log("withdraw " + withdrawAmount);
     formdata.append("rider_id", riderId.split(",")[0]);
     formdata.append("withdraw", withdrawAmount);
+    formdata.append("tx_paymentType", "ถอนเงิน");
+    formdata.append("tx_amount", withdrawAmount);
 
     try {
       await GetApi.useFetch(
@@ -128,7 +128,7 @@ const WithdrawRiderScreen = ({ navigation, props }) => {
           </View>
           <View style={{ paddingVertical: 10 }}>
             <TextInput
-              label={<Text style={{ fontFamily: "Kanit" }}>{"ยอดถอน"}</Text>}
+              label={<Text style={{ fontFamily: "Kanit" }}>{"ยอดถอนขั้นต่ำ 100 บาท"}</Text>}
               mode="outlined"
               style={{ backgroundColor: "#ffffff", height: 60 }}
               onChangeText={setWithdrawAmount}

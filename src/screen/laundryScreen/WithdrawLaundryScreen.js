@@ -80,10 +80,10 @@ const WithdrawLaundryScreen = ({ navigation, props }) => {
 
   const postWithdrawLaundry = async () => {
     var formdata = new FormData();
-    console.log("account " + laundryId.split(",")[0]);
-    console.log("withdraw " + withdrawAmount);
     formdata.append("laundry_id", laundryId.split(",")[0]);
     formdata.append("withdraw", withdrawAmount);
+    formdata.append("tx_paymentType", "ถอนเงิน");
+    formdata.append("tx_amount", withdrawAmount);
 
     try {
       await GetApi.useFetch(
