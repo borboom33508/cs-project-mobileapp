@@ -22,12 +22,12 @@ const OrderDetailScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (isFocused) {
-      getOrderDetail();
+      getOrderData();
       // console.log(orderData);
     }
   }, [isFocused]);
 
-  const getOrderDetail = async () => {
+  const getOrderData = async () => {
     try {
       await GetApi.useFetch(
         "GET",
@@ -58,6 +58,8 @@ const OrderDetailScreen = ({ navigation, route }) => {
       "cus_credit",
       parseInt(orderData.cus_credit) - parseInt(orderData.order_finalCost)
     );
+    formdata.append("tx_paymentType", "ชำระเงิน");
+    formdata.append("tx_amount", orderData.order_finalCost);
     try {
       await GetApi.useFetch(
         "POST",
@@ -69,7 +71,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
     } catch (e) {
       console.log(e);
     } finally {
-      getOrderDetail();
+      getOrderData();
     }
   };
 
