@@ -1,57 +1,79 @@
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { container } from "./TransactionScreenStyle";
+import {
+  container,
+  content1,
+  content2,
+  text1,
+  text2,
+} from "./TransactionScreenStyle";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/core";
+import GetApi from "../../api/GetApi";
+import moment from "moment/moment";
 
 const TransactionScreen = ({ navigation, props }) => {
+  const isFocused = useIsFocused();
+  const [transaction, setTransaction] = useState([]);
+
+  useEffect(() => {
+    if (isFocused) {
+      getTransactionData();
+      // console.log(transaction);
+    }
+  }, [isFocused]);
+
+  const getTransactionData = async () => {
+    let account;
+    await AsyncStorage.getItem("@account").then((res) => {
+      account = JSON.parse(res).split(",")[0];
+    });
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/transaction/GetTransactionDataCustomer.php?cus_id=${account}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          setTransaction(data.request);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const renderItem = ({ item }) => (
-    <View
-      style={{
-        borderRadius: 10,
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 5,
-        elevation: 2,
-        backgroundColor: "#ffffff",
-        marginVertical: 5,
-        marginHorizontal: 5,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-      }}
-    >
+    <View style={content1}>
       <TouchableOpacity>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <AntDesign
-            name="creditcard"
-            size={60}
-            color="#4691FB"
-            style={{ marginLeft: 4 }}
-          />
-          <View style={{ marginLeft: 16 }}>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >{`รูปแบบ: ${item.header}`}</Text>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >{`เวลา: ${item.timestamp}`}</Text>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#000000",
-                fontFamily: "Kanit",
-              }}
-            >{`จำนวนเงิน: ${item.amount}`}</Text>
+        <View style={[content2, { justifyContent: "space-between" }]}>
+          <View style={content2}>
+            <AntDesign
+              name="creditcard"
+              size={60}
+              color="#4691FB"
+              style={{ marginLeft: 4 }}
+            />
+            <View style={{ marginLeft: 16 }}>
+              <Text style={text1}>{`รูปแบบ: ${item.tx_paymentType}`}</Text>
+              <Text style={text1}>{`เวลา: ${moment(item.tx_timestamp).format(
+                "YYYY-MM-DD HH:mm"
+              )}`}</Text>
+            </View>
           </View>
+          {item.tx_paymentType == "ชำระเงิน" ? (
+            <Text
+              style={[text2, { color: "#F91616" }]}
+            >{`- ${item.tx_amount}`}</Text>
+          ) : (
+            <Text
+              style={[text2, { color: "#25BD2B" }]}
+            >{`+ ${item.tx_amount}`}</Text>
+          )}
         </View>
       </TouchableOpacity>
     </View>
@@ -70,42 +92,23 @@ const TransactionScreen = ({ navigation, props }) => {
           </TouchableOpacity>
         </View>
       </View>
-        <View style={{ marginHorizontal: 10, marginTop: 10 }}>
-          <Text
-            style={{
-              fontSize: 28,
-              color: "#000000",
-              fontFamily: "Kanit",
-            }}
-          >
-            {"ประวัติธุรกรรม"}
-          </Text>
-        </View>
+      <View style={{ marginHorizontal: 10, marginTop: 10 }}>
+        <Text
+          style={{
+            fontSize: 28,
+            color: "#000000",
+            fontFamily: "Kanit",
+          }}
+        >
+          {"ประวัติธุรกรรม"}
+        </Text>
+      </View>
       <View style={{ flex: 1, marginHorizontal: 5, marginBottom: 5 }}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={[
-            {
-              key: "1",
-              header: "เติมเครดิต",
-              timestamp: "22:22-8-3-66",
-              amount: 250
-            },
-            {
-              key: "2",
-              header: "ชำระเงิน",
-              timestamp: "16:22-8-3-66",
-              amount: 100
-            },
-            // {
-            //   key: "3",
-            //   orderNumber: "1529",
-            //   status: "ถึงร้านแล้ว",
-            //   payment: "รอการชำระเงิน...",
-            // },
-          ]}
+          data={transaction}
           renderItem={renderItem}
-          // keyExtractor={(item) => item.id_request}
+          keyExtractor={(item) => item.tx_id}
         />
       </View>
     </View>

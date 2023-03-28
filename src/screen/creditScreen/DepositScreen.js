@@ -17,20 +17,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 
 const DepositScreen = ({ navigation, props }) => {
-  const [balance, setBalance] = useState("0");
+  const isFocused = useIsFocused();
+  const [balance, setBalance] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isPress, setIsPress] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [accountId, setAccountId] = useState("");
-  const [timestamp, setTimestamp] = useState(""); //timestamp
-  const [qrCodeUri, setQrcodeUri] = useState(
-    "https://promptpay.io/0625491524/"
-  );
-  const isFocused = useIsFocused();
+  // const [accountId, setAccountId] = useState("");
+  // const [timestamp, setTimestamp] = useState(""); //timestamp
+  // const [qrCodeUri, setQrcodeUri] = useState(
+  //   "https://promptpay.io/0625491524/"
+  // );
+  const qrCodeUri = "https://promptpay.io/0625491524/"
 
   useEffect(() => {
     if (isFocused) {
-      getAccountData();
+      // getAccountData();
       setShowError(false);
     } else {
       setBalance("0");
@@ -39,33 +40,36 @@ const DepositScreen = ({ navigation, props }) => {
     }
   }, [isFocused]);
 
-  const formatterTimestamp = (unix_time) => {
-    var timestamp = moment(unix_time).format("YYYY-MM-DD HH-mm-ss");
-    console.log(timestamp);
-    setTimestamp(timestamp);
-  };
+  // const formatterTimestamp = (unix_time) => {
+  //   var timestamp = moment(unix_time).format("YYYY-MM-DD HH-mm-ss");
+  //   setTimestamp(timestamp);
+  // };
 
   const validateInput = (x) => {
     if (x > 99) {
+      setShowError(false);
       setBalance(x);
       setIsPress(true);
-      console.log(qrCodeUri + x);
       setTimeout(() => {
-        formatterTimestamp(Date.now());
+        // formatterTimestamp(Date.now());
         postCreditCustomer();
       }, 3000);
     } else {
-      console.log("Invalid Input");
+      // console.log("Invalid Input");
       setShowError(true);
     }
   };
 
   const postCreditCustomer = async () => {
+    let account;
+    await AsyncStorage.getItem("@account").then((res) => {
+      account = JSON.parse(res).split(",")[0];
+    });
     var formdata = new FormData();
-    console.log("account " + accountId.split(",")[0]);
-    console.log("balance " + balance);
-    formdata.append("cus_id", accountId.split(",")[0]);
+    formdata.append("cus_id", account);
     formdata.append("deposit", balance);
+    formdata.append("tx_paymentType", "เติมเครดิต");
+    formdata.append("tx_amount", balance);
 
     try {
       await GetApi.useFetch(
@@ -74,7 +78,7 @@ const DepositScreen = ({ navigation, props }) => {
         `/customer/DepositCredit.php`
       ).then((res) => {
         let data = JSON.parse(res);
-        console.log(res);
+        // console.log(res);
         if (data.success) {
           setIsSuccess(!isSuccess);
         }
@@ -84,17 +88,17 @@ const DepositScreen = ({ navigation, props }) => {
     }
   };
 
-  const getAccountData = async () => {
-    await AsyncStorage.getItem("@account").then((res) => {
-      let accountId = JSON.parse(res);
-      if (accountId == null) {
-        console.log("not found");
-      } else {
-        setAccountId(accountId);
-        console.log(accountId);
-      }
-    });
-  };
+  // const getAccountData = async () => {
+  //   await AsyncStorage.getItem("@account").then((res) => {
+  //     let accountId = JSON.parse(res);
+  //     if (accountId == null) {
+  //       console.log("not found");
+  //     } else {
+  //       setAccountId(accountId);
+  //       console.log(accountId);
+  //     }
+  //   });
+  // };
 
   return (
     <View style={container}>
