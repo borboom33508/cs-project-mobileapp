@@ -13,14 +13,18 @@ import GetApi from "../../api/GetApi";
 import { useIsFocused } from "@react-navigation/native";
 import SelectServiceScreen from "../serviceScreen/SelectServiceScreen";
 import { API } from "../../api/GetApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SelectShopScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [laundryList, setLaundryList] = useState({});
   const [isFetching, setIsFetching] = useState(false);
+  const [cusPlaceName, setCusPlaceName] = useState("");
+  const [cusId, setCusId] = useState("");
 
   useEffect(() => {
     if (isFocused) {
+      getCustomerData();
       getLaundryData();
     }
   }, [isFocused]);
@@ -38,6 +42,37 @@ const SelectShopScreen = ({ navigation }) => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const fetchCustomerData = async (cusId) => {
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/customer/GetCustomerPosition.php?cus_id= ${cusId}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          setCusPlaceName(data.request.cus_placeName);
+        } else {
+          console.log(data);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getCustomerData = async () => {
+    await AsyncStorage.getItem("@account").then((res) => {
+      let accountId = JSON.parse(res);
+      if (accountId == null) {
+        console.log("not found");
+      } else {
+        fetchCustomerData(accountId);
+        setCusId(accountId);
+      }
+    });
   };
 
   const onRefresh = async () => {
@@ -154,7 +189,9 @@ const SelectShopScreen = ({ navigation }) => {
         />
       </View>
       <View style={{ marginTop: getStatusBarHeight(), marginHorizontal: 10 }}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate("SelectPosition")
+        }}>
           <View
             style={{
               flexDirection: "row",
@@ -180,7 +217,7 @@ const SelectShopScreen = ({ navigation }) => {
                   fontFamily: "Kanit",
                 }}
               >
-                88 ถนน งามวงศ์วาน แขวง ลาดยาว เขต...
+                {cusPlaceName}
               </Text>
             </View>
           </View>

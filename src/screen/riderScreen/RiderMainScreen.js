@@ -15,7 +15,7 @@ import {
   activeButton,
   inactiveButton,
 } from "./RiderMainScreenStyle";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { FontAwesome } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { useIsFocused } from "@react-navigation/native";
@@ -50,8 +50,8 @@ const RiderMainScreen = ({ navigation, props }) => {
       enableHighAccuracy: true,
     });
     setCurrentPosition({
-      latitude: 13.814960922983204, //change -> location.coords.latitude to test
-      longitude: 100.56503558421038, //change -> location.coords.longitude to test
+      latitude: location.coords.latitude, //change -> location.coords.latitude to test or 13.814960922983204
+      longitude: location.coords.longitude, //change -> location.coords.longitude to test or 100.56503558421038
       latitudeDelta: 0.012,
       longitudeDelta: 0.013,
     });
@@ -125,7 +125,7 @@ const RiderMainScreen = ({ navigation, props }) => {
           // position: "absolute"
         }}
       >
-        <MapView region={currentPosition} style={styles.map}>
+        <MapView region={currentPosition} style={styles.map} provider={PROVIDER_GOOGLE}>
           <Marker coordinate={currentPosition} title={"คุณอยู่ที่นี่"} />
         </MapView>
       </View>
@@ -136,7 +136,7 @@ const RiderMainScreen = ({ navigation, props }) => {
             setIsActive(!isActive);
           }}
         >
-          <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
+          <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit"}}>
             {isActive == true ? "Active" : "Inactive"}
           </Text>
         </TouchableOpacity>
