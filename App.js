@@ -44,6 +44,7 @@ import SelectPositionScreen from "./src/screen/coreScreen/SelectPositionScreen";
 import RiderTransactionScreen from "./src/screen/riderScreen/RiderTransactionScreen";
 import LaundryTransactionScreen from "./src/screen/laundryScreen/LaundryTransactionScreen";
 import GoogleMapTest from "./src/GoogleMapTest";
+import SearchScreen from "./src/screen/coreScreen/SearchScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -212,9 +213,8 @@ export default function App() {
         <Stack.Screen name="WithdrawLaundry" component={WithdrawLaundryScreen} />
         <Stack.Screen name="AddRiderAcc" component={AddRiderAccScreen} />
         <Stack.Screen name="LaundryTransaction" component={LaundryTransactionScreen} />
-
         <Stack.Screen name="GoogleMapTest" component={GoogleMapTest} />
-
+        <Stack.Screen name="Search" component={SearchScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
