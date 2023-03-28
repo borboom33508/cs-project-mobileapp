@@ -11,16 +11,74 @@ import { Ionicons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TextInput } from "react-native-paper";
 import GetApi from "../../api/GetApi";
+import { useIsFocused } from "@react-navigation/native";
 
 const SignUpScreen = ({ navigation, props }) => {
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
-  const [account, setAccount] = useState({
-    name: { value: "", error: "" },
-    email: { value: "", error: "" },
-    password: { value: "", error: "" },
-    passwordConfirm: { value: "", error: "" },
-    phone: { value: "", error: "" },
+  const isFocused = useIsFocused();
+  const [username, setUsername] = useState({ value: "", error: false });
+  const [email, setEmail] = useState({ value: "", error: false });
+  const [password, setPassword] = useState({ value: "", error: false });
+  const [passwordConfirm, setPasswordConfirm] = useState({
+    value: "",
+    error: false,
   });
+  const [phone, setPhone] = useState({ value: "", error: false });
+
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  useEffect(() => {
+    if (isFocused) {
+    } else {
+      setIsSuccess(false);
+    }
+  }, [isFocused]);
+
+  const validateInput = () => {
+    if (
+      !username.value ||
+      !email.value ||
+      !password.value ||
+      !passwordConfirm.value ||
+      !phone.value
+    ) {
+      if (username.value == "" || username.value == null) {
+        setUsername({ value: "", error: true });
+      }
+      if (
+        email.value == "" ||
+        email.value == null ||
+        !email.value.includes("@") ||
+        !email.value.includes(".")
+      ) {
+        setEmail({ value: "", error: true });
+      }
+      if (password.value == "" || password.value != passwordConfirm.value) {
+        setPassword({ value: "", error: true });
+        setPasswordConfirm({ value: "", error: true });
+      }
+      if (
+        passwordConfirm.value == "" ||
+        password.value != passwordConfirm.value
+      ) {
+        setPasswordConfirm({ value: "", error: true });
+      }
+      if (phone.value == "") {
+        setPhone({ value: "", error: true });
+      }
+    } else {
+      navigation.navigate("OTPForm", {
+        page: "SignIn",
+        description: "สร้างบัญชีผู้ใช้เรียบร้อย",
+        account: {
+          name: username.value,
+          email: email.value,
+          password: password.value,
+          phone: phone.value,
+        },
+      });
+    }
+  };
 
   return (
     <View style={container}>
@@ -48,13 +106,11 @@ const SignUpScreen = ({ navigation, props }) => {
                   mode="outlined"
                   style={{ backgroundColor: "#ffffff", height: 60 }}
                   onChangeText={(text) => {
-                    setAccount({
-                      ...account,
-                      name: { value: text, error: "" },
-                    });
+                    setUsername({ value: text, error: false });
                   }}
-                  value={account.name.value}
+                  value={username.value}
                   activeOutlineColor="#4691FB"
+                  error={username.error}
                   theme={{
                     fonts: {
                       regular: {
@@ -72,13 +128,11 @@ const SignUpScreen = ({ navigation, props }) => {
                     height: 60,
                     marginTop: 5,
                   }}
+                  error={email.error}
                   onChangeText={(text) => {
-                    setAccount({
-                      ...account,
-                      email: { value: text, error: "" },
-                    });
+                    setEmail({ value: text, error: false });
                   }}
-                  value={account.email.value}
+                  value={email.value}
                   activeOutlineColor="#4691FB"
                   theme={{
                     fonts: {
@@ -99,13 +153,11 @@ const SignUpScreen = ({ navigation, props }) => {
                     marginTop: 5,
                     height: 60,
                   }}
+                  error={password.error}
                   onChangeText={(text) => {
-                    setAccount({
-                      ...account,
-                      password: { value: text, error: "" },
-                    });
+                    setPassword({ value: text, error: false });
                   }}
-                  value={account.password.value}
+                  value={password.value}
                   activeOutlineColor="#4691FB"
                   secureTextEntry={isPasswordSecure}
                   right={
@@ -132,6 +184,7 @@ const SignUpScreen = ({ navigation, props }) => {
                       {"ยืนยันรหัสผ่าน"}
                     </Text>
                   }
+                  error={passwordConfirm.error}
                   mode="outlined"
                   style={{
                     backgroundColor: "#ffffff",
@@ -139,12 +192,9 @@ const SignUpScreen = ({ navigation, props }) => {
                     height: 60,
                   }}
                   onChangeText={(text) => {
-                    setAccount({
-                      ...account,
-                      passwordConfirm: { value: text, error: "" },
-                    });
+                    setPasswordConfirm({ value: text, error: false });
                   }}
-                  value={account.passwordConfirm.value}
+                  value={passwordConfirm.value}
                   activeOutlineColor="#4691FB"
                   secureTextEntry={isPasswordSecure}
                   right={
@@ -177,14 +227,12 @@ const SignUpScreen = ({ navigation, props }) => {
                     height: 60,
                     marginTop: 5,
                   }}
+                  error={phone.error}
                   onChangeText={(text) => {
-                    setAccount({
-                      ...account,
-                      phone: { value: text, error: "" },
-                    });
+                    setPhone({ value: text, error: false });
                   }}
                   maxLength={10}
-                  value={account.phone.value}
+                  value={phone.value}
                   keyboardType="phone-pad"
                   activeOutlineColor="#4691FB"
                   theme={{
@@ -200,12 +248,7 @@ const SignUpScreen = ({ navigation, props }) => {
               <TouchableOpacity
                 style={button}
                 onPress={() => {
-                  // addAccount();
-                  navigation.navigate("OTPForm", {
-                    page: "SignIn",
-                    description: "สร้างบัญชีผู้ใช้เรียบร้อย",
-                    account: account,
-                  });
+                  validateInput();
                 }}
               >
                 <Text

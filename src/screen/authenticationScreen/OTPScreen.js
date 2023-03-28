@@ -10,7 +10,6 @@ import { useIsFocused } from "@react-navigation/native";
 import SendOTP from "../../api/SendOTP";
 import GetApi from "../../api/GetApi";
 
-
 const OTPScreen = ({ navigation, route, props }) => {
   const isFocused = useIsFocused();
   const [otp, setOTP] = useState("");
@@ -22,21 +21,20 @@ const OTPScreen = ({ navigation, route, props }) => {
   const description = route.params.description;
   const account = route.params.account;
 
-
   useEffect(() => {
-    return () => {
+    if (isFocused) {
+      console.log(account);
+    } else {
       setOTP("");
       setOtpCode("");
-
       setIsSuccess(false);
       setIsOTPError(false);
-    };
+    }
   }, [isFocused]);
-
 
   const genAndSendOTP = () => {
     let tpm = Math.floor(Math.random() * (9999 - 1111 + 1) + 1111).toString(); // String
-    SendOTP.useFetch(account.phone.value, tpm);
+    SendOTP.useFetch(account.phone, tpm);
     setOtpCode(tpm);
   };
 
@@ -54,13 +52,12 @@ const OTPScreen = ({ navigation, route, props }) => {
     }
   };
 
-
   const addAccount = async () => {
     var formdata = new FormData();
-    formdata.append("cus_email", account.email.value);
-    formdata.append("cus_phone", account.phone.value);
-    formdata.append("cus_password", account.password.value);
-    formdata.append("cus_name", account.name.value);
+    formdata.append("cus_email", account.email);
+    formdata.append("cus_phone", account.phone);
+    formdata.append("cus_password", account.password);
+    formdata.append("cus_name", account.name);
     try {
       await GetApi.useFetch(
         "POST",
@@ -126,9 +123,7 @@ const OTPScreen = ({ navigation, route, props }) => {
           ) : null}
 
           <TouchableOpacity
-
             onPress={() => verifyOTP()}
-
             style={{
               marginTop: "10%",
               borderRadius: 10,
@@ -137,7 +132,6 @@ const OTPScreen = ({ navigation, route, props }) => {
               padding: 20,
               width: "90%",
             }}
-
           >
             <Text
               style={{
@@ -162,7 +156,6 @@ const OTPScreen = ({ navigation, route, props }) => {
                 genAndSendOTP();
               }}
             >
-
               <Text
                 style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
               >

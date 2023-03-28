@@ -2,9 +2,9 @@
 
 const useFetch = (phonenumber, otp_code) => {
   console.log(phonenumber, otp_code);
-  fetch("https://zjkr22.api.infobip.com/sms/2/text/advanced", {
+  fetch("https://19lp31.api.infobip.com/sms/2/text/advanced", {
     method: "POST",
-    hostname: "zjkr22.api.infobip.com",
+    hostname: "19lp31.api.infobip.com",
     path: "/sms/2/text/advanced",
     headers: {
       Authorization:
