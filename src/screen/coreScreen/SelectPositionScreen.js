@@ -5,7 +5,12 @@ import {
   Dimensions,
   StyleSheet,
 } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE, Animated, AnimatedRegion } from "react-native-maps";
+import MapView, {
+  Marker,
+  PROVIDER_GOOGLE,
+  Animated,
+  AnimatedRegion,
+} from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import React, { useEffect, useRef, useState } from "react";
 import { getStatusBarHeight } from "react-native-status-bar-height";
@@ -78,37 +83,48 @@ const SelectPositionScreen = ({ navigation, props }) => {
       latitudeDelta: 0.012,
       longitudeDelta: 0.013,
     });
-    setSelectedPosition({latitude: lat, longitude: lng})
-    setPlaceName(name)
-  }
+    setSelectedPosition({ latitude: lat, longitude: lng });
+    setPlaceName(name);
+  };
 
-  const postCustomerLocation = async () => { 
-    var formdata = new FormData();
-    formdata.append("cus_id", cusId.split(",")[0]);
-    formdata.append("placeName", placeName);
-    formdata.append("latitude", selectedPosition.latitude);
-    formdata.append("longitude", selectedPosition.longitude);
-    try {
-      await GetApi.useFetch(
-        "POST",
-        formdata,
-        `/customer/PostLocationCustomer.php`
-      ).then((res) => {
-        let data = JSON.parse(res);
-        console.log(res);
-        if (data.success) {
-          navigation.goBack();
-        }
-      });
-    } catch (e) {
-      console.log(e);
+  const postCustomerLocation = async () => {
+    if (placeName == "" || placeName == undefined || placeName == null) {
+      console.log("Invalid");
+    } else {
+      var formdata = new FormData();
+      formdata.append("cus_id", cusId.split(",")[0]);
+      formdata.append("placeName", placeName);
+      formdata.append("latitude", selectedPosition.latitude);
+      formdata.append("longitude", selectedPosition.longitude);
+      try {
+        await GetApi.useFetch(
+          "POST",
+          formdata,
+          `/customer/PostLocationCustomer.php`
+        ).then((res) => {
+          let data = JSON.parse(res);
+          console.log(res);
+          if (data.success) {
+            navigation.goBack();
+          }
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
-  }
+  };
 
   return (
     <View style={container}>
       <View style={{ marginTop: getStatusBarHeight() }}>
-        <View style={{ paddingHorizontal: 20, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+        <View
+          style={{
+            paddingHorizontal: 20,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <TouchableOpacity
             onPress={() => {
               navigation.goBack();
@@ -116,10 +132,12 @@ const SelectPositionScreen = ({ navigation, props }) => {
           >
             <Ionicons name="arrow-back" size={30} color="#4691FB" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {
-            postCustomerLocation()
-          }}>
-            <Text style={{color: "#4691FB"}}>{"บันทึก"}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              postCustomerLocation();
+            }}
+          >
+            <Text style={{ color: "#4691FB" }}>{"บันทึก"}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -139,9 +157,17 @@ const SelectPositionScreen = ({ navigation, props }) => {
           placeholder="ค้นหาตำแหน่ง"
           fetchDetails
           onPress={(data, details = null) => {
-            console.log(details.name, details.geometry.location.lat, details.geometry.location.lng);
+            console.log(
+              details.name,
+              details.geometry.location.lat,
+              details.geometry.location.lng
+            );
             setPlaceName(details.name);
-            onPlaceSelected(details.name, details.geometry.location.lat, details.geometry.location.lng);
+            onPlaceSelected(
+              details.name,
+              details.geometry.location.lat,
+              details.geometry.location.lng
+            );
           }}
           query={{
             key: "AIzaSyCRIHZm8hYtb2iJp1-0ITTVxLZVoNP8UWM",
