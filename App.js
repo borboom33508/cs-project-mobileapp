@@ -40,6 +40,8 @@ import WithdrawLaundryScreen from "./src/screen/laundryScreen/WithdrawLaundryScr
 import CreditLaundryScreen from "./src/screen/laundryScreen/CreditLaundryScreen";
 import OrderLaundryScreen from "./src/screen/laundryScreen/OrderLaundryScreen";
 import SupportScreen from "./src/screen/laundryScreen/SupportScreen";
+import SelectPositionScreen from "./src/screen/coreScreen/SelectPositionScreen";
+import GoogleMapTest from "./src/GoogleMapTest";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -185,6 +187,7 @@ export default function App() {
         <Stack.Screen name="AboutUs" component={AboutUsScreen} />
         <Stack.Screen name="Policy" component={PolicyScreen} />
         <Stack.Screen name="SelectService" component={SelectServiceScreen} />
+        <Stack.Screen name="SelectPosition" component={SelectPositionScreen} />
         <Stack.Screen name="RiderMain" component={RiderMainScreen} />
         <Stack.Screen name="ProfitRider" component={ProfitScreen} />
         <Stack.Screen name="WithdrawRider" component={WithdrawRiderScreen} />
@@ -203,6 +206,8 @@ export default function App() {
         <Stack.Screen name="Laundry" component={LaundryScreen} options={{ gestureEnabled: false }} />
         <Stack.Screen name="WithdrawLaundry" component={WithdrawLaundryScreen} />
         <Stack.Screen name="AddRiderAcc" component={AddRiderAccScreen} />
+
+        <Stack.Screen name="GoogleMapTest" component={GoogleMapTest} />
 
       </Stack.Navigator>
     </NavigationContainer>
