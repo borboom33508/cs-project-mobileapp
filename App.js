@@ -42,6 +42,7 @@ import OrderLaundryScreen from "./src/screen/laundryScreen/OrderLaundryScreen";
 import SupportScreen from "./src/screen/laundryScreen/SupportScreen";
 import SelectPositionScreen from "./src/screen/coreScreen/SelectPositionScreen";
 import GoogleMapTest from "./src/GoogleMapTest";
+import SearchScreen from "./src/screen/coreScreen/SearchScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -206,9 +207,8 @@ export default function App() {
         <Stack.Screen name="Laundry" component={LaundryScreen} options={{ gestureEnabled: false }} />
         <Stack.Screen name="WithdrawLaundry" component={WithdrawLaundryScreen} />
         <Stack.Screen name="AddRiderAcc" component={AddRiderAccScreen} />
-
         <Stack.Screen name="GoogleMapTest" component={GoogleMapTest} />
-
+        <Stack.Screen name="Search" component={SearchScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
