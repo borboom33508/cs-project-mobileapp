@@ -41,6 +41,8 @@ import CreditLaundryScreen from "./src/screen/laundryScreen/CreditLaundryScreen"
 import OrderLaundryScreen from "./src/screen/laundryScreen/OrderLaundryScreen";
 import SupportScreen from "./src/screen/laundryScreen/SupportScreen";
 import SelectPositionScreen from "./src/screen/coreScreen/SelectPositionScreen";
+import RiderTransactionScreen from "./src/screen/riderScreen/RiderTransactionScreen";
+import LaundryTransactionScreen from "./src/screen/laundryScreen/LaundryTransactionScreen";
 import GoogleMapTest from "./src/GoogleMapTest";
 import SearchScreen from "./src/screen/coreScreen/SearchScreen";
 
@@ -189,11 +191,14 @@ export default function App() {
         <Stack.Screen name="Policy" component={PolicyScreen} />
         <Stack.Screen name="SelectService" component={SelectServiceScreen} />
         <Stack.Screen name="SelectPosition" component={SelectPositionScreen} />
+
         <Stack.Screen name="RiderMain" component={RiderMainScreen} />
         <Stack.Screen name="ProfitRider" component={ProfitScreen} />
         <Stack.Screen name="WithdrawRider" component={WithdrawRiderScreen} />
         <Stack.Screen name="JobHistory" component={JobHistoryScreen} />
         <Stack.Screen name="CreateOrder" component={CreateOrderScreen} />
+        <Stack.Screen name="RiderTransaction" component={RiderTransactionScreen} />
+
         <Stack.Screen
           name="WaitingForRider"
           component={WaitingForRiderScreen}
@@ -207,6 +212,7 @@ export default function App() {
         <Stack.Screen name="Laundry" component={LaundryScreen} options={{ gestureEnabled: false }} />
         <Stack.Screen name="WithdrawLaundry" component={WithdrawLaundryScreen} />
         <Stack.Screen name="AddRiderAcc" component={AddRiderAccScreen} />
+        <Stack.Screen name="LaundryTransaction" component={LaundryTransactionScreen} />
         <Stack.Screen name="GoogleMapTest" component={GoogleMapTest} />
         <Stack.Screen name="Search" component={SearchScreen} />
       </Stack.Navigator>

@@ -108,7 +108,7 @@ const CreditLaundryScreen = ({ navigation, props }) => {
             <TouchableOpacity
               style={button}
               onPress={() => {
-                // navigation.navigate("WithdrawRider");
+                navigation.navigate("LaundryTransaction");
               }}
             >
               <Text

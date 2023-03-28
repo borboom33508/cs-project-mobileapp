@@ -109,7 +109,7 @@ const ProfitScreen = ({ navigation, props }) => {
             <TouchableOpacity
               style={button}
               onPress={() => {
-                // navigation.navigate("WithdrawRider");
+                navigation.navigate("RiderTransaction");
               }}
             >
               <Text
