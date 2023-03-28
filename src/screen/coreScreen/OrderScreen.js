@@ -4,7 +4,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
-import GetApi from "../../api/getApi";
+import GetApi from "../../api/GetApi";
 import {
   container,
   content1,
