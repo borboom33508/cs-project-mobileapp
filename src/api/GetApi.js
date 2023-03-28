@@ -8,6 +8,8 @@
 
 const BASEURL = "https://9d8e-2001-fb1-e8-65b5-cd60-7685-8d35-b78d.ap.ngrok.io"
 
+
+
 export const API = {
   url: BASEURL + "/CS-PROJECT-BACKEND",
   urlCustomerImage: BASEURL + "/CS-PROJECT-BACKEND/customerAssets/",
