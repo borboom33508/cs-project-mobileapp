@@ -65,7 +65,8 @@ const WithdrawRiderScreen = ({ navigation, props }) => {
 
   const validateInput = (x) => {
     console.log(credit);
-    if (x > 99 && x <= credit) {
+    if (parseInt(x) > 99 && parseInt(x) <= credit) {
+      setShowError(false);
       setWithdrawAmount(x);
       setIsPress(true);
       setTimeout(() => {

@@ -13,6 +13,7 @@ import {
   content3,
   text,
 } from "./OrderDetailScreenStyle";
+import { ScrollView } from "react-native";
 
 const OrderDetailScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
@@ -61,7 +62,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
       await GetApi.useFetch(
         "POST",
         formdata,
-        `/order/PostUpdateCreditAndStatus.php`
+        `/order/PostUpdateOrderAndTransaction.php`
       ).then((data) => {
         console.log(data);
       });
@@ -80,7 +81,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
       },
       {
         text: "ยืนยัน",
-        style: "destructive",
+        style: "default",
         onPress: () => postCreditCustomer(),
       },
     ]);
@@ -94,7 +95,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
       },
       {
         text: "ยืนยัน",
-        style: "destructive",
+        style: "default",
         onPress: () => console.log("Success"),
       },
     ]);
@@ -114,60 +115,68 @@ const OrderDetailScreen = ({ navigation, route }) => {
         </View>
       </View>
       <Divider />
-      <View style={{ margin: 10, marginTop: 20 }}>
-        <View style={{ marginHorizontal: 5, marginBottom: 10 }}>
-          <Text
-            style={[text, { fontSize: 18 }]}
-          >{`Order Number: ${orderId}`}</Text>
-        </View>
-        <View style={content1}>
-          <Text style={[text, { fontSize: 18 }]}>{`รายละเอียดการส่งซัก`}</Text>
-          <View style={{ marginHorizontal: 10, marginTop: 5 }}>
-            <Text style={text}>{`*ส่งคืนภายใน ${
-              orderData.order_service_type?.split("_")[0]
-            } ชั่วโมง`}</Text>
-            <View style={{ marginHorizontal: 15 }}>
-              <View style={content2}>
-                <Text style={text}>{`ซักผ้า`}</Text>
-                <Text style={text}>{`${orderData.order_washingKg} กิโล`}</Text>
-              </View>
-              {orderData.order_isReed ? (
-                <Text style={text}>{`รีด`}</Text>
-              ) : null}
-            </View>
-
-            <Text style={text}>
-              {`คำแนะนำเพิ่มเติม: ${orderData.order_description}`}
-            </Text>
-            <View style={content2}>
-              <Text style={text}>{`ราคาโดยประมาณ`}</Text>
-              <Text
-                style={text}
-              >{`<= ${orderData.order_fixedCost_by_laundry} บาท`}</Text>
-            </View>
-            <View style={content2}>
-              <Text style={text}>{`ราคาค่าจัดส่งขาไป`}</Text>
-              <Text style={text}>{`${orderData.order_firstRideCost} บาท`}</Text>
-            </View>
-            <View style={content2}>
-              <Text style={text}>{`ราคาค่าจัดส่งขากลับ`}</Text>
-              <Text
-                style={text}
-              >{`${orderData.order_secondRideCost} บาท`}</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={content1}>
-          <View style={{ marginHorizontal: 10, marginTop: 5 }}>
-            <Text style={text}>{`สถานะผ้า: ${orderData.order_status}`}</Text>
-            <Text style={text}>{`ชำระเงิน: ${orderData.order_payment}`}</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ margin: 10, marginTop: 20 }}>
+          <View style={{ marginHorizontal: 5, marginBottom: 10 }}>
             <Text
-              style={text}
-            >{`เวลาทำการ: ${orderData.laundry_hours} น.`}</Text>
+              style={[text, { fontSize: 18 }]}
+            >{`Order Number: ${orderId}`}</Text>
+          </View>
+          <View style={content1}>
+            <Text
+              style={[text, { fontSize: 18 }]}
+            >{`รายละเอียดการส่งซัก`}</Text>
+            <View style={{ marginHorizontal: 10, marginTop: 5 }}>
+              <Text style={text}>{`*ส่งคืนภายใน ${
+                orderData.order_service_type?.split("_")[0]
+              } ชั่วโมง`}</Text>
+              <View style={{ marginHorizontal: 15 }}>
+                <View style={content2}>
+                  <Text style={text}>{`ซักผ้า`}</Text>
+                  <Text
+                    style={text}
+                  >{`${orderData.order_washingKg} กิโล`}</Text>
+                </View>
+                {orderData.order_isReed ? (
+                  <Text style={text}>{`รีด`}</Text>
+                ) : null}
+              </View>
+
+              <Text style={text}>
+                {`คำแนะนำเพิ่มเติม: ${orderData.order_description}`}
+              </Text>
+              <View style={content2}>
+                <Text style={text}>{`ราคาโดยประมาณ`}</Text>
+                <Text
+                  style={text}
+                >{`<= ${orderData.order_fixedCost_by_laundry} บาท`}</Text>
+              </View>
+              <View style={content2}>
+                <Text style={text}>{`ราคาค่าจัดส่งขาไป`}</Text>
+                <Text
+                  style={text}
+                >{`${orderData.order_firstRideCost} บาท`}</Text>
+              </View>
+              <View style={content2}>
+                <Text style={text}>{`ราคาค่าจัดส่งขากลับ`}</Text>
+                <Text
+                  style={text}
+                >{`${orderData.order_secondRideCost} บาท`}</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={content1}>
+            <View style={{ marginHorizontal: 10, marginTop: 5 }}>
+              <Text style={text}>{`สถานะผ้า: ${orderData.order_status}`}</Text>
+              <Text style={text}>{`ชำระเงิน: ${orderData.order_payment}`}</Text>
+              <Text
+                style={text}
+              >{`เวลาทำการ: ${orderData.laundry_hours} น.`}</Text>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
       <View style={content3}>
         {orderData.order_payment != "ชำระเงินแล้ว" ? (
           <View style={{ marginHorizontal: 5, marginBottom: 5 }}>

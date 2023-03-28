@@ -28,10 +28,8 @@ export const content2 = {
 };
 
 export const content3 = {
-  flex: 1,
   marginVertical: "2%",
   marginBottom: "7%",
   width: "90%",
   alignSelf: "center",
-  justifyContent: "flex-end",
 };
