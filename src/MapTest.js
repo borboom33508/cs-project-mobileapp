@@ -1,5 +1,5 @@
 import { View, Dimensions, StyleSheet, Button, Text } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
 
@@ -45,7 +45,7 @@ const MapTest = () => {
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} region={mapRegion}>
+      <MapView style={styles.map} region={mapRegion} provider={PROVIDER_GOOGLE}>
         <Marker coordinate={mapRegion} title="marker" />
       </MapView>
       <Button title="Get Location" onPress={() => userLocation()} />
