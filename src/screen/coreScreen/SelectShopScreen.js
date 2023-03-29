@@ -23,12 +23,29 @@ import {
   text1,
   text2,
 } from "./SelectShopScreenStyle";
+import { AnimatedRegion } from "react-native-maps";
+import MapView from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
+const GOOGLEMAP_APIKEY = "AIzaSyCRIHZm8hYtb2iJp1-0ITTVxLZVoNP8UWM";
 
 const SelectShopScreen = ({ navigation }) => {
+  const [destinationCords, setDestinationCords] = useState({
+    latitude: 13.856590317284635,
+    longitude: 100.54181361119001,
+  });
+  const [time, setTime] = useState("");
+  const [distance, setDistance] = useState("");
+  const [currentPosition, setCurrentPosition] = useState({
+    latitude: 13.847468594271557,
+    longitude: 100.56969677482991,
+  });
+
   const isFocused = useIsFocused();
   const [laundryList, setLaundryList] = useState({});
   const [isFetching, setIsFetching] = useState(false);
   const [cusPlaceName, setCusPlaceName] = useState("");
+  const [laundryLat, setLaundryLat] = useState("");
+  const [laundryLng, setLaundryLng] = useState("");
 
   useEffect(() => {
     if (isFocused) {
@@ -62,6 +79,7 @@ const SelectShopScreen = ({ navigation }) => {
         let data = JSON.parse(res);
         if (data.success) {
           setCusPlaceName(data.request.cus_placeName);
+          setCurrentPosition({...currentPosition, latitude: parseFloat(data.request.cus_lat), longitude: parseFloat(data.request.cus_lng)})
         } else {
           console.log(data);
         }
@@ -69,6 +87,7 @@ const SelectShopScreen = ({ navigation }) => {
     } catch (e) {
       console.log(e);
     }
+    console.log(currentPosition);
   };
 
   const getCustomerData = async () => {
@@ -180,6 +199,25 @@ const SelectShopScreen = ({ navigation }) => {
           </Text>
         </View>
       </View>
+          
+      <MapViewDirections
+        apikey="AIzaSyCRIHZm8hYtb2iJp1-0ITTVxLZVoNP8UWM"
+        origin={currentPosition}
+        destination={destinationCords}
+        onReady={(result) => {
+          setDistance(parseFloat(result.distance).toFixed(1));
+          setTime(parseFloat(result.duration).toFixed(1));
+          console.log(`ระยะทาง: ${parseFloat(result.distance).toFixed(1)} กม`);
+          console.log(`เวลา: ${parseFloat(result.duration).toFixed(1)} นาที`);
+        }}
+        onError={(err) => {
+          console.log(err);
+        }}
+      />
+
+      <Text>{`ระยะห่าง : ~${distance} กม.`}</Text>
+      <Text>{`เวลาประมาณ : ~${time} นาที`}</Text>
+
       <View style={{ flex: 1, marginHorizontal: 5, marginBottom: 5 }}>
         <FlatList
           showsVerticalScrollIndicator={false}

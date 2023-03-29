@@ -1,23 +1,39 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { Dimensions, StyleSheet, View, Button } from "react-native";
+import { Dimensions, StyleSheet, View, Button, Text } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import * as Location from "expo-location";
+import MapViewDirections from "react-native-maps-directions";
 
 const GoogleMapTest = () => {
   const { width, height } = Dimensions.get("window");
   const [currentPosition, setCurrentPosition] = useState({
-    latitude: 0,
-    longitude: 0,
-  });
-  const [selectedPosition, setSelectedPosition] = useState({
-    latitude: 0,
-    longitude: 0,
+    latitude: 13.847468594271557,
+    longitude: 100.56969677482991,
   });
 
+  // const [selectedPosition, setSelectedPosition] = useState({
+  //   latitude: 0,
+  //   longitude: 0,
+  // });
+
+  const [destinationCords, setDestinationCords] = useState({
+    latitude: 13.856590317284635,
+    longitude: 100.54181361119001,
+  });
+
+  const [time, setTime] = useState("");
+  const [distance, setDistance] = useState("");
+
   useEffect(() => {
-    getCurrentPosition()
-  }, [])
+    getCurrentPosition();
+
+
+  }, []);
+
+  const getDistance = () => {
+
+  }
 
   const ASPECT_RATIO = width / height;
   const LATITUDE_DELTA = 0.02;
@@ -52,8 +68,7 @@ const GoogleMapTest = () => {
       latitudeDelta: 0.012,
       longitudeDelta: 0.013,
     });
-
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -62,7 +77,23 @@ const GoogleMapTest = () => {
         provider={PROVIDER_GOOGLE}
         initialRegion={currentPosition}
       >
-        <Marker coordinate={currentPosition} title="Home"/>
+        <Marker coordinate={currentPosition} title="Home" />
+        <MapViewDirections
+          apikey="AIzaSyCRIHZm8hYtb2iJp1-0ITTVxLZVoNP8UWM"
+          origin={currentPosition}
+          destination={destinationCords}
+          onReady={result => {
+            setDistance(parseFloat(result.distance).toFixed(1));
+            setTime(parseFloat(result.duration).toFixed(1));
+            console.log(`ระยะทาง: ${parseFloat(result.distance).toFixed(1)} กม`);
+            console.log(`เวลา: ${parseFloat(result.duration).toFixed(1)} นาที`);
+          }}
+          onError={(err) => {
+            console.log(err);
+          }}
+        />
+
+
       </MapView>
 
       <View style={styles.searchContainer}>
@@ -74,8 +105,11 @@ const GoogleMapTest = () => {
             let tmp = {
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,
-            }
-            onPlaceSelected(details.geometry.location.lat, details.geometry.location.lng)
+            };
+            onPlaceSelected(
+              details.geometry.location.lat,
+              details.geometry.location.lng
+            );
             // console.log(data, details);
             // console.log(details.geometry.location.lat);
             // console.log(details.geometry.location.lng);
@@ -89,6 +123,8 @@ const GoogleMapTest = () => {
           // currentLocation={true}
           // currentLocationLabel="current location"
         />
+        <Text>{`ระยะห่าง : ~${distance} กม.`}</Text>
+        <Text>{`เวลาประมาณ : ~${time} นาที`}</Text>
       </View>
     </View>
   );
@@ -108,6 +144,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     position: "absolute",
     width: "90%",
+    height: "20%",
     backgroundColor: "#ffff",
     shadowColor: "black",
     shadowOffset: { width: 2, height: 2 },
