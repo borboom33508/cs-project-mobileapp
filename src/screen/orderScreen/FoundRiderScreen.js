@@ -50,7 +50,7 @@ const FoundARiderScreen = ({ navigation }) => {
       <View style={{ margin: 10, marginTop: 20 }}>
         <View style={{ alignItems: "center" }}>
           <MapView
-            style={{ width: "90%", height: "60%" }}
+            style={{ width: "100%", height: "60%" }}
             provider={PROVIDER_GOOGLE}
             initialRegion={currentPosition}
             region={currentPosition}
@@ -154,7 +154,7 @@ const FoundARiderScreen = ({ navigation }) => {
             {`ทะเบียน 69กข-122`}
           </Text>
 
-          <View style={{ marginTop: "10%" }}>
+          <View style={{ marginTop: 10 }}>
             <Text
               style={{
                 fontSize: 14,
