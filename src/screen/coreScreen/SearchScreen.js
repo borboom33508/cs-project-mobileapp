@@ -53,7 +53,6 @@ const SearchScreen = ({ navigation }) => {
       return;
     }
     if (searchQuery) {
-      console.log("test");
       filteredData = filter(filteredData, (request) => {
         if (request.laundry_name.includes(searchQuery)) {
           return true;

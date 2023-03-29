@@ -15,6 +15,7 @@ import {
 
 const SelectServiceScreen = ({ navigation, props, route }) => {
   const laundryId = route.params.laundry_id;
+  const destination = route.params.destination;
   const isFocused = useIsFocused();
   const [laundryData, setLaundryData] = useState({});
 
@@ -81,7 +82,9 @@ const SelectServiceScreen = ({ navigation, props, route }) => {
             </Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={text}>{`ห่างจากที่อยู่: ~ 2 กิโลเมตร`}</Text>
+            <Text
+              style={text}
+            >{`ห่างจากที่อยู่: ~ ${destination} กิโลเมตร`}</Text>
           </View>
         </View>
         <View style={{ marginHorizontal: 10 }}>
@@ -98,9 +101,7 @@ const SelectServiceScreen = ({ navigation, props, route }) => {
               style={button}
             >
               <Text style={[text, { fontSize: 16 }]}>
-                {`ส่งคืนภายใน ${
-                  laundryData.service_1.split("_")[0]
-                } ชั่วโมง`}
+                {`ส่งคืนภายใน ${laundryData.service_1.split("_")[0]} ชั่วโมง`}
               </Text>
               <Text style={text}>
                 {`~กิโลกรัมละ ${laundryData.service_1.split("_")[1]}`}
@@ -119,9 +120,7 @@ const SelectServiceScreen = ({ navigation, props, route }) => {
               style={button}
             >
               <Text style={[text, { fontSize: 16 }]}>
-                {`ส่งคืนภายใน ${
-                  laundryData.service_2.split("_")[0]
-                } ชั่วโมง`}
+                {`ส่งคืนภายใน ${laundryData.service_2.split("_")[0]} ชั่วโมง`}
               </Text>
               <Text style={text}>
                 {`~กิโลกรัมละ ${laundryData.service_2.split("_")[1]}`}
@@ -140,9 +139,7 @@ const SelectServiceScreen = ({ navigation, props, route }) => {
               style={button}
             >
               <Text style={[text, { fontSize: 16 }]}>
-                {`ส่งคืนภายใน ${
-                  laundryData.service_3.split("_")[0]
-                } ชั่วโมง`}
+                {`ส่งคืนภายใน ${laundryData.service_3.split("_")[0]} ชั่วโมง`}
               </Text>
               <Text style={text}>
                 {`~กิโลกรัมละ ${laundryData.service_3.split("_")[1]}`}

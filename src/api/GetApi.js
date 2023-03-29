@@ -6,7 +6,7 @@
 // SelectShopScreen line 66-74
 // SelectServiceScreen line 82
 
-const BASEURL = "https://7f51-2001-fb1-e8-65b5-cd60-7685-8d35-b78d.ap.ngrok.io"
+const BASEURL = "https://f64e-27-55-84-179.ap.ngrok.io"
 
 export const API = {
   url: BASEURL + "/CS-PROJECT-BACKEND",
@@ -16,7 +16,6 @@ export const API = {
 };
 
 const useFetch = async (method, body, path) => {
-
   var requestOptions = {
     method: method,
     body: body,

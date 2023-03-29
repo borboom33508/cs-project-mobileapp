@@ -12,27 +12,27 @@ import {
   content2,
   content3,
   text,
-} from "./OrderDetailScreenStyle";
+} from "./OrderLaundryDetailScreenStyle";
 import { ScrollView } from "react-native";
 
-const OrderDetailScreen = ({ navigation, route }) => {
+const OrderLaundryDetailScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const orderId = route.params.order_id;
   const [orderData, setOrderData] = useState({});
 
   useEffect(() => {
     if (isFocused) {
-      getOrderData();
+      fetchOrderLaundryData();
       // console.log(orderData);
     }
   }, [isFocused]);
 
-  const getOrderData = async () => {
+  const fetchOrderLaundryData = async () => {
     try {
       await GetApi.useFetch(
         "GET",
         "",
-        `/order/GetOrderDataCustomer.php?order_id=${orderId}`
+        `/order/GetOrderDataLaundry.php?order_id=${orderId}`
       ).then((res) => {
         let data = JSON.parse(res);
         if (data.success) {
@@ -44,53 +44,46 @@ const OrderDetailScreen = ({ navigation, route }) => {
     }
   };
 
-  const postCreditCustomer = async () => {
-    let account;
-    await AsyncStorage.getItem("@account").then((res) => {
-      account = JSON.parse(res).split(",")[0];
-    });
+  const deleteOrder = async () => {
     var formdata = new FormData();
     formdata.append("order_id", orderId);
-    formdata.append("cus_id", account);
-    formdata.append("order_status", "ผ้าพร้อมส่งคืน");
-    formdata.append("order_payment", "ชำระเงินแล้ว");
-    formdata.append(
-      "cus_credit",
-      parseInt(orderData.cus_credit) - parseInt(orderData.order_finalCost)
-    );
-    formdata.append("tx_paymentType", "ชำระเงิน");
-    formdata.append("tx_amount", orderData.order_finalCost);
+    formdata.append("order_detail_id", orderData.order_detail_id);
     try {
       await GetApi.useFetch(
         "POST",
         formdata,
-        `/order/PostUpdateOrderAndTransaction.php`
+        `/order/DeleteOrderData.php`
       ).then((data) => {
         console.log(data);
       });
     } catch (e) {
       console.log(e);
     } finally {
-      getOrderData();
+      navigation.navigate("OrderLaundry");
     }
   };
 
-  const alertPayment = () => {
-    Alert.alert("โปรดยืนยันการชำระเงิน", "", [
-      {
-        text: "ยกเลิก",
-        style: "cancel",
-      },
-      {
-        text: "ยืนยัน",
-        style: "default",
-        onPress: () => postCreditCustomer(),
-      },
-    ]);
+  const postUpdateStatus = async () => {
+    var formdata = new FormData();
+    formdata.append("order_id", orderId);
+    formdata.append("order_status", "กำลังค้นหาไรเดอร์");
+    try {
+      await GetApi.useFetch(
+        "POST",
+        formdata,
+        `/order/PostUpdateStatus.php`
+      ).then((data) => {
+        console.log(data);
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      fetchOrderLaundryData();
+    }
   };
 
-  const alertReceiveCloth = () => {
-    Alert.alert("โปรดยืนยันการรับผ้า", "", [
+  const alertSubmit = (header) => {
+    Alert.alert("โปรดยืนยัน", "", [
       {
         text: "ยกเลิก",
         style: "cancel",
@@ -98,7 +91,12 @@ const OrderDetailScreen = ({ navigation, route }) => {
       {
         text: "ยืนยัน",
         style: "default",
-        onPress: () => console.log("Success"),
+        onPress: () =>
+          header == "delete" || header == "submit"
+            ? header == "delete"
+              ? deleteOrder()
+              : postUpdateStatus()
+            : null,
       },
     ]);
   };
@@ -108,7 +106,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
       <View style={{ marginTop: getStatusBarHeight() }}>
         <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Order")}
+            onPress={() => navigation.navigate("OrderLaundry")}
             style={{ alignItems: "center", flexDirection: "row" }}
           >
             <Ionicons name="arrow-back" size={30} color="#4691FB" />
@@ -123,6 +121,15 @@ const OrderDetailScreen = ({ navigation, route }) => {
             <Text
               style={[text, { fontSize: 18 }]}
             >{`Order Number: ${orderId}`}</Text>
+          </View>
+          <View style={content1}>
+            <Text style={[text, { fontSize: 18 }]}>{`รายละเอียดลูกค้า`}</Text>
+            <View style={{ marginHorizontal: 10, marginTop: 5 }}>
+              <Text style={text}>{`ชื่อ: ${orderData.cus_name}`}</Text>
+              <Text
+                style={text}
+              >{`เบอร์โทรศัพท์: ${orderData.cus_phone}`}</Text>
+            </View>
           </View>
           <View style={content1}>
             <Text
@@ -175,71 +182,56 @@ const OrderDetailScreen = ({ navigation, route }) => {
         </View>
       </ScrollView>
       <View style={content3}>
-        {orderData.order_payment != "ชำระเงินแล้ว" ? (
-          <View style={{ marginHorizontal: 5, marginBottom: 5 }}>
-            <View style={content2}>
-              <Text style={text}>{`เครดิตคงเหลือ:`}</Text>
-              <View style={[content2, { alignItems: "center" }]}>
-                <Text style={text}>{`฿${orderData.cus_credit}`}</Text>
-                <TouchableOpacity
-                  style={{ marginLeft: 5 }}
-                  onPress={() => navigation.navigate("Deposit")}
-                >
-                  <Ionicons
-                    name="add-circle-outline"
-                    size={20}
-                    color="#4691FB"
-                  />
-                </TouchableOpacity>
+        {orderData.order_status == "รอร้านยืนยันรายการ" ? (
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <TouchableOpacity
+              onPress={() => alertSubmit("delete")}
+              style={{
+                backgroundColor: "#D9534F",
+                padding: 10,
+                borderRadius: 5,
+                width: "48%",
+              }}
+            >
+              <View style={{ alignItems: "center", marginHorizontal: 5 }}>
+                <Text style={[text, { color: "#ffffff" }]}>{`ยกเลิก`}</Text>
               </View>
-            </View>
-            <View style={content2}>
-              <Text style={text}>{`ราคาที่ต้องชำระ`}</Text>
-              {orderData.order_finalCost ? (
-                <Text style={text}>{`${orderData.order_finalCost} บาท`}</Text>
-              ) : (
-                <Text style={text}>{`กำลังดำเนินการ`}</Text>
-              )}
-            </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => alertSubmit("submit")}
+              style={{
+                backgroundColor: "#4691FB",
+                padding: 10,
+                borderRadius: 5,
+                width: "48%",
+              }}
+            >
+              <View style={{ alignItems: "center", marginHorizontal: 5 }}>
+                <Text style={[text, { color: "#ffffff" }]}>{`ยืนยัน`}</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-        ) : null}
-
-        {orderData.order_payment != "ชำระเงินแล้ว" ? (
+        ) : (
           <TouchableOpacity
-            onPress={() => alertPayment()}
+            onPress={() => alertSubmit()}
             style={{
               backgroundColor:
-                orderData.order_finalCost &&
-                parseInt(orderData.cus_credit) >=
-                  parseInt(orderData.order_finalCost)
+                orderData.order_status == "คนขับถึงร้านแล้ว"
                   ? "#4691FB"
                   : "#767577",
               padding: 10,
               borderRadius: 5,
             }}
             disabled={
-              orderData.order_finalCost &&
-              parseInt(orderData.cus_credit) >=
-                parseInt(orderData.order_finalCost)
-                ? false
-                : true
+              orderData.order_status == "คนขับถึงร้านแล้ว" ? false : true
             }
           >
             <View style={{ alignItems: "center", marginHorizontal: 5 }}>
-              <Text style={[text, { color: "#ffffff" }]}>{`ชำระเงิน`}</Text>
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={() => alertReceiveCloth()}
-            style={{
-              backgroundColor: "#4691FB",
-              padding: 10,
-              borderRadius: 5,
-            }}
-          >
-            <View style={{ alignItems: "center", marginHorizontal: 5 }}>
-              <Text style={[text, { color: "#ffffff" }]}>{`รับผ้า`}</Text>
+              <Text
+                style={[text, { color: "#ffffff" }]}
+              >{`กำลังดำเนินการ`}</Text>
             </View>
           </TouchableOpacity>
         )}
@@ -248,4 +240,4 @@ const OrderDetailScreen = ({ navigation, route }) => {
   );
 };
 
-export default OrderDetailScreen;
+export default OrderLaundryDetailScreen;

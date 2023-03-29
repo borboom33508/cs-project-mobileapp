@@ -23,44 +23,37 @@ import {
   text1,
   text2,
 } from "./SelectShopScreenStyle";
-import { AnimatedRegion } from "react-native-maps";
-import MapView from "react-native-maps";
-import MapViewDirections from "react-native-maps-directions";
-const GOOGLEMAP_APIKEY = "AIzaSyCRIHZm8hYtb2iJp1-0ITTVxLZVoNP8UWM";
 
 const SelectShopScreen = ({ navigation }) => {
-  const [destinationCords, setDestinationCords] = useState({
-    latitude: 13.856590317284635,
-    longitude: 100.54181361119001,
-  });
-  const [time, setTime] = useState("");
-  const [distance, setDistance] = useState("");
-  const [currentPosition, setCurrentPosition] = useState({
-    latitude: 13.847468594271557,
-    longitude: 100.56969677482991,
-  });
-
   const isFocused = useIsFocused();
-  const [laundryList, setLaundryList] = useState({});
+  const [laundryList, setLaundryList] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cusPlaceName, setCusPlaceName] = useState("");
-  const [laundryLat, setLaundryLat] = useState("");
-  const [laundryLng, setLaundryLng] = useState("");
 
   useEffect(() => {
     if (isFocused) {
-      getCustomerData();
-      getLaundryData();
+      fetchCustomerData();
     }
   }, [isFocused]);
 
-  const getLaundryData = async () => {
+  const getLaundryData = async (cusData) => {
     try {
       await GetApi.useFetch("GET", "", `/customer/GetLaundryData.php`).then(
         (res) => {
           let data = JSON.parse(res);
           if (data.success) {
-            setLaundryList(data.request);
+            const destination = calculatorDistance(data.request, cusData);
+            setLaundryList(
+              data.request.map((data, index) => ({
+                laundry_id: data.laundry_id,
+                laundry_name: data.laundry_name,
+                laundry_picture: data.laundry_picture,
+                laundry_location: data.laundry_location,
+                laundry_hours: data.laundry_hours,
+                laundry_rating: data.laundry_rating,
+                destination: destination[index],
+              }))
+            );
           }
         }
       );
@@ -69,36 +62,54 @@ const SelectShopScreen = ({ navigation }) => {
     }
   };
 
-  const fetchCustomerData = async (cusId) => {
+  const fetchCustomerData = async () => {
+    let accountId;
+    await AsyncStorage.getItem("@account").then((res) => {
+      accountId = JSON.parse(res).split(",")[0];
+    });
     try {
       await GetApi.useFetch(
         "GET",
         "",
-        `/customer/GetCustomerPosition.php?cus_id= ${cusId}`
+        `/customer/GetCustomerPosition.php?cus_id= ${accountId}`
       ).then((res) => {
         let data = JSON.parse(res);
         if (data.success) {
+          getLaundryData(data.request);
           setCusPlaceName(data.request.cus_placeName);
-          setCurrentPosition({...currentPosition, latitude: parseFloat(data.request.cus_lat), longitude: parseFloat(data.request.cus_lng)})
-        } else {
-          console.log(data);
         }
       });
     } catch (e) {
       console.log(e);
     }
-    console.log(currentPosition);
   };
 
-  const getCustomerData = async () => {
-    await AsyncStorage.getItem("@account").then((res) => {
-      let accountId = JSON.parse(res);
-      if (accountId == null) {
-        console.log("not found");
-      } else {
-        fetchCustomerData(accountId);
-      }
+  const calculatorDistance = (laundryData, cusData) => {
+    let destination = [];
+    laundryData.map((data, index) => {
+      //currentPosition
+      let lat1 = parseFloat(cusData.cus_lat);
+      let lon1 = parseFloat(cusData.cus_lng);
+      //destination
+      let lat2 = parseFloat(data.laundry_location.split(",")[0]);
+      let lon2 = parseFloat(data.laundry_location.split(",")[1]);
+
+      const R = 6371e3; // earth radius in meters
+      const φ1 = lat1 * (Math.PI / 180);
+      const φ2 = lat2 * (Math.PI / 180);
+      const Δφ = (lat2 - lat1) * (Math.PI / 180);
+      const Δλ = (lon2 - lon1) * (Math.PI / 180);
+
+      const a =
+        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) * (Math.sin(Δλ / 2) * Math.sin(Δλ / 2));
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      const finalDistance = (R * c) / 1000;
+      destination[index] = finalDistance.toFixed(1);
     });
+    return destination;
   };
 
   const onRefresh = async () => {
@@ -111,7 +122,10 @@ const SelectShopScreen = ({ navigation }) => {
     <View style={content3}>
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("SelectService", { laundry_id: item.laundry_id })
+          navigation.navigate("SelectService", {
+            laundry_id: item.laundry_id,
+            destination: item.destination,
+          })
         }
       >
         <View style={{ flexDirection: "row" }}>
@@ -139,7 +153,7 @@ const SelectShopScreen = ({ navigation }) => {
             <View style={{ flexDirection: "row", marginBottom: 2 }}>
               <MaterialIcons name="delivery-dining" size={18} color="#4691FB" />
               <Text style={[text2, { fontSize: 14, marginLeft: 5 }]}>
-                {`1.2 กม. (25นาที)`}
+                {`~${item.destination} กม.`}
               </Text>
             </View>
             <View style={{ flexDirection: "row" }}>
@@ -199,24 +213,6 @@ const SelectShopScreen = ({ navigation }) => {
           </Text>
         </View>
       </View>
-          
-      <MapViewDirections
-        apikey="AIzaSyCRIHZm8hYtb2iJp1-0ITTVxLZVoNP8UWM"
-        origin={currentPosition}
-        destination={destinationCords}
-        onReady={(result) => {
-          setDistance(parseFloat(result.distance).toFixed(1));
-          setTime(parseFloat(result.duration).toFixed(1));
-          console.log(`ระยะทาง: ${parseFloat(result.distance).toFixed(1)} กม`);
-          console.log(`เวลา: ${parseFloat(result.duration).toFixed(1)} นาที`);
-        }}
-        onError={(err) => {
-          console.log(err);
-        }}
-      />
-
-      <Text>{`ระยะห่าง : ~${distance} กม.`}</Text>
-      <Text>{`เวลาประมาณ : ~${time} นาที`}</Text>
 
       <View style={{ flex: 1, marginHorizontal: 5, marginBottom: 5 }}>
         <FlatList

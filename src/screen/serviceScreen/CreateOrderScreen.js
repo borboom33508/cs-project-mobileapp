@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, Switch, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Switch,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   Ionicons,
@@ -18,43 +25,103 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Divider, TextInput } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GetApi from "../../api/GetApi";
+import { useIsFocused } from "@react-navigation/native";
 
 const CreateOrderScreen = ({ navigation, route }) => {
   const laundryId = route.params.laundry_id;
   const laundryName = route.params.laundry_name;
   const laundryService = route.params.laundry_service;
+  const isFocused = useIsFocused();
   const [isEnabled, setIsEnabled] = useState({ reed: false, QR: false });
   const [orderData, setOrderData] = useState({
     washingKgValue: 1,
     description: "",
   });
-  
-  const postCreateOrder = async () => {
-    let account;
+  const [requestData, setRequestData] = useState({
+    placeName: "",
+    customerLocation: "",
+    laundryLocation: "",
+    riderCost: "",
+  });
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchCustomerLaundryPositionData();
+      console.log(requestData);
+    }
+  }, [isFocused]);
+
+  const fetchCustomerLaundryPositionData = async () => {
+    let accountId;
     await AsyncStorage.getItem("@account").then((res) => {
-      account = JSON.parse(res).split(",")[0];
+      accountId = JSON.parse(res).split(",")[0];
+    });
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/customer/GetCustomerLaundryPosition.php?cus_id=${accountId}&laundry_id=${laundryId}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          const riderCost = calculatorDistance(data.request);
+          setRequestData({
+            placeName: data.request.cus_placeName,
+            customerLocation: data.request.cus_lat + "," + data.request.cus_lng,
+            laundryLocation: data.request.laundry_location,
+            riderCost: riderCost,
+          });
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const calculatorDistance = (data) => {
+    let lat1 = parseFloat(data.cus_lat);
+    let lon1 = parseFloat(data.cus_lng);
+    //destination
+    let lat2 = parseFloat(data.laundry_location.split(",")[0]);
+    let lon2 = parseFloat(data.laundry_location.split(",")[1]);
+
+    const R = 6371e3; // earth radius in meters
+    const φ1 = lat1 * (Math.PI / 180);
+    const φ2 = lat2 * (Math.PI / 180);
+    const Δφ = (lat2 - lat1) * (Math.PI / 180);
+    const Δλ = (lon2 - lon1) * (Math.PI / 180);
+
+    const a =
+      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+      Math.cos(φ1) * Math.cos(φ2) * (Math.sin(Δλ / 2) * Math.sin(Δλ / 2));
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const finalDistance = (R * c) / 1000;
+
+    const riderCost = Math.floor(finalDistance / 5) * 10;
+    return riderCost;
+  };
+
+  const postCreateOrder = async () => {
+    let accountId;
+    await AsyncStorage.getItem("@account").then((res) => {
+      accountId = JSON.parse(res).split(",")[0];
     });
 
     var formdata = new FormData();
     formdata.append("laundry_id", laundryId);
-    formdata.append("cus_id", account);
+    formdata.append("cus_id", accountId);
     formdata.append("order_service_type", laundryService);
     formdata.append("order_washingKg", orderData.washingKgValue);
     formdata.append("order_isReed", isEnabled.reed);
     formdata.append("order_description", orderData.description);
     formdata.append("order_fixedCost_by_laundry", calculateEstimateCost());
-    formdata.append("order_firstRideCost", 40);
-    formdata.append("order_secondRideCost", 40);
+    formdata.append("order_firstRideCost", requestData.riderCost);
+    formdata.append("order_secondRideCost", requestData.riderCost);
     formdata.append("order_status", "รอร้านยืนยันรายการ");
-    formdata.append(
-      "order_source_location",
-      "13.81480277932051,100.56665129748043"
-    );
-    formdata.append(
-      "order_dest_location",
-      "13.793047980709705,100.57274527599726"
-    );
-    // console.log(formdata);
+    formdata.append("order_source_location", requestData.customerLocation);
+    formdata.append("order_dest_location", requestData.laundryLocation);
     try {
       await GetApi.useFetch(
         "POST",
@@ -66,7 +133,10 @@ const CreateOrderScreen = ({ navigation, route }) => {
     } catch (e) {
       console.log(e);
     } finally {
-      navigation.navigate("WaitingForRider");
+      navigation.navigate("WaitingForRider", {
+        source_address: requestData.placeName,
+        destaination_address: laundryName,
+      });
     }
   };
 
@@ -99,7 +169,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
         <View style={{ margin: 10, marginTop: 20 }}>
           <View style={content1}>
             <Text style={[text, { fontSize: 14, marginLeft: 10 }]}>
-              {`ที่อยู่จัดส่ง: 88 ถนน งามวงศ์วาน แขวง ลาดยาว เขต...`}
+              {`ที่อยู่จัดส่ง: ${requestData.placeName}`}
             </Text>
           </View>
 
@@ -131,7 +201,9 @@ const CreateOrderScreen = ({ navigation, route }) => {
               </Text>
               <TouchableOpacity
                 onPress={() =>
-                  setOrderData({ washingKgValue: orderData.washingKgValue + 1 })
+                  setOrderData({
+                    washingKgValue: orderData.washingKgValue + 1,
+                  })
                 }
               >
                 <MaterialCommunityIcons
@@ -212,7 +284,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={[text, { marginLeft: 10 }]}>{`จัดส่ง`}</Text>
               </View>
-              <Text style={text}>{`40 บาท`}</Text>
+              <Text style={text}>{`${requestData.riderCost * 2} บาท`}</Text>
             </View>
 
             <View style={content4}>
@@ -227,13 +299,6 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 value={isEnabled.QR}
                 style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
               />
-            </View>
-
-            <View style={content4}>
-              <Text style={text}>{`โปรโมชั่น`}</Text>
-              <TouchableOpacity style={button1}>
-                <Text style={[text, { color: "#ffffff" }]}>{`ตรวจสอบ`}</Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -252,7 +317,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
           <View style={[content3, { marginHorizontal: 5 }]}>
             <Text style={[text, { color: "#ffffff" }]}>{`ส่งซัก`}</Text>
             <Text style={[text, { color: "#ffffff" }]}>{`฿${
-              calculateEstimateCost() + 40
+              calculateEstimateCost() + requestData.riderCost * 2
             } บาท`}</Text>
           </View>
         </TouchableOpacity>

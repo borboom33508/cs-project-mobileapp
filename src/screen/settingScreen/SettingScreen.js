@@ -122,11 +122,11 @@ const SettingScreen = ({ navigation, props }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View>
+      {/* <View>
         <TouchableOpacity style={button}>
           <Text style={textButton}>{"สะสมแต้ม"}</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <View>
         <TouchableOpacity
           style={button}

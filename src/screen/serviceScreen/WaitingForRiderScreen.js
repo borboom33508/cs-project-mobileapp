@@ -4,11 +4,14 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Divider } from "react-native-paper";
 
-const WaitingForRiderScreen = ({ navigation }) => {
+const WaitingForRiderScreen = ({ navigation, route }) => {
+  const sourceAddress = route.params.source_address;
+  const destainationAddress = route.params.destaination_address;
+
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate("FoundRider");
-    }, 2000);
+    }, 5000);
   }, []);
 
   return (
@@ -36,7 +39,7 @@ const WaitingForRiderScreen = ({ navigation }) => {
         </View>
       </View>
       <Divider />
-      <View style={{ margin: 10, marginTop: 20 }}>
+      <View style={{ margin: 10, marginTop: "20%" }}>
         <View style={{ alignItems: "center" }}>
           <Image
             source={{
@@ -53,26 +56,26 @@ const WaitingForRiderScreen = ({ navigation }) => {
           >
             {`กำลังหาคนรับผ้า`}
           </Text>
-        </View>
-        <View style={{ marginTop: "25%", marginHorizontal: "5%" }}>
-          <Text
-            style={{
-              fontSize: 16,
-              color: "#000000",
-              fontFamily: "Kanit",
-            }}
-          >
-            {`รับผ้าที่: ซอยงามวงศ์วาน 42...`}
-          </Text>
-          <Text
-            style={{
-              fontSize: 16,
-              color: "#000000",
-              fontFamily: "Kanit",
-            }}
-          >
-            {`ที่อยู่จัดส่ง: 88 ถนน งามวงศ์วาน แขวง ลาดยาว เขต...`}
-          </Text>
+          <View style={{ marginTop: "5%", marginHorizontal: "5%" }}>
+            <Text
+              style={{
+                fontSize: 16,
+                color: "#000000",
+                fontFamily: "Kanit",
+              }}
+            >
+              {`รับผ้าที่: ${sourceAddress}`}
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                color: "#000000",
+                fontFamily: "Kanit",
+              }}
+            >
+              {`ที่อยู่จัดส่ง: ${destainationAddress}`}
+            </Text>
+          </View>
         </View>
       </View>
     </View>
