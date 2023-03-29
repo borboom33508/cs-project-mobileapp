@@ -196,7 +196,7 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
               }}
             >
               <View style={{ alignItems: "center", marginHorizontal: 5 }}>
-                <Text style={[text, { color: "#ffffff" }]}>{`ยกเลิก`}</Text>
+                <Text style={[text, { color: "#ffffff" }]}>{`ยกเลิกรายการ`}</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
