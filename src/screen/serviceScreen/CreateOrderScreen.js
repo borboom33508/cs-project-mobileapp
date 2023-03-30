@@ -98,8 +98,13 @@ const CreateOrderScreen = ({ navigation, route }) => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     const finalDistance = (R * c) / 1000;
-
-    const riderCost = Math.floor(finalDistance / 5) * 10;
+    let riderCost;
+    console.log(finalDistance);
+    if (finalDistance >= 5) {
+      riderCost = Math.floor(finalDistance / 5) * 10;
+    } else {
+      riderCost = 20;
+    }
     return riderCost;
   };
 
@@ -115,7 +120,10 @@ const CreateOrderScreen = ({ navigation, route }) => {
     formdata.append("order_service_type", laundryService);
     formdata.append("order_washingKg", orderData.washingKgValue);
     formdata.append("order_isReed", isEnabled.reed);
-    formdata.append("order_description", orderData.description);
+    formdata.append(
+      "order_description",
+      orderData.description ? orderData.description : ""
+    );
     formdata.append("order_fixedCost_by_laundry", calculateEstimateCost());
     formdata.append("order_firstRideCost", requestData.riderCost);
     formdata.append("order_secondRideCost", requestData.riderCost);
@@ -133,10 +141,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
     } catch (e) {
       console.log(e);
     } finally {
-      navigation.navigate("WaitingForRider", {
-        source_address: requestData.placeName,
-        destaination_address: laundryName,
-      });
+      navigation.navigate("Notification");
     }
   };
 

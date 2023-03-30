@@ -14,16 +14,17 @@ import {
   text,
 } from "./OrderLaundryDetailScreenStyle";
 import { ScrollView } from "react-native";
+import CreatePaymentSlip from "../../components/CreatePaymentSlip";
 
 const OrderLaundryDetailScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const orderId = route.params.order_id;
   const [orderData, setOrderData] = useState({});
+  const [isSuccess, setSuccess] = useState(false);
 
   useEffect(() => {
     if (isFocused) {
       fetchOrderLaundryData();
-      // console.log(orderData);
     }
   }, [isFocused]);
 
@@ -63,10 +64,21 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
     }
   };
 
-  const postUpdateStatus = async () => {
+  const postUpdateStatus = async (header, price) => {
+    console.log(header);
     var formdata = new FormData();
     formdata.append("order_id", orderId);
-    formdata.append("order_status", "กำลังค้นหาไรเดอร์");
+    formdata.append("order_detail_id", orderData.order_detail_id);
+    formdata.append(
+      "order_status",
+      header == "submit" || header == "process"
+        ? header == "submit"
+          ? "กำลังค้นหาไรเดอร์"
+          : "กำลังดำเนินการ"
+        : "ผ้าพร้อมส่งคืนโปรดชำระเงิน"
+    );
+    formdata.append("order_payment", "โปรดชำระเงิน");
+    formdata.append("order_finalCost", price ? price : "");
     try {
       await GetApi.useFetch(
         "POST",
@@ -95,8 +107,8 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
           header == "delete" || header == "submit"
             ? header == "delete"
               ? deleteOrder()
-              : postUpdateStatus()
-            : null,
+              : postUpdateStatus(header)
+            : postUpdateStatus(header),
       },
     ]);
   };
@@ -179,43 +191,79 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
               >{`เวลาทำการ: ${orderData.laundry_hours} น.`}</Text>
             </View>
           </View>
+          {orderData.order_finalCost ? (
+            <View style={content1}>
+              <View style={{ marginHorizontal: 10, marginTop: 5 }}>
+                <Text style={[text, { fontSize: 18 }]}>{`ใบชำระเงิน`}</Text>
+                <Text
+                  style={text}
+                >{`ยอดชำระ: ${orderData.order_finalCost} บาท`}</Text>
+              </View>
+            </View>
+          ) : null}
         </View>
       </ScrollView>
       <View style={content3}>
-        {orderData.order_status == "รอร้านยืนยันรายการ" ? (
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
+        {orderData.order_status == "รอร้านยืนยันรายการ" ||
+        orderData.order_status == "กำลังดำเนินการ" ? (
+          orderData.order_status == "รอร้านยืนยันรายการ" ? (
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <TouchableOpacity
+                onPress={() => alertSubmit("delete")}
+                style={{
+                  backgroundColor: "#D9534F",
+                  padding: 10,
+                  borderRadius: 5,
+                  width: "48%",
+                }}
+              >
+                <View style={{ alignItems: "center", marginHorizontal: 5 }}>
+                  <Text
+                    style={[text, { color: "#ffffff" }]}
+                  >{`ยกเลิกรายการ`}</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => alertSubmit("submit")}
+                style={{
+                  backgroundColor: "#4691FB",
+                  padding: 10,
+                  borderRadius: 5,
+                  width: "48%",
+                }}
+              >
+                <View style={{ alignItems: "center", marginHorizontal: 5 }}>
+                  <Text style={[text, { color: "#ffffff" }]}>{`ยืนยัน`}</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ) : (
             <TouchableOpacity
-              onPress={() => alertSubmit("delete")}
+              onPress={() => setSuccess(true)}
               style={{
-                backgroundColor: "#D9534F",
+                backgroundColor:
+                  orderData.order_status == "กำลังดำเนินการ"
+                    ? "#4691FB"
+                    : "#767577",
                 padding: 10,
                 borderRadius: 5,
-                width: "48%",
               }}
+              disabled={
+                orderData.order_status == "กำลังดำเนินการ" ? false : true
+              }
             >
               <View style={{ alignItems: "center", marginHorizontal: 5 }}>
-                <Text style={[text, { color: "#ffffff" }]}>{`ยกเลิกรายการ`}</Text>
+                <Text
+                  style={[text, { color: "#ffffff" }]}
+                >{`ผ้าพร้อมส่งคืนโปรดชำระเงิน`}</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => alertSubmit("submit")}
-              style={{
-                backgroundColor: "#4691FB",
-                padding: 10,
-                borderRadius: 5,
-                width: "48%",
-              }}
-            >
-              <View style={{ alignItems: "center", marginHorizontal: 5 }}>
-                <Text style={[text, { color: "#ffffff" }]}>{`ยืนยัน`}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          )
         ) : (
           <TouchableOpacity
-            onPress={() => alertSubmit()}
+            onPress={() => alertSubmit("process")}
             style={{
               backgroundColor:
                 orderData.order_status == "คนขับถึงร้านแล้ว"
@@ -236,6 +284,22 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         )}
       </View>
+
+      {isSuccess ? (
+        <CreatePaymentSlip
+          props={{
+            order_fixedCost_by_laundry: orderData.order_fixedCost_by_laundry,
+            order_firstRideCost: orderData.order_firstRideCost,
+            order_secondRideCost: orderData.order_secondRideCost,
+          }}
+          onChange={(event) => {
+            if (event.type == "set") {
+              postUpdateStatus("", event.price);
+            }
+            setSuccess(false);
+          }}
+        />
+      ) : null}
     </View>
   );
 };

@@ -37,6 +37,7 @@ const SelectShopScreen = ({ navigation }) => {
   }, [isFocused]);
 
   const getLaundryData = async (cusData) => {
+    console.log(cusData);
     try {
       await GetApi.useFetch("GET", "", `/customer/GetLaundryData.php`).then(
         (res) => {

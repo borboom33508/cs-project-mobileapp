@@ -70,8 +70,12 @@ const OrderLaundryScreen = ({ navigation }) => {
           />
           <View style={{ marginLeft: 16 }}>
             <Text style={text}>{`Order Number: ${item.order_id}`}</Text>
-            <Text style={text}>{`สถานะ: ${item.order_status}`}</Text>
-            <Text style={text}>{`ชำระเงิน: ${item.order_payment}`}</Text>
+            <Text
+              style={[text, { fontSize: 14 }]}
+            >{`สถานะ: ${item.order_status}`}</Text>
+            <Text
+              style={[text, { fontSize: 14 }]}
+            >{`ชำระเงิน: ${item.order_payment}`}</Text>
           </View>
         </View>
       </TouchableOpacity>

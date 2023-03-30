@@ -125,6 +125,15 @@ const OrderDetailScreen = ({ navigation, route }) => {
             >{`Order Number: ${orderId}`}</Text>
           </View>
           <View style={content1}>
+            <Text style={[text, { fontSize: 18 }]}>{`รายละเอียดร้านค้า`}</Text>
+            <View style={{ marginHorizontal: 10, marginTop: 5 }}>
+              <Text style={text}>{`ชื่อ: ${orderData.laundry_name}`}</Text>
+              <Text
+                style={text}
+              >{`เบอร์โทรศัพท์: ${orderData.laundry_phone}`}</Text>
+            </View>
+          </View>
+          <View style={content1}>
             <Text
               style={[text, { fontSize: 18 }]}
             >{`รายละเอียดการส่งซัก`}</Text>
@@ -233,10 +242,14 @@ const OrderDetailScreen = ({ navigation, route }) => {
           <TouchableOpacity
             onPress={() => alertReceiveCloth()}
             style={{
-              backgroundColor: "#4691FB",
+              backgroundColor:
+                orderData.order_status == "ผ้าพร้อมส่งคืน"
+                  ? "#4691FB"
+                  : "#767577",
               padding: 10,
               borderRadius: 5,
             }}
+            disabled={orderData.order_status == "ผ้าพร้อมส่งคืน" ? false : true}
           >
             <View style={{ alignItems: "center", marginHorizontal: 5 }}>
               <Text style={[text, { color: "#ffffff" }]}>{`รับผ้า`}</Text>

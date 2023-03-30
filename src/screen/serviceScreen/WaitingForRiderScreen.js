@@ -9,9 +9,10 @@ const WaitingForRiderScreen = ({ navigation, route }) => {
   const destainationAddress = route.params.destaination_address;
 
   useEffect(() => {
-    setTimeout(() => {
-      navigation.navigate("FoundRider");
-    }, 5000);
+    console.log(route.params);
+    // setTimeout(() => {
+    //   navigation.navigate("FoundRider");
+    // }, 5000);
   }, []);
 
   return (
@@ -20,7 +21,7 @@ const WaitingForRiderScreen = ({ navigation, route }) => {
         <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Order");
+              navigation.navigate("Notification");
             }}
             style={{ alignItems: "center", flexDirection: "row" }}
           >
@@ -33,7 +34,7 @@ const WaitingForRiderScreen = ({ navigation, route }) => {
                 marginLeft: 10,
               }}
             >
-              {`รายการทั้งหมด`}
+              {`แจ้งเตือน`}
             </Text>
           </TouchableOpacity>
         </View>
