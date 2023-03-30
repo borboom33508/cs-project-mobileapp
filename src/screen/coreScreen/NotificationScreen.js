@@ -81,7 +81,7 @@ const NotificationScreen = ({ navigation }) => {
               color="#4691FB"
               style={{ marginLeft: 4 }}
             />
-            <View style={{ marginLeft: 12 }}>
+            <View style={{ marginLeft: 12, }}>
               <Text style={text}>{`Order Number: ${item.order_id}`}</Text>
               <Text
                 style={[text, { fontSize: 14 }]}
@@ -92,17 +92,17 @@ const NotificationScreen = ({ navigation }) => {
               {item.order_status == "คนขับกำลังไปรับผ้า" ? (
                 <Text
                   style={[text, { fontSize: 14 }]}
-                >{`กำลังไปที่: ${item.cus_placename}`}</Text>
+                >{`กำลังไปที่: ${(item.cus_placename).slice(0,21)}...`}</Text>
               ) : null}
               {item.order_status == "คนขับกำลังไปส่งผ้า" && !item.rider_id2 ? (
                 <Text
                   style={[text, { fontSize: 14 }]}
-                >{`กำลังไปที่: ${item.laundry_name}`}</Text>
+                >{`กำลังไปที่: ${(item.laundry_name).slice(0,21)}...`}</Text>
               ) : null}
               {item.order_status == "คนขับกำลังไปส่งผ้า" && item.rider_id2 ? (
                 <Text
                   style={[text, { fontSize: 14 }]}
-                >{`กำลังไปที่: ${item.cus_placename}`}</Text>
+                >{`กำลังไปที่: ${(item.cus_placename).slice(0,21)}...`}</Text>
               ) : null}
             </View>
           </View>

@@ -174,7 +174,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
         <View style={{ margin: 10, marginTop: 20 }}>
           <View style={content1}>
             <Text style={[text, { fontSize: 14, marginLeft: 10 }]}>
-              {`ที่อยู่จัดส่ง: ${requestData.placeName}`}
+              {`ที่อยู่จัดส่ง: ${(requestData.placeName).slice(0,30)}...`}
             </Text>
           </View>
 

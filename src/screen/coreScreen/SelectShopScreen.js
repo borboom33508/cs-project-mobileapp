@@ -189,7 +189,7 @@ const SelectShopScreen = ({ navigation }) => {
             <Ionicons name="location-outline" size={24} color="#ffffff" />
             <View style={{ marginLeft: 5 }}>
               <Text style={[text1, { fontSize: 12 }]}>ที่อยู่จัดส่ง</Text>
-              <Text style={text1}>{cusPlaceName}</Text>
+              <Text style={text1}>{(cusPlaceName).slice(0,35) + "..."}</Text>
             </View>
           </View>
         </TouchableOpacity>
