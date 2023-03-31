@@ -108,7 +108,7 @@ const JobListScreen = ({ navigation }) => {
 
   const onRefresh = async () => {
     setIsFetching(true);
-    await getCurrentPosition();
+    await fetchJobAndGetCurrentPosition();
     setIsFetching(false);
   };
 
