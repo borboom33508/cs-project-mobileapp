@@ -40,7 +40,9 @@ const SignUpScreen = ({ navigation, props }) => {
       !email.value ||
       !password.value ||
       !passwordConfirm.value ||
-      !phone.value
+      !phone.value ||
+      !email.value.includes("@") ||
+      !email.value.includes(".")
     ) {
       if (username.value == "" || username.value == null) {
         setUsername({ value: "", error: true });
