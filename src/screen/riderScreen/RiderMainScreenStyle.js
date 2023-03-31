@@ -11,22 +11,23 @@ export const button = {
 };
 
 export const text = {
-  marginTop: "20%",
-  fontSize: 42,
+  fontSize: 16,
   color: "#000000",
-  fontFamily: "Montserrat",
+  fontFamily: "Kanit",
 };
 
 export const container = {
   flex: 1,
   backgroundColor: "#ffffff",
+  width: "100%",
+  height: "100%",
 };
 
 export const content1 = {
   marginVertical: 60,
+  marginHorizontal: 20,
   flexDirection: "row",
   justifyContent: "space-between",
-  marginHorizontal: 20,
 };
 
 export const activeButton = {
@@ -40,16 +41,3 @@ export const activeButton = {
   height: 40,
   justifyContent: "center",
 };
-
-export const inactiveButton = {
-  marginHorizontal: 10,
-  marginTop: "2%",
-  borderRadius: 10,
-  alignItems: "center",
-  backgroundColor: "#F91616",
-  padding: 0,
-  width: 96,
-  height: 40,
-  justifyContent: "center",
-}
-

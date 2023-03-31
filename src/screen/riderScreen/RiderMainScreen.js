@@ -13,31 +13,26 @@ import {
   text,
   content1,
   activeButton,
-  inactiveButton,
 } from "./RiderMainScreenStyle";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { FontAwesome } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { useIsFocused } from "@react-navigation/native";
-import GetApi , { API } from "../../api/GetApi";
+import GetApi, { API } from "../../api/GetApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
-const UNKNOWN_PICTURE = ""
-
-const RiderMainScreen = ({ navigation, props }) => {
+const RiderMainScreen = ({ navigation }) => {
+  const isFocused = useIsFocused();
   const [currentPosition, setCurrentPosition] = useState({});
-  const [riderId, setRiderId] = useState("")
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
-  const [rating, setRating] = useState("");
   const [picture, setPicture] = useState("");
-  const [isActive, setIsActive] = useState(true);
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isFocused) {
       getCurrentPosition();
       getRiderData();
+      // fetchJobFromOrder();
     }
   }, [isFocused]);
 
@@ -68,7 +63,6 @@ const RiderMainScreen = ({ navigation, props }) => {
         if (data.success) {
           setFname(data.request.rider_fname);
           setLname(data.request.rider_lname);
-          setRating(data.request.rider_rating);
           setPicture(data.request.rider_picture);
         } else {
           console.log(data);
@@ -78,7 +72,7 @@ const RiderMainScreen = ({ navigation, props }) => {
       console.log(e);
     }
   };
-  
+
   const getRiderData = async () => {
     await AsyncStorage.getItem("@account").then((res) => {
       let riderId = JSON.parse(res);
@@ -86,75 +80,56 @@ const RiderMainScreen = ({ navigation, props }) => {
         console.log("not found");
       } else {
         fetchRiderData(riderId);
-        setRiderId(riderId)
       }
     });
   };
 
   return (
     <View style={container}>
-      <View style={content1}>
-        <TouchableOpacity
-          style={button}
-          onPress={() => {
-            navigation.navigate("ProfitRider");
-          }}
+      <View style={{ position: "absolute" }}>
+        <MapView
+          region={currentPosition}
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
         >
-          <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>
-            {"รายได้"}
-          </Text>
-        </TouchableOpacity>
+          <Marker coordinate={currentPosition} title={"คุณอยู่ที่นี่"} />
+        </MapView>
+      </View>
+      <View style={[content1, { marginTop: getStatusBarHeight() }]}>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            style={button}
+            onPress={() => navigation.navigate("ProfitRider")}
+          >
+            <Text style={[text, { fontSize: 18, color: "#ffffff" }]}>
+              {"รายได้"}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={activeButton}
+            onPress={() => navigation.navigate("JobList")}
+          >
+            <Text style={[text, { fontSize: 18, color: "#ffffff" }]}>
+              รับงาน
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Image
             source={{ uri: API.urlRiderImage + picture }}
             style={{ width: 80, height: 80 }}
           />
-          <Text>{fname + " " + lname}</Text>
-          <View style={{ flexDirection: "row" }}>
-            <FontAwesome name="star" color="orange" />
-            <Text style={{ marginLeft: 8 }}>{parseFloat(rating).toFixed(1)}</Text>
-          </View>
+          <Text style={text}>{fname + " " + lname}</Text>
         </View>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "#ffff",
-          alignItems: "center",
-          justifyContent: "center",
-          // position: "absolute"
-        }}
-      >
-        <MapView region={currentPosition} style={styles.map} provider={PROVIDER_GOOGLE}>
-          <Marker coordinate={currentPosition} title={"คุณอยู่ที่นี่"} />
-        </MapView>
-      </View>
-      <View style={{ alignItems: "center", marginTop: 30 }}>
-        <TouchableOpacity
-          style={isActive == true ? activeButton : inactiveButton}
-          onPress={() => {
-            setIsActive(!isActive);
-          }}
-        >
-          <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit"}}>
-            {isActive == true ? "Active" : "Inactive"}
-          </Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   map: {
-    width: Dimensions.get("screen").width - 20,
-    height: Dimensions.get("screen").height - 300,
+    width: Dimensions.get("screen").width,
+    height: Dimensions.get("screen").height,
   },
 });
 

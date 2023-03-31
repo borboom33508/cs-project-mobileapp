@@ -66,9 +66,7 @@ const OrderScreen = ({ navigation }) => {
             style={{ marginLeft: 4 }}
           />
           <View style={{ marginLeft: 16 }}>
-            <Text
-              style={[text, { fontWeight: "900" }]}
-            >{`Order Number: ${item.order_id}`}</Text>
+            <Text style={text}>{`Order Number: ${item.order_id}`}</Text>
             <Text
               style={[text, { fontSize: 14 }]}
             >{`${item.laundry_name}`}</Text>

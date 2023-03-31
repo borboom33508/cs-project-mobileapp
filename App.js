@@ -46,6 +46,7 @@ import LaundryTransactionScreen from "./src/screen/laundryScreen/LaundryTransact
 import GoogleMapTest from "./src/GoogleMapTest";
 import SearchScreen from "./src/screen/coreScreen/SearchScreen";
 import OrderLaundryDetailScreen from "./src/screen/laundryScreen/OrderLaundryDetailScreen";
+import JobListScreen from "./src/screen/riderScreen/JobListScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -217,6 +218,8 @@ export default function App() {
         <Stack.Screen name="GoogleMapTest" component={GoogleMapTest} />
         <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen name="OrderLaundryDetail" component={OrderLaundryDetailScreen} />
+        <Stack.Screen name="JobList" component={JobListScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
