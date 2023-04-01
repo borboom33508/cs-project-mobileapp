@@ -1,17 +1,36 @@
 import { useEffect } from "react";
 import { View, Text, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import wash_machine from "../../../assets/washing-machine.png";
 import { text, image, container } from "./LandingScreenStyle";
 import { useIsFocused } from "@react-navigation/native";
+import GetApi from "../../api/GetApi";
 
 const LandingScreen = ({ navigation, props }) => {
-  // const isFoucsed = useIsFocused();
+  const isFoucsed = useIsFocused();
 
   useEffect(() => {
-    checkUserLogin();
-  }, []);
+    if (isFoucsed) checkUserLogin();
+  }, [isFoucsed]);
+
+  const fetchOrder = async (riderId) => {
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/rider/GetOrderData.php?rider_id=${riderId}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          navigation.navigate("ShowMapDestination");
+        } else {
+          navigation.navigate("RiderMain");
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const checkUserLogin = async () => {
     setTimeout(async () => {
@@ -26,7 +45,7 @@ const LandingScreen = ({ navigation, props }) => {
         } else if (whoami == "customer") {
           navigation.navigate("Main");
         } else if (whoami == "rider") {
-          navigation.navigate("RiderMain");
+          fetchOrder(account.split(",")[0]);
         } else if (whoami == "laundry") {
           navigation.navigate("Laundry");
         }

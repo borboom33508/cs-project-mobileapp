@@ -149,7 +149,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
     if (isEnabled.reed) {
       return (
         orderData.washingKgValue * laundryService.split("_")[1] +
-        orderData.washingKgValue * 100
+        orderData.washingKgValue * 60
       );
     } else {
       return orderData.washingKgValue * laundryService.split("_")[1];
@@ -223,7 +223,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
           <View style={content2}>
             <View>
               <Text style={[text, { fontSize: 28 }]}>{`รีด`}</Text>
-              <Text style={[text, { fontSize: 14 }]}>{`~ตัวละ 20 บาท`}</Text>
+              <Text style={[text, { fontSize: 14 }]}>{`~ตัวละ 10 บาท`}</Text>
             </View>
             <Switch
               trackColor={{ false: "#767577", true: "#81b0ff" }}

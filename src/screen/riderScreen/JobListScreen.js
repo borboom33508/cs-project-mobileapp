@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -14,11 +14,16 @@ import {
   text,
 } from "./JobListScreenStyle";
 import * as Location from "expo-location";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const JobListScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [isFetching, setIsFetching] = useState(false);
   const [orderData, setOrderData] = useState([]);
+  const [currentPosition, setCurrentPosition] = useState({
+    latitude: 0.0,
+    longitude: 0.0,
+  });
 
   useEffect(() => {
     if (isFocused) {
@@ -33,6 +38,10 @@ const JobListScreen = ({ navigation }) => {
     }
     let location = await Location.getCurrentPositionAsync({
       enableHighAccuracy: true,
+    });
+    setCurrentPosition({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
     });
     try {
       await GetApi.useFetch(
@@ -57,7 +66,9 @@ const JobListScreen = ({ navigation }) => {
                 order_dest_location1: item.order_dest_location1,
                 order_firstRideCost: item.order_firstRideCost,
                 laundry_name: item.laundry_name,
+                laundry_phone: item.laundry_phone,
                 cus_placeName: item.cus_placeName,
+                cus_phone: item.cus_phone,
                 distance: distance[index],
               };
             }
@@ -70,7 +81,9 @@ const JobListScreen = ({ navigation }) => {
               order_dest_location1: item.order_dest_location1,
               order_firstRideCost: item.order_firstRideCost,
               laundry_name: item.laundry_name,
+              laundry_phone: item.laundry_phone,
               cus_placeName: item.cus_placeName,
+              cus_phone: item.cus_phone,
               distance: distance[index],
             }))
           );
@@ -78,6 +91,38 @@ const JobListScreen = ({ navigation }) => {
       });
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  const PostUpdatePositionAndStatus = async (item) => {
+    let riderId;
+    await AsyncStorage.getItem("@account").then((res) => {
+      riderId = JSON.parse(res).split(",")[0];
+    });
+    var formdata = new FormData();
+    formdata.append("order_id", item.order_id);
+    formdata.append("rider_id1", riderId);
+    formdata.append("order_status", "คนขับกำลังไปรับผ้า");
+    formdata.append(
+      "order_rider_location",
+      currentPosition.latitude + "," + currentPosition.longitude
+    );
+    try {
+      await GetApi.useFetch(
+        "POST",
+        formdata,
+        `/rider/PostUpdateRiderPositionAndStatus.php`
+      ).then((data) => {
+        console.log(data);
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      navigation.navigate("ShowMapDestination", {
+        item,
+        current_position_latitude: currentPosition.latitude,
+        current_position_longitude: currentPosition.longitude,
+      });
     }
   };
 
@@ -104,6 +149,20 @@ const JobListScreen = ({ navigation }) => {
     const finalDistance = (R * c) / 1000;
     destination = finalDistance.toFixed(1);
     return destination;
+  };
+
+  const alertSubmit = (item) => {
+    Alert.alert("โปรดยืนยัน", "", [
+      {
+        text: "ยกเลิก",
+        style: "cancel",
+      },
+      {
+        text: "ยืนยัน",
+        style: "default",
+        onPress: () => PostUpdatePositionAndStatus(item),
+      },
+    ]);
   };
 
   const onRefresh = async () => {
@@ -133,21 +192,15 @@ const JobListScreen = ({ navigation }) => {
           >{`ชื่อร้าน: ${item.laundry_name}`}</Text>
           <Text
             style={[text, { fontSize: 14 }]}
-          >{`ระยะห่าง: ${item.distance} กม.`}</Text>
+          >{`ระยะห่างจากคุณ: ${item.distance} กม.`}</Text>
         </View>
       </View>
       <View style={content4}>
         <TouchableOpacity
-          onPress={() => console.log("test")}
-          style={[button, { backgroundColor: "#D9534F" }]}
-        >
-          <Text style={[text, { fontSize: 14, color: "#ffffff" }]}>ยกเลิก</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => console.log("test")}
+          onPress={() => alertSubmit(item)}
           style={[button, { backgroundColor: "#4691FB" }]}
         >
-          <Text style={[text, { fontSize: 14, color: "#ffffff" }]}>ยืนยัน</Text>
+          <Text style={[text, { fontSize: 14, color: "#ffffff" }]}>รับงาน</Text>
         </TouchableOpacity>
       </View>
     </View>

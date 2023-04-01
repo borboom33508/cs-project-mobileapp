@@ -47,6 +47,7 @@ import GoogleMapTest from "./src/GoogleMapTest";
 import SearchScreen from "./src/screen/coreScreen/SearchScreen";
 import OrderLaundryDetailScreen from "./src/screen/laundryScreen/OrderLaundryDetailScreen";
 import JobListScreen from "./src/screen/riderScreen/JobListScreen";
+import ShowMapDestinationScreen from "./src/screen/riderScreen/ShowMapDestinationScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -120,10 +121,11 @@ const LaundryScreen = () => {
           } else if (route.name === "CreditLaundry") {
             iconName = focused ? "wallet" : "wallet-outline";
             pageName = "เครดิต";
-          } else if (route.name === "SupportLaundry") {
-            iconName = focused ? "help-circle-outline" : "help-circle-outline";
-            pageName = "ช่วยเหลือ";
-          }
+          } 
+          // else if (route.name === "SupportLaundry") {
+          //   iconName = focused ? "help-circle-outline" : "help-circle-outline";
+          //   pageName = "ช่วยเหลือ";
+          // }
           return (
             <View style={{ alignItems: "center" }}>
               <Ionicons name={iconName} size={size} color={color} />
@@ -148,7 +150,7 @@ const LaundryScreen = () => {
       <Tab.Screen name="LaundryMain" component={LaundryMainScreen} />
       <Tab.Screen name="OrderLaundry" component={OrderLaundryScreen} />
       <Tab.Screen name="CreditLaundry" component={CreditLaundryScreen} />
-      <Tab.Screen name="SupportLaundry" component={SupportScreen} />
+      {/* <Tab.Screen name="SupportLaundry" component={SupportScreen} /> */}
     </Tab.Navigator>
   );
 };
@@ -219,6 +221,7 @@ export default function App() {
         <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen name="OrderLaundryDetail" component={OrderLaundryDetailScreen} />
         <Stack.Screen name="JobList" component={JobListScreen} />
+        <Stack.Screen name="ShowMapDestination" component={ShowMapDestinationScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>

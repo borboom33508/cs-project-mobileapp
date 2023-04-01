@@ -66,8 +66,7 @@ const NotificationScreen = ({ navigation }) => {
           } else if (
             item.order_status == "คนขับกำลังไปรับผ้า" ||
             item.order_status == "คนขับถึงที่อยู่ลูกค้าแล้ว" ||
-            item.order_status == "คนขับกำลังไปส่งผ้า" ||
-            item.order_status == "คนขับถึงที่หมายแล้ว"
+            item.order_status == "คนขับกำลังไปส่งผ้า"
           ) {
             navigation.navigate("FoundRider");
           } else {
