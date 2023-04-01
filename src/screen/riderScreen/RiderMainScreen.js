@@ -23,7 +23,12 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 
 const RiderMainScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
-  const [currentPosition, setCurrentPosition] = useState({});
+  const [currentPosition, setCurrentPosition] = useState({
+    latitude: 13.847468594271557,
+    longitude: 100.56969677482991,
+    latitudeDelta: 0.012,
+    longitudeDelta: 0.013,
+  });
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [picture, setPicture] = useState("");

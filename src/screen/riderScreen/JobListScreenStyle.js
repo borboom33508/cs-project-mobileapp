@@ -34,14 +34,12 @@ export const content3 = {
 };
 
 export const content4 = {
-  flexDirection: "row",
-  justifyContent: "space-between",
   marginTop: 10,
 };
 
 export const button = {
   borderRadius: 5,
   paddingVertical: 8,
-  width: "48%",
+  width: "100%",
   alignItems: "center",
 };

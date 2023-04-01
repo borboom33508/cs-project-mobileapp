@@ -8,11 +8,9 @@ import {
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
-  Animated,
-  AnimatedRegion,
 } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Ionicons } from "@expo/vector-icons";
 import { container } from "./SelectPositionScreenStyle";
@@ -22,14 +20,13 @@ import GetApi from "../../api/GetApi";
 
 const SelectPositionScreen = ({ navigation, props }) => {
   const isFocused = useIsFocused();
-  const mapRef = useRef();
   const [cusId, setCusId] = useState("");
   const [placeName, setPlaceName] = useState("");
   const [currentPosition, setCurrentPosition] = useState({
     latitude: 0,
     longitude: 0,
-    // latitudeDelta: 0.012,
-    // longitudeDelta: 0.013,
+    latitudeDelta: 0.012,
+    longitudeDelta: 0.013,
   });
   const [selectedPosition, setSelectedPosition] = useState({
     latitude: 0,
@@ -54,6 +51,8 @@ const SelectPositionScreen = ({ navigation, props }) => {
           setCurrentPosition({
             latitude: data.request.cus_lat,
             longitude: data.request.cus_lng,
+            latitudeDelta: 0.012,
+            longitudeDelta: 0.013,
           });
         } else {
           console.log(data);
