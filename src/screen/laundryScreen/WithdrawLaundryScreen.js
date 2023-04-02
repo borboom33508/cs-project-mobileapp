@@ -17,6 +17,7 @@ const WithdrawLaundryScreen = ({ navigation, props }) => {
   const [bank, setBank] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
+  const [phone, setPhone] = useState("");
   const isFocused = useIsFocused();
   const [isPress, setIsPress] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -24,6 +25,7 @@ const WithdrawLaundryScreen = ({ navigation, props }) => {
 
   useEffect(() => {
     if (isFocused) {
+      setIsPress(false)
       getLaundryAccountData();
     }
   }, [isFocused]);
@@ -42,6 +44,7 @@ const WithdrawLaundryScreen = ({ navigation, props }) => {
           setBank(data.request.laundry_bankName);
           setFname(data.request.laundry_ownerFname);
           setLname(data.request.laundry_ownerLname);
+          setPhone(data.request.laundry_phone)
         } else {
           console.log(data);
         }
@@ -70,35 +73,19 @@ const WithdrawLaundryScreen = ({ navigation, props }) => {
       setWithdrawAmount(x);
       setIsPress(true);
       setTimeout(() => {
-        postWithdrawLaundry();
+        navigation.navigate("OTPForm", {
+          page: "WithdrawLaundry",
+          description: "ถอนเงินเรียบร้อย",
+          account: {
+            laundryId: laundryId[0],
+            withdraw: withdrawAmount,
+            phone: phone
+          },
+        });
       }, 3000);
     } else {
       console.log("Invalid Input");
       setShowError(true);
-    }
-  };
-
-  const postWithdrawLaundry = async () => {
-    var formdata = new FormData();
-    formdata.append("laundry_id", laundryId.split(",")[0]);
-    formdata.append("withdraw", withdrawAmount);
-    formdata.append("tx_paymentType", "ถอนเงิน");
-    formdata.append("tx_amount", withdrawAmount);
-
-    try {
-      await GetApi.useFetch(
-        "POST",
-        formdata,
-        `/laundry/PostWithdrawLaundry.php`
-      ).then((res) => {
-        let data = JSON.parse(res);
-        console.log(res);
-        if (data.success) {
-          setIsSuccess(!isSuccess);
-        }
-      });
-    } catch (e) {
-      console.log(e);
     }
   };
 
@@ -128,7 +115,11 @@ const WithdrawLaundryScreen = ({ navigation, props }) => {
           </View>
           <View style={{ paddingVertical: 10 }}>
             <TextInput
-              label={<Text style={{ fontFamily: "Kanit" }}>{"ยอดถอนขั้นต่ำ 100 บาท"}</Text>}
+              label={
+                <Text style={{ fontFamily: "Kanit" }}>
+                  {"ยอดถอนขั้นต่ำ 100 บาท"}
+                </Text>
+              }
               mode="outlined"
               style={{ backgroundColor: "#ffffff", height: 60 }}
               onChangeText={setWithdrawAmount}

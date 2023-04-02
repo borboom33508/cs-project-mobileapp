@@ -23,7 +23,7 @@ const OTPScreen = ({ navigation, route, props }) => {
 
   useEffect(() => {
     if (isFocused) {
-      console.log(account);
+      // console.log(account.withdraw);
     } else {
       setOTP("");
       setOtpCode("");
@@ -39,16 +39,30 @@ const OTPScreen = ({ navigation, route, props }) => {
   };
 
   const verifyOTP = () => {
-    if (otp == otpCode && otp !== "") {
-      setIsOTPError(false);
-      addAccount();
-      page == "ChangePassword"
-        ? navigation.navigate(page)
-        : setIsSuccess(!isSuccess);
-      console.log("OTP ถูกต้อง");
+    if (page == "WithdrawLaundry") {
+      if (otp == otpCode && otp !== "") {
+        setIsOTPError(false);
+        postWithdrawLaundry();
+        setTimeout(() => {
+          navigation.navigate("CreditLaundry");
+        }, 2000);
+        setIsSuccess(!isSuccess);
+      } else {
+        setIsOTPError(true);
+        console.log(`OTP ที่ถูกคือ ${otpCode}`);
+      }
     } else {
-      setIsOTPError(true);
-      console.log(`OTP ที่ถูกคือ ${otpCode}`);
+      if (otp == otpCode && otp !== "") {
+        setIsOTPError(false);
+        addAccount();
+        page == "ChangePassword"
+          ? navigation.navigate(page)
+          : setIsSuccess(!isSuccess);
+        console.log("OTP ถูกต้อง");
+      } else {
+        setIsOTPError(true);
+        console.log(`OTP ที่ถูกคือ ${otpCode}`);
+      }
     }
   };
 
@@ -65,6 +79,29 @@ const OTPScreen = ({ navigation, route, props }) => {
         `/customer/PostAccountRequest.php`
       ).then((data) => {
         console.log(data);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const postWithdrawLaundry = async () => {
+    var formdata = new FormData();
+    formdata.append("laundry_id", account.laundryId);
+    formdata.append("withdraw", account.withdraw);
+    formdata.append("tx_paymentType", "ถอนเงิน");
+    formdata.append("tx_amount", account.withdraw);
+    try {
+      await GetApi.useFetch(
+        "POST",
+        formdata,
+        `/laundry/PostWithdrawLaundry.php`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        console.log(res);
+        if (data.success) {
+          setIsSuccess(!isSuccess);
+        }
       });
     } catch (e) {
       console.log(e);

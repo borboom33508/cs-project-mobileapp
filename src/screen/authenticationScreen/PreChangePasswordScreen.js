@@ -10,9 +10,41 @@ import { container, button } from "./PreChangePasswordScreenStyle";
 import { Ionicons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TextInput } from "react-native-paper";
+import { useIsFocused } from "@react-navigation/native";
 
 const PreChangePasswordScreen = ({ navigation, props }) => {
+  const isFocused = useIsFocused();
+  const [isError, setIsError] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
   const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    if (isFocused) {
+      setIsError(false);
+      setIsSuccess(false);
+    }
+    else {
+      setIsError(false);
+      setIsSuccess(false);
+    }
+
+  }, [isFocused])
+
+  const validateInput = () => {
+    if (phone == "" || phone == null) {
+      setIsError(true);
+    }
+    else {
+      setIsSuccess(true);
+      navigation.navigate("OTPForm", {
+        page: "SignIn",
+        description: "เปลี่ยนรหัสผ่านเรียบร้อย",
+        account: {
+          phone: phone 
+        },
+      });
+    }
+  }
 
   return (
     <View style={container}>
@@ -42,6 +74,7 @@ const PreChangePasswordScreen = ({ navigation, props }) => {
                 style={{ backgroundColor: "#ffffff", height: 60 }}
                 onChangeText={setPhone}
                 value={phone}
+                error={isError}
                 activeOutlineColor="#4691FB"
                 keyboardType="phone-pad"
                 theme={{
@@ -56,9 +89,12 @@ const PreChangePasswordScreen = ({ navigation, props }) => {
             <TouchableOpacity
               style={button}
               onPress={() => {
-                navigation.navigate("OTPForm", {
-                  page: "ChangePassword",
-                }); //ทำ handle ทีหลัง
+                validateInput();
+                if (isSuccess) {
+                  navigation.navigate("OTPForm", {
+                    page: "ChangePassword",
+                  }); //ทำ handle ทีหลัง
+                }
               }}
             >
               <Text
