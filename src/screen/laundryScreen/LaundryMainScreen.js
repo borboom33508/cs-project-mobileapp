@@ -1,5 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import GetApi, { API } from "../../api/GetApi";
 import { useIsFocused } from "@react-navigation/native";
@@ -10,6 +11,11 @@ const LaundryMainScreen = ({ navigation, props }) => {
   const [laundryId, setLaundryId] = useState("");
   const [name, setName] = useState("");
   const [picture, setPicture] = useState("");
+  const [rating, setRating] = useState("");
+  const [hours, setHours] = useState("");
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [phone, setPhone] = useState("");
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -29,6 +35,11 @@ const LaundryMainScreen = ({ navigation, props }) => {
         if (data.success) {
           setName(data.request.laundry_name);
           setPicture(data.request.laundry_picture);
+          setRating(data.request.laundry_rating);
+          setHours(data.request.laundry_hours);
+          setFname(data.request.laundry_ownerFname);
+          setLname(data.request.laundry_ownerLname);
+          setPhone(data.request.laundry_phone);
         } else {
           console.log(data);
         }
@@ -45,7 +56,7 @@ const LaundryMainScreen = ({ navigation, props }) => {
         console.log("not found");
       } else {
         fetchLaundryData(accountId);
-        setLaundryId(accountId)
+        setLaundryId(accountId);
       }
     });
   };
@@ -56,7 +67,7 @@ const LaundryMainScreen = ({ navigation, props }) => {
         <View
           style={{
             width: 500,
-            height: Platform.OS === "android" ? 170 : 180,
+            height: Platform.OS === "android" ? 170 : 220,
             position: "absolute",
             backgroundColor: "#4691FB",
           }}
@@ -79,14 +90,49 @@ const LaundryMainScreen = ({ navigation, props }) => {
           style={{ width: 230, height: 200, marginTop: 32 }}
           resizeMode="contain"
         />
-        <View>
-            <TouchableOpacity style={button} onPress={() => {
-                navigation.navigate("AddRiderAcc")
-            }}>
-                <Text style={{ fontSize: 18, color: "#ffffff", fontFamily: "Kanit" }}>{"เพิ่มไรเดอร์"}</Text>
-            </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            marginTop: 24,
+            backgroundColor: "#4691FB",
+            justifyContent: "center",
+            width: "100%",
+            height: "10%",
+            alignItems: "center"
+          }}
+        >
+          <AntDesign name="star" size={28} color="#ffbf00" />
+          <Text style={{ fontFamily: "Kanit", fontSize: 20, marginLeft: 16, color: "#ffff" }}>
+            {`Rating ปัจจุบัน: ${rating}`}
+          </Text>
         </View>
-      </View>
+          <Text style={{ fontFamily: "Kanit", fontSize: 24, marginBottom: 12, marginTop: 16 }}>
+            {"ข้อมูลร้านของคุณ"}
+          </Text>
+          <View
+            style={{
+              borderWidth: 1,
+              width: "80%",
+              borderRadius: 12,
+              padding: 18,
+              borderColor: "#4691FB",
+              justifyContent: "center"
+            }}
+          >
+            <Text style={{ fontFamily: "Kanit", fontSize: 16 }}>
+              {`ชื่อ: คุณ${fname} ${lname}`}
+            </Text>
+            <Text style={{ fontFamily: "Kanit", fontSize: 16 }}>
+              {"\n"}
+              {`เบอร์โทรศัพท์: ${phone}`}
+            </Text>
+            <Text style={{ fontFamily: "Kanit", fontSize: 16 }}>
+              {"\n"}
+              {`เวลาเปิด-ปิดร้าน: ${hours} `}
+            </Text>
+          </View>
+        </View>
     </View>
   );
 };
