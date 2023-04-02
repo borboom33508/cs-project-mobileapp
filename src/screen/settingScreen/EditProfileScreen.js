@@ -7,6 +7,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GetApi, { API } from "../../api/GetApi";
+import * as ImagePicker from "expo-image-picker";
 
 const EditProfileScreen = ({ navigation, props }) => {
   const [accountId, setAccountId] = useState("");
@@ -14,6 +15,7 @@ const EditProfileScreen = ({ navigation, props }) => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [picture, setPicture] = useState("");
+  const [newPicture, setNewPicture] = useState("");
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -69,6 +71,15 @@ const EditProfileScreen = ({ navigation, props }) => {
     formdata.append("cus_id", accountId.split(",")[0]);
     formdata.append("cus_name", username);
     formdata.append("cus_email", email);
+    formdata.append("cus_picture", picture);
+    if (newPicture) {
+      let localUri = newPicture;
+      let filename = localUri.split("/").pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+      formdata.append("photo", { uri: localUri, name: filename, type });
+    }
+    console.log(formdata);
     try {
       await GetApi.useFetch(
         "POST",
@@ -86,16 +97,28 @@ const EditProfileScreen = ({ navigation, props }) => {
     }
   };
 
+  const PickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setNewPicture(result.assets[0].uri);
+    }
+  };
+
   const alertConfirm = () => {
     Alert.alert("ยืนยันความถูกตัอง", "", [
+      {
+        text: "ยกเลิก",
+        style: "cancel",
+      },
       {
         text: "ยืนยัน",
         style: "default",
         onPress: () => handleSaveButton(),
-      },
-      {
-        text: "ยกเลิก",
-        style: "cancel",
       },
     ]);
   };
@@ -133,7 +156,11 @@ const EditProfileScreen = ({ navigation, props }) => {
           }}
         >
           <Image
-            source={{ uri: API.urlCustomerImage + picture }}
+            source={
+              newPicture
+                ? { uri: newPicture }
+                : { uri: API.urlCustomerImage + picture }
+            }
             style={{
               width: 190,
               height: 190,
@@ -143,7 +170,10 @@ const EditProfileScreen = ({ navigation, props }) => {
             resizeMode="contain"
           />
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => PickImage()}
+            style={{ marginTop: "5%" }}
+          >
             <Text
               style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}
             >

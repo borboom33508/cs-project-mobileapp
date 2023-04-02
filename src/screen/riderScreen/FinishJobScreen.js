@@ -23,10 +23,30 @@ const FinishJobScreen = ({ navigation, route }) => {
     picture: "",
     status: route.params.order_status,
   });
+  const [reqeustData, setRequestData] = useState({});
 
   useEffect(() => {
     console.log(orderData);
+    console.log(reqeustData);
+    fetchOrderLaundryData();
   }, []);
+
+  const fetchOrderLaundryData = async () => {
+    try {
+      await GetApi.useFetch(
+        "GET",
+        "",
+        `/order/GetOrderDataLaundry.php?order_id=${orderId}`
+      ).then((res) => {
+        let data = JSON.parse(res);
+        if (data.success) {
+          setRequestData(data.request);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const TakePicture = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -42,8 +62,11 @@ const FinishJobScreen = ({ navigation, route }) => {
   };
 
   const PostUpdateFinishJob = async () => {
+    let riderId;
+    await AsyncStorage.getItem("@account").then((res) => {
+      riderId = JSON.parse(res).split(",")[0];
+    });
     var formdata = new FormData();
-
     let localUri = orderData.picture;
     let filename = localUri.split("/").pop();
 
@@ -52,13 +75,14 @@ const FinishJobScreen = ({ navigation, route }) => {
 
     formdata.append("order_id", orderId);
     formdata.append("order_status", "คนขับถึงร้านแล้ว");
-
     formdata.append("file", {
       uri: localUri,
       name: filename,
       type: type,
     });
-    console.log(formdata);
+    formdata.append("rider_id", riderId);
+    formdata.append("tx_paymentType", "เงินเข้า");
+    formdata.append("tx_amount", parseInt(reqeustData.order_firstRideCost));
     try {
       await GetApi.useFetch(
         "POST",

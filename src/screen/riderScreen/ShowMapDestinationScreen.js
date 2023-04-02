@@ -268,7 +268,7 @@ const ShowMapDestinationScreen = ({ navigation }) => {
           ) : null}
         </View>
         <MapView
-          style={{ width: "90%", height: "60%", marginHorizontal: "5%" }}
+          style={{ width: "90%", height: "58%", marginHorizontal: "5%" }}
           provider={PROVIDER_GOOGLE}
           region={currentPosition}
           initialRegion={currentPosition}

@@ -120,7 +120,7 @@ const ProfitScreen = ({ navigation, props }) => {
             </TouchableOpacity>
           </View>
 
-          <View>
+          {/* <View>
             <TouchableOpacity
               style={button}
               onPress={() => {
@@ -133,7 +133,7 @@ const ProfitScreen = ({ navigation, props }) => {
                 {"ประวัติการรับงาน"}
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={{ alignItems: "center", marginTop: 60 }}>
             <TouchableOpacity onPress={() => alertLogout()}>
               <Text

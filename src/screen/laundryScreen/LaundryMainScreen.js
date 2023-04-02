@@ -78,16 +78,8 @@ const LaundryMainScreen = ({ navigation, props }) => {
           {name}
         </Text>
         <Image
-          source={
-            Platform.OS === "android"
-              ? {
-                  uri: API.urlLaundryImage + picture,
-                }
-              : {
-                  uri: API.urlLaundryImage + picture,
-                }
-          }
-          style={{ width: 230, height: 200, marginTop: 32 }}
+          source={{ uri: API.urlLaundryImage + picture }}
+          style={{ width: 300, height: 200, marginTop: 32 }}
           resizeMode="contain"
         />
         <View
@@ -99,40 +91,54 @@ const LaundryMainScreen = ({ navigation, props }) => {
             justifyContent: "center",
             width: "100%",
             height: "10%",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <AntDesign name="star" size={28} color="#ffbf00" />
-          <Text style={{ fontFamily: "Kanit", fontSize: 20, marginLeft: 16, color: "#ffff" }}>
+          <Text
+            style={{
+              fontFamily: "Kanit",
+              fontSize: 20,
+              marginLeft: 16,
+              color: "#ffff",
+            }}
+          >
             {`Rating ปัจจุบัน: ${rating}`}
           </Text>
         </View>
-          <Text style={{ fontFamily: "Kanit", fontSize: 24, marginBottom: 12, marginTop: 16 }}>
-            {"ข้อมูลร้านของคุณ"}
+        <Text
+          style={{
+            fontFamily: "Kanit",
+            fontSize: 24,
+            marginBottom: 12,
+            marginTop: 16,
+          }}
+        >
+          {"ข้อมูลร้านของคุณ"}
+        </Text>
+        <View
+          style={{
+            borderWidth: 1,
+            width: "80%",
+            borderRadius: 12,
+            padding: 18,
+            borderColor: "#4691FB",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ fontFamily: "Kanit", fontSize: 16 }}>
+            {`ชื่อ: คุณ${fname} ${lname}`}
           </Text>
-          <View
-            style={{
-              borderWidth: 1,
-              width: "80%",
-              borderRadius: 12,
-              padding: 18,
-              borderColor: "#4691FB",
-              justifyContent: "center"
-            }}
-          >
-            <Text style={{ fontFamily: "Kanit", fontSize: 16 }}>
-              {`ชื่อ: คุณ${fname} ${lname}`}
-            </Text>
-            <Text style={{ fontFamily: "Kanit", fontSize: 16 }}>
-              {"\n"}
-              {`เบอร์โทรศัพท์: ${phone}`}
-            </Text>
-            <Text style={{ fontFamily: "Kanit", fontSize: 16 }}>
-              {"\n"}
-              {`เวลาเปิด-ปิดร้าน: ${hours} `}
-            </Text>
-          </View>
+          <Text style={{ fontFamily: "Kanit", fontSize: 16 }}>
+            {"\n"}
+            {`เบอร์โทรศัพท์: ${phone}`}
+          </Text>
+          <Text style={{ fontFamily: "Kanit", fontSize: 16 }}>
+            {"\n"}
+            {`เวลาเปิด-ปิดร้าน: ${hours} `}
+          </Text>
         </View>
+      </View>
     </View>
   );
 };

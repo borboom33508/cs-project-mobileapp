@@ -68,7 +68,7 @@ const NotificationScreen = ({ navigation }) => {
             item.order_status == "คนขับถึงที่อยู่ลูกค้าแล้ว" ||
             item.order_status == "คนขับกำลังไปส่งผ้า"
           ) {
-            navigation.navigate("FoundRider");
+            navigation.navigate("FoundRider", { order_id: item.order_id });
           } else {
             navigation.navigate("OrderDetail", { order_id: item.order_id });
           }

@@ -81,7 +81,19 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
         : "เสร็จสิ้นรายการ"
     );
     formdata.append("order_payment", "โปรดชำระเงิน");
-    formdata.append("order_finalCost", price && header != "finish" ? price : "");
+    formdata.append(
+      "order_finalCost",
+      price && header != "finish" ? price : ""
+    );
+    if (header == "finish") {
+      formdata.append("laundry_id", orderData.laundry_id);
+      formdata.append("tx_paymentType", "เงินเข้า");
+      formdata.append(
+        "tx_amount",
+        parseInt(orderData.order_finalCost) -
+          parseInt(orderData.order_firstRideCost)
+      );
+    }
     try {
       await GetApi.useFetch(
         "POST",
