@@ -20,9 +20,7 @@ const EditProfileScreen = ({ navigation, props }) => {
 
   useEffect(() => {
     if (isFocused) {
-      setPicture("");
       getAccountData();
-    } else {
     }
   }, [isFocused]);
 
@@ -39,12 +37,6 @@ const EditProfileScreen = ({ navigation, props }) => {
           setPhone(data.request.cus_phone);
           setEmail(data.request.cus_email);
           setPicture(data.request.cus_picture);
-          if (
-            data.request.cus_picture == "" ||
-            data.request.cus_picture == null
-          ) {
-            setPicture("unknown-user.png");
-          }
         } else {
           console.log(data);
         }

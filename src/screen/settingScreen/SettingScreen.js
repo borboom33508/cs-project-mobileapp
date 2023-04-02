@@ -21,7 +21,6 @@ const SettingScreen = ({ navigation, props }) => {
   const handleLogout = async () => {
     await AsyncStorage.removeItem("@account");
     NativeModules.DevSettings.reload();
-    // navigation.navigate("Landing");
   };
 
   useEffect(() => {
@@ -44,12 +43,6 @@ const SettingScreen = ({ navigation, props }) => {
           setUsername(data.request.cus_name);
           setPhone(data.request.cus_phone);
           setPicture(data.request.cus_picture);
-          if (
-            data.request.cus_picture == "" ||
-            data.request.cus_picture == null
-          ) {
-            setPicture("unknown-user.png");
-          }
         } else {
           console.log(data);
         }

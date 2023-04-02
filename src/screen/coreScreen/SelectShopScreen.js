@@ -145,21 +145,21 @@ const SelectShopScreen = ({ navigation }) => {
           />
           <View style={{ marginLeft: 20 }}>
             <Text style={text2}>{item.laundry_name}</Text>
-            <View style={{ flexDirection: "row", marginVertical: 2 }}>
+            {/* <View style={{ flexDirection: "row", marginVertical: 2 }}>
               <FontAwesome name="star" size={18} color="orange" />
               <Text style={[text2, { fontSize: 14, marginLeft: 5 }]}>
                 {parseFloat(item.laundry_rating).toFixed(1)}
               </Text>
-            </View>
-            <View style={{ flexDirection: "row", marginBottom: 2 }}>
+            </View> */}
+            <View style={{ flexDirection: "row", marginBottom: 4, marginTop: 8 }}>
               <MaterialIcons name="delivery-dining" size={18} color="#4691FB" />
-              <Text style={[text2, { fontSize: 14, marginLeft: 5 }]}>
+              <Text style={[text2, { fontSize: 16, marginLeft: 5 }]}>
                 {`~${item.destination} กม.`}
               </Text>
             </View>
             <View style={{ flexDirection: "row" }}>
               <Ionicons name="time-outline" size={18} color="#4691FB" />
-              <Text style={[text2, { fontSize: 14, marginLeft: 5 }]}>
+              <Text style={[text2, { fontSize: 16, marginLeft: 5 }]}>
                 {`${item.laundry_hours} น.`}
               </Text>
             </View>
