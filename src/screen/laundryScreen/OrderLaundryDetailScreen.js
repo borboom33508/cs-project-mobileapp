@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert, Linking } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Divider } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
@@ -25,6 +25,7 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (isFocused) {
       fetchOrderLaundryData();
+      console.log(orderData);
     }
   }, [isFocused]);
 
@@ -71,14 +72,16 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
     formdata.append("order_detail_id", orderData.order_detail_id);
     formdata.append(
       "order_status",
-      header == "submit" || header == "process"
-        ? header == "submit"
-          ? "กำลังค้นหาไรเดอร์"
-          : "กำลังดำเนินการ"
-        : "ผ้าพร้อมส่งคืนโปรดชำระเงิน"
+      header == "submit" || header == "process" || header == "delivery"
+        ? header == "submit" || header == "process"
+          ? header == "submit"
+            ? "กำลังค้นหาไรเดอร์"
+            : "กำลังดำเนินการ"
+          : "ผ้าพร้อมส่งคืนโปรดชำระเงิน"
+        : "เสร็จสิ้นรายการ"
     );
     formdata.append("order_payment", "โปรดชำระเงิน");
-    formdata.append("order_finalCost", price ? price : "");
+    formdata.append("order_finalCost", price && header != "finish" ? price : "");
     try {
       await GetApi.useFetch(
         "POST",
@@ -103,12 +106,15 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
       {
         text: "ยืนยัน",
         style: "default",
-        onPress: () =>
-          header == "delete" || header == "submit"
-            ? header == "delete"
-              ? deleteOrder()
+        onPress: () => {
+          header == "submit" || header == "delete" || header == "process"
+            ? header == "submit" || header == "delete"
+              ? header == "delete"
+                ? deleteOrder()
+                : postUpdateStatus(header)
               : postUpdateStatus(header)
-            : postUpdateStatus(header),
+            : postUpdateStatus(header);
+        },
       },
     ]);
   };
@@ -138,10 +144,41 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
             <Text style={[text, { fontSize: 18 }]}>{`รายละเอียดลูกค้า`}</Text>
             <View style={{ marginHorizontal: 10, marginTop: 5 }}>
               <Text style={text}>{`ชื่อ: ${orderData.cus_name}`}</Text>
-              <Text
-                style={text}
-              >{`เบอร์โทรศัพท์: ${orderData.cus_phone}`}</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={text}>{`เบอร์โทรศัพท์: `}</Text>
+                <TouchableOpacity
+                  onPress={() => Linking.openURL(`tel:${orderData.cus_phone}`)}
+                >
+                  <Text
+                    style={[text, { color: "#4691FB" }]}
+                  >{`${orderData.cus_phone}`}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
+            {orderData.order_status == "ร้านกำลังดำเนินการส่งผ้าคืน" ? (
+              <TouchableOpacity
+                onPress={() =>
+                  Linking.openURL(
+                    `https://www.google.com/maps/search/?api=1&query=${orderData.cus_placeName}`
+                  )
+                }
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Text
+                  style={[text, { color: "#4691FB" }]}
+                >{`กดปุ่มนำทาง`}</Text>
+                <MaterialCommunityIcons
+                  name="compass-outline"
+                  size={40}
+                  color="#4691FB"
+                  style={{ marginLeft: 5 }}
+                />
+              </TouchableOpacity>
+            ) : null}
           </View>
           <View style={content1}>
             <Text
@@ -204,64 +241,41 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
         </View>
       </ScrollView>
       <View style={content3}>
-        {orderData.order_status == "รอร้านยืนยันรายการ" ||
-        orderData.order_status == "กำลังดำเนินการ" ? (
-          orderData.order_status == "รอร้านยืนยันรายการ" ? (
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <TouchableOpacity
-                onPress={() => alertSubmit("delete")}
-                style={{
-                  backgroundColor: "#D9534F",
-                  padding: 10,
-                  borderRadius: 5,
-                  width: "48%",
-                }}
-              >
-                <View style={{ alignItems: "center", marginHorizontal: 5 }}>
-                  <Text
-                    style={[text, { color: "#ffffff" }]}
-                  >{`ยกเลิกรายการ`}</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => alertSubmit("submit")}
-                style={{
-                  backgroundColor: "#4691FB",
-                  padding: 10,
-                  borderRadius: 5,
-                  width: "48%",
-                }}
-              >
-                <View style={{ alignItems: "center", marginHorizontal: 5 }}>
-                  <Text style={[text, { color: "#ffffff" }]}>{`ยืนยัน`}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ) : (
+        {orderData.order_status == "รอร้านยืนยันรายการ" ? (
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
             <TouchableOpacity
-              onPress={() => setSuccess(true)}
+              onPress={() => alertSubmit("delete")}
               style={{
-                backgroundColor:
-                  orderData.order_status == "กำลังดำเนินการ"
-                    ? "#4691FB"
-                    : "#767577",
+                backgroundColor: "#D9534F",
                 padding: 10,
                 borderRadius: 5,
+                width: "48%",
               }}
-              disabled={
-                orderData.order_status == "กำลังดำเนินการ" ? false : true
-              }
             >
               <View style={{ alignItems: "center", marginHorizontal: 5 }}>
                 <Text
                   style={[text, { color: "#ffffff" }]}
-                >{`ผ้าพร้อมส่งคืนโปรดชำระเงิน`}</Text>
+                >{`ยกเลิกรายการ`}</Text>
               </View>
             </TouchableOpacity>
-          )
-        ) : (
+            <TouchableOpacity
+              onPress={() => alertSubmit("submit")}
+              style={{
+                backgroundColor: "#4691FB",
+                padding: 10,
+                borderRadius: 5,
+                width: "48%",
+              }}
+            >
+              <View style={{ alignItems: "center", marginHorizontal: 5 }}>
+                <Text style={[text, { color: "#ffffff" }]}>{`ยืนยัน`}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+        {orderData.order_status == "คนขับถึงร้านแล้ว" ? (
           <TouchableOpacity
             onPress={() => alertSubmit("process")}
             style={{
@@ -282,7 +296,51 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
               >{`กำลังดำเนินการ`}</Text>
             </View>
           </TouchableOpacity>
-        )}
+        ) : null}
+        {orderData.order_status == "กำลังดำเนินการ" ? (
+          <TouchableOpacity
+            onPress={() => setSuccess(true)}
+            style={{
+              backgroundColor:
+                orderData.order_status == "กำลังดำเนินการ"
+                  ? "#4691FB"
+                  : "#767577",
+              padding: 10,
+              borderRadius: 5,
+            }}
+            disabled={orderData.order_status == "กำลังดำเนินการ" ? false : true}
+          >
+            <View style={{ alignItems: "center", marginHorizontal: 5 }}>
+              <Text
+                style={[text, { color: "#ffffff" }]}
+              >{`ผ้าพร้อมส่งคืนโปรดชำระเงิน`}</Text>
+            </View>
+          </TouchableOpacity>
+        ) : null}
+        {orderData.order_status == "ร้านกำลังดำเนินการส่งผ้าคืน" ? (
+          <TouchableOpacity
+            onPress={() => alertSubmit("finish")}
+            style={{
+              backgroundColor:
+                orderData.order_status == "ร้านกำลังดำเนินการส่งผ้าคืน"
+                  ? "#4691FB"
+                  : "#767577",
+              padding: 10,
+              borderRadius: 5,
+            }}
+            disabled={
+              orderData.order_status == "ร้านกำลังดำเนินการส่งผ้าคืน"
+                ? false
+                : true
+            }
+          >
+            <View style={{ alignItems: "center", marginHorizontal: 5 }}>
+              <Text
+                style={[text, { color: "#ffffff" }]}
+              >{`เสร็จสิ้นรายการ`}</Text>
+            </View>
+          </TouchableOpacity>
+        ) : null}
       </View>
 
       {isSuccess ? (
@@ -294,7 +352,7 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
           }}
           onChange={(event) => {
             if (event.type == "set") {
-              postUpdateStatus("", event.price);
+              postUpdateStatus("delivery", event.price);
             }
             setSuccess(false);
           }}

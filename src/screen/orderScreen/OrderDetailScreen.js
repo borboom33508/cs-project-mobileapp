@@ -23,7 +23,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (isFocused) {
       getOrderData();
-      // console.log(orderData);
+      console.log(orderData);
     }
   }, [isFocused]);
 
@@ -75,6 +75,29 @@ const OrderDetailScreen = ({ navigation, route }) => {
     }
   };
 
+  const postUpdateStatus = async () => {
+    var formdata = new FormData();
+    formdata.append("order_id", orderId);
+    formdata.append("order_detail_id", "");
+    formdata.append("order_status", "ร้านกำลังดำเนินการส่งผ้าคืน");
+    formdata.append("order_payment", "");
+    formdata.append("order_finalCost", "");
+    console.log(formdata);
+    try {
+      await GetApi.useFetch(
+        "POST",
+        formdata,
+        `/order/PostUpdateStatus.php`
+      ).then((data) => {
+        console.log(data);
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      getOrderData();
+    }
+  };
+
   const alertPayment = () => {
     Alert.alert("โปรดยืนยันการชำระเงิน", "", [
       {
@@ -98,7 +121,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
       {
         text: "ยืนยัน",
         style: "default",
-        onPress: () => console.log("Success"),
+        onPress: () => postUpdateStatus(),
       },
     ]);
   };
@@ -176,6 +199,11 @@ const OrderDetailScreen = ({ navigation, route }) => {
             <View style={{ marginHorizontal: 10, marginTop: 5 }}>
               <Text style={text}>{`สถานะผ้า: ${orderData.order_status}`}</Text>
               <Text style={text}>{`ชำระเงิน: ${orderData.order_payment}`}</Text>
+              {orderData.order_finalCost ? (
+                <Text
+                  style={text}
+                >{`ยอดชำระ: ${orderData.order_finalCost} บาท`}</Text>
+              ) : null}
               <Text
                 style={text}
               >{`เวลาทำการ: ${orderData.laundry_hours} น.`}</Text>

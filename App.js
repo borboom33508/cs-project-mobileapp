@@ -48,6 +48,7 @@ import SearchScreen from "./src/screen/coreScreen/SearchScreen";
 import OrderLaundryDetailScreen from "./src/screen/laundryScreen/OrderLaundryDetailScreen";
 import JobListScreen from "./src/screen/riderScreen/JobListScreen";
 import ShowMapDestinationScreen from "./src/screen/riderScreen/ShowMapDestinationScreen";
+import FinishJobScreen from "./src/screen/riderScreen/FinishJobScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -222,6 +223,7 @@ export default function App() {
         <Stack.Screen name="OrderLaundryDetail" component={OrderLaundryDetailScreen} />
         <Stack.Screen name="JobList" component={JobListScreen} />
         <Stack.Screen name="ShowMapDestination" component={ShowMapDestinationScreen} />
+        <Stack.Screen name="FinishJob" component={FinishJobScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>

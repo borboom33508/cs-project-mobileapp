@@ -163,7 +163,10 @@ const ShowMapDestinationScreen = ({ navigation }) => {
         style: "default",
         onPress: () =>
           orderData.orderStatus == "คนขับกำลังไปส่งผ้า"
-            ? console.log("คนขับถึงร้านแล้ว")
+            ? navigation.navigate("FinishJob", {
+                order_id: orderData.orderId,
+                order_status: orderData.orderStatus,
+              })
             : PostUpdateStatus(),
       },
     ]);
