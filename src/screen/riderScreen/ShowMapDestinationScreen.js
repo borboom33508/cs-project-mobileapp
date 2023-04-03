@@ -12,8 +12,8 @@ import GetApi from "../../api/GetApi";
 const ShowMapDestinationScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [currentPosition, setCurrentPosition] = useState({
-    latitude: 0.0,
-    longitude: 0.0,
+    latitude: 13.847468594271557,
+    longitude: 100.56969677482991,
     latitudeDelta: 0.012,
     longitudeDelta: 0.013,
   });
@@ -294,9 +294,9 @@ const ShowMapDestinationScreen = ({ navigation }) => {
             }
             strokeColor="#4691FB"
             strokeWidth={8}
-            onError={(err) => {
-              console.log(err);
-            }}
+            // onError={(err) => {
+            //   console.log(err);
+            // }}
           />
         </MapView>
         <View

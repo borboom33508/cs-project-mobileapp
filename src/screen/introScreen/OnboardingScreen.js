@@ -63,7 +63,7 @@ const OnboardingScreen = ({ navigation, props }) => {
 
       <View style={{ marginTop: getStatusBarHeight(), alignItems: "center" }}>
         <Image source={require("../../../assets/washing-machine.png")} style={image} resizeMode="contain" />
-        <Text style={text}>{"Suck&Reed"}</Text>
+        <Text style={text}>{"Zuck&Reed"}</Text>
         <TouchableOpacity
           style={button}
           onPress={() => {

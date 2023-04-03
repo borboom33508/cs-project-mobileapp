@@ -56,7 +56,7 @@ const LandingScreen = ({ navigation, props }) => {
   return (
     <View style={container}>
       <Image source={wash_machine} style={image} resizeMode="contain" />
-      <Text style={text}>{"Suck&Reed"}</Text>
+      <Text style={text}>{"Zuck&Reed"}</Text>
     </View>
   );
 };

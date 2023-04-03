@@ -293,7 +293,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
             </View>
 
             <View style={content4}>
-              <Text style={text}>{`ชำระเงินผ่าน QR Code (บังคับ)`}</Text>
+              <Text style={text}>{`ชำระเงินผ่านเครดิต (บังคับ)`}</Text>
               <Switch
                 trackColor={{ false: "#767577", true: "#81b0ff" }}
                 thumbColor={isEnabled.QR ? "#4691FB" : "#f4f3f4"}

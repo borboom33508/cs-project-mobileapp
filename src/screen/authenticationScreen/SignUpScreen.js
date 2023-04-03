@@ -42,7 +42,9 @@ const SignUpScreen = ({ navigation, props }) => {
       !passwordConfirm.value ||
       !phone.value ||
       !email.value.includes("@") ||
-      !email.value.includes(".")
+      !email.value.includes(".") ||
+      password.value.length < 8 ||
+      passwordConfirm.value.length < 8
     ) {
       if (username.value == "" || username.value == null) {
         setUsername({ value: "", error: true });
@@ -55,7 +57,12 @@ const SignUpScreen = ({ navigation, props }) => {
       ) {
         setEmail({ value: "", error: true });
       }
-      if (password.value == "" || password.value != passwordConfirm.value) {
+      if (
+        password.value == "" ||
+        password.value != passwordConfirm.value ||
+        password.value.length < 8 ||
+        passwordConfirm.value.length < 8
+      ) {
         setPassword({ value: "", error: true });
         setPasswordConfirm({ value: "", error: true });
       }
@@ -265,17 +272,19 @@ const SignUpScreen = ({ navigation, props }) => {
               </TouchableOpacity>
 
               <View style={{ marginTop: 20, alignItems: "center" }}>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    color: "#000000",
-                    fontFamily: "Kanit",
-                  }}
-                >
-                  {
-                    "ในการสร้างบัญชีผู้ใช้จำเป็นต้องยอมรับนโยบายของทางแอปพลิเคชั่น"
-                  }
-                </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Policy")}>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: "#4691FB",
+                      fontFamily: "Kanit",
+                    }}
+                  >
+                    {
+                      "ในการสร้างบัญชีผู้ใช้จำเป็นต้องยอมรับนโยบายของทางแอปพลิเคชั่น"
+                    }
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
