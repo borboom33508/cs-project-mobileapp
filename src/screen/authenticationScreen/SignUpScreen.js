@@ -12,6 +12,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TextInput } from "react-native-paper";
 import GetApi from "../../api/GetApi";
 import { useIsFocused } from "@react-navigation/native";
+import { Checkbox } from "react-native-paper";
 
 const SignUpScreen = ({ navigation, props }) => {
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
@@ -24,6 +25,7 @@ const SignUpScreen = ({ navigation, props }) => {
     error: false,
   });
   const [phone, setPhone] = useState({ value: "", error: false });
+  const [isAgree, setIsAgree] = useState(false);
 
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -254,35 +256,77 @@ const SignUpScreen = ({ navigation, props }) => {
                 />
               </View>
 
-              <TouchableOpacity
-                style={button}
-                onPress={() => {
-                  validateInput();
-                }}
-              >
-                <Text
+              {!isAgree ? (
+                <TouchableOpacity
                   style={{
-                    fontSize: 18,
-                    color: "#ffffff",
-                    fontFamily: "Kanit",
+                    marginTop: "10%",
+                    borderRadius: 10,
+                    alignItems: "center",
+                    backgroundColor: "#767577",
+                    padding: 20,
                   }}
+                  disabled={!isAgree}
                 >
-                  {"สร้างบัญชี"}
-                </Text>
-              </TouchableOpacity>
-
-              <View style={{ marginTop: 20, alignItems: "center" }}>
-                <TouchableOpacity onPress={() => navigation.navigate("Policy")}>
                   <Text
                     style={{
-                      fontSize: 12,
-                      color: "#4691FB",
+                      fontSize: 18,
+                      color: "#ffffff",
                       fontFamily: "Kanit",
                     }}
                   >
-                    {
-                      "ในการสร้างบัญชีผู้ใช้จำเป็นต้องยอมรับนโยบายของทางแอปพลิเคชั่น"
-                    }
+                    {"สร้างบัญชี"}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={button}
+                  disabled={!isAgree}
+                  onPress={() => {
+                    validateInput();
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      color: "#ffffff",
+                      fontFamily: "Kanit",
+                    }}
+                  >
+                    {"สร้างบัญชี"}
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              <View
+                style={{
+                  marginTop: 20,
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <View style={{borderWidth: 0.5, marginRight: 8 }}>
+                <Checkbox
+                  status={isAgree ? "checked" : "unchecked"}
+                  color={"#4691FB"}
+                  onPress={() => {
+                    setIsAgree(!isAgree);
+                  }}
+                />
+                </View>
+                <Text style={{ fontSize: 13, fontFamily: "Kanit" }}>
+                  {"ข้าพเจ้ายินยอมการให้ข้อมูลกับแอปพลิเคชัน "}
+                </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Policy")}>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "#4691FB",
+                      fontFamily: "Kanit",
+                      
+                    }}
+                  >
+                    {"นโยบาย"}
                   </Text>
                 </TouchableOpacity>
               </View>
