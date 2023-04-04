@@ -99,7 +99,6 @@ const CreateOrderScreen = ({ navigation, route }) => {
 
     const finalDistance = (R * c) / 1000;
     let riderCost;
-    console.log(finalDistance);
     if (finalDistance >= 5) {
       riderCost = Math.floor(finalDistance / 5) * 10;
     } else {
@@ -113,7 +112,6 @@ const CreateOrderScreen = ({ navigation, route }) => {
     await AsyncStorage.getItem("@account").then((res) => {
       accountId = JSON.parse(res).split(",")[0];
     });
-
     var formdata = new FormData();
     formdata.append("laundry_id", laundryId);
     formdata.append("cus_id", accountId);

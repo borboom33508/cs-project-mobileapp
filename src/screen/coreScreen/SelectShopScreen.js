@@ -33,28 +33,41 @@ const SelectShopScreen = ({ navigation }) => {
   useEffect(() => {
     if (isFocused) {
       fetchCustomerData();
+      // console.log(laundryList);
     }
   }, [isFocused]);
 
   const getLaundryData = async (cusData) => {
-    console.log(cusData);
     try {
       await GetApi.useFetch("GET", "", `/customer/GetLaundryData.php`).then(
         (res) => {
           let data = JSON.parse(res);
           if (data.success) {
             const destination = calculatorDistance(data.request, cusData);
-            setLaundryList(
-              data.request.map((data, index) => ({
-                laundry_id: data.laundry_id,
-                laundry_name: data.laundry_name,
-                laundry_picture: data.laundry_picture,
-                laundry_location: data.laundry_location,
-                laundry_hours: data.laundry_hours,
-                laundry_rating: data.laundry_rating,
-                destination: destination[index],
-              }))
-            );
+            const dataList = data.request.map((data, index) => ({
+              laundry_id: data.laundry_id,
+              laundry_name: data.laundry_name,
+              laundry_picture: data.laundry_picture,
+              laundry_location: data.laundry_location,
+              laundry_hours: data.laundry_hours,
+              laundry_rating: data.laundry_rating,
+              destination: destination[index],
+            }));
+            const myData = []
+              .concat(dataList)
+              .sort((a, b) => a.destination - b.destination);
+            setLaundryList(myData);
+            // setLaundryList(
+            //   data.request.map((data, index) => ({
+            //     laundry_id: data.laundry_id,
+            //     laundry_name: data.laundry_name,
+            //     laundry_picture: data.laundry_picture,
+            //     laundry_location: data.laundry_location,
+            //     laundry_hours: data.laundry_hours,
+            //     laundry_rating: data.laundry_rating,
+            //     destination: destination[index],
+            //   }))
+            // );
           }
         }
       );
@@ -126,20 +139,13 @@ const SelectShopScreen = ({ navigation }) => {
           navigation.navigate("SelectService", {
             laundry_id: item.laundry_id,
             destination: item.destination,
+            laundry_name: item.laundry_name,
           })
         }
       >
         <View style={{ flexDirection: "row" }}>
           <Image
-            source={
-              Platform.OS === "android"
-                ? {
-                    uri: API.urlLaundryImage + item.laundry_picture,
-                  }
-                : {
-                    uri: API.urlLaundryImage + item.laundry_picture,
-                  }
-            }
+            source={{ uri: API.urlLaundryImage + item.laundry_picture }}
             style={{ width: 130, height: 100 }}
             resizeMode="contain"
           />
@@ -151,7 +157,9 @@ const SelectShopScreen = ({ navigation }) => {
                 {parseFloat(item.laundry_rating).toFixed(1)}
               </Text>
             </View> */}
-            <View style={{ flexDirection: "row", marginBottom: 4, marginTop: 8 }}>
+            <View
+              style={{ flexDirection: "row", marginBottom: 4, marginTop: 8 }}
+            >
               <MaterialIcons name="delivery-dining" size={18} color="#4691FB" />
               <Text style={[text2, { fontSize: 16, marginLeft: 5 }]}>
                 {`~${item.destination} กม.`}
@@ -189,7 +197,7 @@ const SelectShopScreen = ({ navigation }) => {
             <Ionicons name="location-outline" size={24} color="#ffffff" />
             <View style={{ marginLeft: 5 }}>
               <Text style={[text1, { fontSize: 12 }]}>ที่อยู่จัดส่ง</Text>
-              <Text style={text1}>{(cusPlaceName).slice(0,35) + "..."}</Text>
+              <Text style={text1}>{cusPlaceName.slice(0, 35) + "..."}</Text>
             </View>
           </View>
         </TouchableOpacity>

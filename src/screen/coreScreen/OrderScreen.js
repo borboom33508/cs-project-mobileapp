@@ -71,7 +71,7 @@ const OrderScreen = ({ navigation }) => {
               style={[text, { fontSize: 14 }]}
             >{`${item.laundry_name}`}</Text>
             <Text
-              style={[text, { fontSize: 14 }]}
+              style={[text, { fontSize: 14, color: "#4691FB" }]}
             >{`สถานะ: ${item.order_status}`}</Text>
             <Text
               style={[text, { fontSize: 14 }]}

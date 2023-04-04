@@ -71,7 +71,7 @@ const OrderLaundryScreen = ({ navigation }) => {
           <View style={{ marginLeft: 16 }}>
             <Text style={text}>{`Order Number: ${item.order_id}`}</Text>
             <Text
-              style={[text, { fontSize: 14 }]}
+              style={[text, { fontSize: 14, color: "#4691FB" }]}
             >{`สถานะ: ${item.order_status}`}</Text>
             <Text
               style={[text, { fontSize: 14 }]}

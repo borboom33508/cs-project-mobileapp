@@ -16,6 +16,7 @@ import {
 const SelectServiceScreen = ({ navigation, props, route }) => {
   const laundryId = route.params.laundry_id;
   const destination = route.params.destination;
+  const laundryName = route.params.laundry_name;
   const isFocused = useIsFocused();
   const [laundryData, setLaundryData] = useState({});
 
@@ -67,7 +68,7 @@ const SelectServiceScreen = ({ navigation, props, route }) => {
           />
         </View>
         <View style={content1}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text
               style={[text, { fontFamily: "Montserrat" }]}
             >{`Rating: `}</Text>
@@ -80,6 +81,9 @@ const SelectServiceScreen = ({ navigation, props, route }) => {
             <Text style={[text, { marginLeft: 5 }]}>
               {parseFloat(laundryData.laundry_rating).toFixed(1)}
             </Text>
+          </View> */}
+          <View>
+            <Text style={text}>{`ชื่อร้าน: ${laundryName}`}</Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text

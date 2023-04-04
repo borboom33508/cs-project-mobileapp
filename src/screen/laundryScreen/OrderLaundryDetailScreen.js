@@ -233,7 +233,9 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
 
           <View style={content1}>
             <View style={{ marginHorizontal: 10, marginTop: 5 }}>
-              <Text style={text}>{`สถานะผ้า: ${orderData.order_status}`}</Text>
+              <Text
+                style={[text, { color: "#4691FB" }]}
+              >{`สถานะผ้า: ${orderData.order_status}`}</Text>
               <Text style={text}>{`ชำระเงิน: ${orderData.order_payment}`}</Text>
               <Text
                 style={text}

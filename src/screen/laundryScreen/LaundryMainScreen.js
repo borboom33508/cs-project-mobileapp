@@ -82,7 +82,7 @@ const LaundryMainScreen = ({ navigation, props }) => {
           style={{ width: 300, height: 200, marginTop: 32 }}
           resizeMode="contain"
         />
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
             justifyContent: "flex-start",
@@ -105,13 +105,13 @@ const LaundryMainScreen = ({ navigation, props }) => {
           >
             {`Rating ปัจจุบัน: ${rating}`}
           </Text>
-        </View>
+        </View> */}
         <Text
           style={{
             fontFamily: "Kanit",
             fontSize: 24,
             marginBottom: 12,
-            marginTop: 16,
+            marginTop: "12%",
           }}
         >
           {"ข้อมูลร้านของคุณ"}
