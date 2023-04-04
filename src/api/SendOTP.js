@@ -1,6 +1,6 @@
 // https://portal.infobip.com/homepage/
 
-const useFetch = (phonenumber, otp_code) => {
+const useFetch = (phonenumber, otp_code, referenceId) => {
   console.log(phonenumber, otp_code);
   fetch("https://19lp31.api.infobip.com/sms/2/text/advanced", {
     'method': 'POST',
@@ -21,7 +21,7 @@ const useFetch = (phonenumber, otp_code) => {
                 }
             ],
             "from": "InfoSMS",
-            "text": `รหัส OTP ของคุณคือ ${otp_code}`
+            "text": `Suck&Reed Services: อ้างอิง ${referenceId} รหัส OTP ของคุณคือ ${otp_code}`
         }
     ]
     }),

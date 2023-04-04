@@ -12,8 +12,12 @@ import GetApi from "../../api/GetApi";
 
 const OTPScreen = ({ navigation, route, props }) => {
   const isFocused = useIsFocused();
-  const [otp, setOTP] = useState("");
-  const [otpCode, setOtpCode] = useState("");
+  const [otp, setOTP] = useState(""); //User Input
+  const [otpCode, setOtpCode] = useState(""); //OTP in system
+  const [refId, setRefId] = useState("");
+  const [timerCount, setTimerCount] = useState();
+  const [stillCount, setStillCount] = useState(0);
+  const [showRefAndTime, setShowRefAndTime] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isOTPError, setIsOTPError] = useState(false);
 
@@ -27,15 +31,24 @@ const OTPScreen = ({ navigation, route, props }) => {
     } else {
       setOTP("");
       setOtpCode("");
+      setStillCount(0);
       setIsSuccess(false);
       setIsOTPError(false);
     }
   }, [isFocused]);
 
   const genAndSendOTP = () => {
-    let tpm = Math.floor(Math.random() * (9999 - 1111 + 1) + 1111).toString(); // String
-    SendOTP.useFetch(account.phone, tpm);
-    setOtpCode(tpm);
+    setStillCount(true);
+    if (stillCount == 0) {
+      let OTP_tmp = Math.floor(Math.random() * (9999 - 1111 + 1) + 1111).toString(); // String
+      let refId_tmp = OTP_tmp * 7 + 1234;
+      setRefId(refId_tmp);
+      setOtpCode(OTP_tmp);
+      SendOTP.useFetch(account.phone, OTP_tmp, refId_tmp);
+      countDownTimer();
+    } else if (stillCount == 1) {
+      SendOTP.useFetch(account.phone, otpCode, refId);
+    }
   };
 
   const verifyOTP = () => {
@@ -64,6 +77,23 @@ const OTPScreen = ({ navigation, route, props }) => {
         console.log(`OTP ที่ถูกคือ ${otpCode}`);
       }
     }
+  };
+
+  const countDownTimer = () => {
+    setTimerCount(60);
+    setShowRefAndTime(true);
+    let interval = setInterval(() => {
+      setTimerCount((lastTimerCount) => {
+        lastTimerCount <= 1 && clearInterval(interval);
+        if (lastTimerCount == 1) {
+          setStillCount(0);
+          console.log(stillCount);
+          console.log("Counting Done !!!");
+        }
+        return lastTimerCount - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
   };
 
   const addAccount = async () => {
@@ -121,10 +151,22 @@ const OTPScreen = ({ navigation, route, props }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ marginHorizontal: 20, marginTop: "20%" }}>
+        <View
+          style={{
+            marginHorizontal: 20,
+            marginTop: "20%",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
           <Text style={{ fontSize: 32, fontFamily: "Montserrat" }}>
             {"OTP"}
           </Text>
+          {showRefAndTime ? (
+            <Text
+              style={{ fontSize: 16, marginLeft: 12 }}
+            >{`รหัสอ้างอิง : ${refId} ( ${timerCount} )`}</Text>
+          ) : null}
         </View>
 
         <View
@@ -189,9 +231,9 @@ const OTPScreen = ({ navigation, route, props }) => {
             </Text>
 
             <TouchableOpacity
-              onPress={() => {
-                genAndSendOTP();
-              }}
+              onPress={() => 
+                genAndSendOTP()
+              }
             >
               <Text
                 style={{ color: "#4691FB", fontSize: 14, fontFamily: "Kanit" }}

@@ -256,6 +256,40 @@ const SignUpScreen = ({ navigation, props }) => {
                 />
               </View>
 
+              <View
+                style={{
+                  marginTop: 20,
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <View style={{borderWidth: 0.5, marginRight: 8 }}>
+                <Checkbox
+                  status={isAgree ? "checked" : "unchecked"}
+                  color={"#4691FB"}
+                  onPress={() => {
+                    setIsAgree(!isAgree);
+                  }}
+                />
+                </View>
+                <Text style={{ fontSize: 13, fontFamily: "Kanit" }}>
+                  {"ข้าพเจ้ายินยอมการให้ข้อมูลกับแอปพลิเคชัน "}
+                </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Policy")}>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "#4691FB",
+                      fontFamily: "Kanit",
+                      
+                    }}
+                  >
+                    {"นโยบาย"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
               {!isAgree ? (
                 <TouchableOpacity
                   style={{
@@ -297,39 +331,7 @@ const SignUpScreen = ({ navigation, props }) => {
                 </TouchableOpacity>
               )}
 
-              <View
-                style={{
-                  marginTop: 20,
-                  alignItems: "center",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
-              >
-                <View style={{borderWidth: 0.5, marginRight: 8 }}>
-                <Checkbox
-                  status={isAgree ? "checked" : "unchecked"}
-                  color={"#4691FB"}
-                  onPress={() => {
-                    setIsAgree(!isAgree);
-                  }}
-                />
-                </View>
-                <Text style={{ fontSize: 13, fontFamily: "Kanit" }}>
-                  {"ข้าพเจ้ายินยอมการให้ข้อมูลกับแอปพลิเคชัน "}
-                </Text>
-                <TouchableOpacity onPress={() => navigation.navigate("Policy")}>
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      color: "#4691FB",
-                      fontFamily: "Kanit",
-                      
-                    }}
-                  >
-                    {"นโยบาย"}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+
             </View>
           </View>
         </ScrollView>
