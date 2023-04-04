@@ -21,7 +21,7 @@ const useFetch = (phonenumber, otp_code, referenceId) => {
                 }
             ],
             "from": "InfoSMS",
-            "text": `Suck&Reed Services: อ้างอิง ${referenceId} รหัส OTP ของคุณคือ ${otp_code}`
+            "text": `Zuck&Reed Services: อ้างอิง ${referenceId} รหัส OTP ของคุณคือ ${otp_code}`
         }
     ]
     }),
