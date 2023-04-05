@@ -33,3 +33,9 @@ export const content3 = {
   width: "90%",
   alignSelf: "center",
 };
+
+export const content4 = {
+  marginLeft: "4%",
+  flexDirection: "row",
+  justifyContent: "space-between",
+};

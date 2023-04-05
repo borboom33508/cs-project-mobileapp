@@ -19,6 +19,7 @@ import {
   content3,
   content4,
   content5,
+  content6,
   text,
 } from "./CreateOrderStyle";
 import { getStatusBarHeight } from "react-native-status-bar-height";
@@ -32,11 +33,21 @@ const CreateOrderScreen = ({ navigation, route }) => {
   const laundryName = route.params.laundry_name;
   const laundryService = route.params.laundry_service;
   const isFocused = useIsFocused();
-  const [isEnabled, setIsEnabled] = useState({ reed: false, QR: false });
+  const [isEnabled, setIsEnabled] = useState({ reed: false, QR: false, max: false });
+  // setIsEnabled({ ...isEnabled, max: true})
   const [orderData, setOrderData] = useState({
     washingKgValue: 1,
+    shirt: 0,
+    tshirt: 0,
+    sLeg: 0,
+    lLeg: 0,
+    jean: 0,
+    underwear: 0,
+    sock: 0,
+    other: 0,
     description: "",
   });
+  // setOrderData({ ...orderData, washingKgValue: 2})
   const [requestData, setRequestData] = useState({
     placeName: "",
     customerLocation: "",
@@ -47,7 +58,6 @@ const CreateOrderScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (isFocused) {
       fetchCustomerLaundryPositionData();
-      console.log(requestData);
     }
   }, [isFocused]);
 
@@ -117,6 +127,15 @@ const CreateOrderScreen = ({ navigation, route }) => {
     formdata.append("cus_id", accountId);
     formdata.append("order_service_type", laundryService);
     formdata.append("order_washingKg", orderData.washingKgValue);
+
+    formdata.append("order_shirt", orderData.shirt);
+    formdata.append("order_tshirt", orderData.tshirt);
+    formdata.append("order_sLeg", orderData.sLeg);
+    formdata.append("order_lLeg", orderData.lLeg);
+    formdata.append("order_jean", orderData.jean);
+    formdata.append("order_underwear", orderData.underwear);
+    formdata.append("order_sock", orderData.sock);
+    formdata.append("order_other", orderData.other);
     formdata.append("order_isReed", isEnabled.reed);
     formdata.append(
       "order_description",
@@ -172,7 +191,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
         <View style={{ margin: 10, marginTop: 20 }}>
           <View style={content1}>
             <Text style={[text, { fontSize: 14, marginLeft: 10 }]}>
-              {`ที่อยู่จัดส่ง: ${(requestData.placeName).slice(0,30)}...`}
+              {`ที่อยู่จัดส่ง: ${requestData.placeName.slice(0, 30)}...`}
             </Text>
           </View>
 
@@ -188,6 +207,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 onPress={() => {
                   orderData.washingKgValue > 1
                     ? setOrderData({
+                        ...orderData,
                         washingKgValue: orderData.washingKgValue - 1,
                       })
                     : null;
@@ -205,6 +225,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
               <TouchableOpacity
                 onPress={() =>
                   setOrderData({
+                    ...orderData,
                     washingKgValue: orderData.washingKgValue + 1,
                   })
                 }
@@ -212,6 +233,302 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 <MaterialCommunityIcons
                   name="plus-box"
                   size={40}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={content6}>
+            <View>
+              <Text style={[text, { fontSize: 18 }]}>{`เสื้อยืด`}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  orderData.shirt >= 1
+                    ? setOrderData({
+                        ...orderData,
+                        shirt: orderData.shirt - 1,
+                      })
+                    : null;
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="minus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+              <Text style={[text, { fontSize: 18, marginHorizontal: 10 }]}>
+                {orderData.shirt}
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  setOrderData({ ...orderData, shirt: orderData.shirt + 1 })
+                }
+              >
+                <MaterialCommunityIcons
+                  name="plus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={content6}>
+            <View>
+              <Text style={[text, { fontSize: 18 }]}>{`เสื้อเชิ๊ต`}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  orderData.tshirt >= 1
+                    ? setOrderData({
+                        ...orderData,
+                        tshirt: orderData.tshirt - 1,
+                      })
+                    : null;
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="minus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+              <Text style={[text, { fontSize: 18, marginHorizontal: 10 }]}>
+                {orderData.tshirt}
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  setOrderData({ ...orderData, tshirt: orderData.tshirt + 1 })
+                }
+              >
+                <MaterialCommunityIcons
+                  name="plus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={content6}>
+            <View>
+              <Text
+                style={[text, { fontSize: 18 }]}
+              >{`กางเกง/กระโปรง (ขาสั้น)`}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  orderData.sLeg >= 1
+                    ? setOrderData({ ...orderData, sLeg: orderData.sLeg - 1 })
+                    : null;
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="minus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+              <Text style={[text, { fontSize: 18, marginHorizontal: 10 }]}>
+                {orderData.sLeg}
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  setOrderData({ ...orderData, sLeg: orderData.sLeg + 1 })
+                }
+              >
+                <MaterialCommunityIcons
+                  name="plus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={content6}>
+            <View>
+              <Text
+                style={[text, { fontSize: 18 }]}
+              >{`กางเกง/กระโปรง (ขายาว)`}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  orderData.lLeg >= 1
+                    ? setOrderData({ ...orderData, lLeg: orderData.lLeg - 1 })
+                    : null;
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="minus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+              <Text style={[text, { fontSize: 18, marginHorizontal: 10 }]}>
+                {orderData.lLeg}
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  setOrderData({ ...orderData, lLeg: orderData.lLeg + 1 })
+                }
+              >
+                <MaterialCommunityIcons
+                  name="plus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={content6}>
+            <View>
+              <Text style={[text, { fontSize: 18 }]}>{`กางเกงยีน`}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  orderData.jean >= 1
+                    ? setOrderData({ ...orderData, jean: orderData.jean - 1 })
+                    : null;
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="minus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+              <Text style={[text, { fontSize: 18, marginHorizontal: 10 }]}>
+                {orderData.jean}
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  setOrderData({ ...orderData, jean: orderData.jean + 1 })
+                }
+              >
+                <MaterialCommunityIcons
+                  name="plus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={content6}>
+            <View>
+              <Text style={[text, { fontSize: 18 }]}>{`ชุดชั้นใน`}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  orderData.underwear >= 1
+                    ? setOrderData({
+                        ...orderData,
+                        underwear: orderData.underwear - 1,
+                      })
+                    : null;
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="minus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+              <Text style={[text, { fontSize: 18, marginHorizontal: 10 }]}>
+                {orderData.underwear}
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  setOrderData({
+                    ...orderData,
+                    underwear: orderData.underwear + 1,
+                  })
+                }
+              >
+                <MaterialCommunityIcons
+                  name="plus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={content6}>
+            <View>
+              <Text style={[text, { fontSize: 18 }]}>{`ถุงเท้า`}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  orderData.sock >= 1
+                    ? setOrderData({ ...orderData, sock: orderData.sock - 1 })
+                    : null;
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="minus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+              <Text style={[text, { fontSize: 18, marginHorizontal: 10 }]}>
+                {orderData.sock}
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  setOrderData({ ...orderData, sock: orderData.sock + 1 })
+                }
+              >
+                <MaterialCommunityIcons
+                  name="plus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={content6}>
+            <View>
+              <Text style={[text, { fontSize: 18 }]}>{`อื่นๆ`}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  orderData.other >= 1
+                    ? setOrderData({ ...orderData, other: orderData.other - 1 })
+                    : null;
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="minus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+              <Text style={[text, { fontSize: 18, marginHorizontal: 10 }]}>
+                {orderData.other}
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  setOrderData({ ...orderData, other: orderData.other + 1 })
+                }
+              >
+                <MaterialCommunityIcons
+                  name="plus-box"
+                  size={36}
                   color="#4691FB"
                 />
               </TouchableOpacity>
@@ -259,12 +576,94 @@ const CreateOrderScreen = ({ navigation, route }) => {
           <View style={{ marginTop: "5%", marginHorizontal: "8%" }}>
             <Text style={[text, { fontSize: 20 }]}>{`สรุปรายการ`}</Text>
             <View style={[content3, { marginTop: "2%" }]}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <FontAwesome name="circle" size={8} />
-                <Text style={[text, { marginLeft: 10 }]}>{`ซักทั้งหมด`}</Text>
-              </View>
+              <Text style={text}>{`ซักทั้งหมด`}</Text>
               <Text style={text}>{`${orderData.washingKgValue} กิโลกรัม`}</Text>
             </View>
+
+            {orderData.shirt ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`เสื้อยืด`}</Text>
+                </View>
+                <Text style={text}>{`${orderData.shirt} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.tshirt ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`เสื้อเชิ๊ต`}</Text>
+                </View>
+                <Text style={text}>{`${orderData.tshirt} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.sLeg ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text
+                    style={[text, { marginLeft: 10 }]}
+                  >{`กางเกง/กระโปรง (ขาสั้น)`}</Text>
+                </View>
+                <Text style={text}>{`${orderData.sLeg} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.lLeg ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text
+                    style={[text, { marginLeft: 10 }]}
+                  >{`กางเกง/กระโปรง (ขายาว)`}</Text>
+                </View>
+                <Text style={text}>{`${orderData.lLeg} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.jean ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`กางเกงยีน`}</Text>
+                </View>
+                <Text style={text}>{`${orderData.jean} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.underwear ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`ชุดชั้นใน`}</Text>
+                </View>
+                <Text style={text}>{`${orderData.underwear} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.sock ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`ถุงเท้า`}</Text>
+                </View>
+                <Text style={text}>{`${orderData.sock} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.other ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`อื่นๆ`}</Text>
+                </View>
+                <Text style={text}>{`${orderData.other} ตัว`}</Text>
+              </View>
+            ) : null}
+
             {isEnabled.reed ? (
               <View style={content3}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>

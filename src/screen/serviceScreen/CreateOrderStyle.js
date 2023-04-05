@@ -37,6 +37,14 @@ export const content4 = {
   alignItems: "center",
 };
 
+export const content6 = {
+  justifyContent: "space-between",
+  marginTop: "2%",
+  flexDirection: "row",
+  alignItems: "center",
+  marginHorizontal: "8%",
+};
+
 export const button1 = {
   backgroundColor: "#4691FB",
   padding: 8,

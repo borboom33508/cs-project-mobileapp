@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert, Linking } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Divider } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
@@ -11,6 +11,7 @@ import {
   content1,
   content2,
   content3,
+  content4,
   text,
 } from "./OrderDetailScreenStyle";
 import { ScrollView } from "react-native";
@@ -151,9 +152,18 @@ const OrderDetailScreen = ({ navigation, route }) => {
             <Text style={[text, { fontSize: 18 }]}>{`รายละเอียดร้านค้า`}</Text>
             <View style={{ marginHorizontal: 10, marginTop: 5 }}>
               <Text style={text}>{`ชื่อ: ${orderData.laundry_name}`}</Text>
-              <Text
-                style={text}
-              >{`เบอร์โทรศัพท์: ${orderData.laundry_phone}`}</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={text}>{`เบอร์โทรศัพท์: `}</Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL(`tel:${orderData.laundry_phone}`)
+                  }
+                >
+                  <Text
+                    style={[text, { color: "#4691FB" }]}
+                  >{`${orderData.laundry_phone}`}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           <View style={content1}>
@@ -166,11 +176,122 @@ const OrderDetailScreen = ({ navigation, route }) => {
               } ชั่วโมง`}</Text>
               <View style={{ marginHorizontal: 15 }}>
                 <View style={content2}>
-                  <Text style={text}>{`ซักผ้า`}</Text>
+                  <Text style={text}>{`ซักผ้าทั้งหมด`}</Text>
                   <Text
                     style={text}
-                  >{`${orderData.order_washingKg} กิโล`}</Text>
+                  >{`${orderData.order_washingKg} กิโลกรัม`}</Text>
                 </View>
+
+                {orderData.order_shirt != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`เสื้อยืด`}</Text>
+                    </View>
+                    <Text style={text}>{`${orderData.order_shirt} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_tshirt != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`เสื้อเชิ๊ต`}</Text>
+                    </View>
+                    <Text style={text}>{`${orderData.order_tshirt} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_sLeg != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`กางเกง/กระโปรง (ขาสั้น)`}</Text>
+                    </View>
+                    <Text style={text}>{`${orderData.order_sLeg} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_lLeg != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`กางเกง/กระโปรง (ขายาว)`}</Text>
+                    </View>
+                    <Text style={text}>{`${orderData.order_lLeg} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_jean != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`กางเกงยีน`}</Text>
+                    </View>
+                    <Text style={text}>{`${orderData.order_jean} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_underwear != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`ชุดชั้นใน`}</Text>
+                    </View>
+                    <Text
+                      style={text}
+                    >{`${orderData.order_underwear} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_sock != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text style={[text, { marginLeft: 5 }]}>{`ถุงเท้า`}</Text>
+                    </View>
+                    <Text style={text}>{`${orderData.order_sock} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_other != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text style={[text, { marginLeft: 5 }]}>{`อื่นๆ`}</Text>
+                    </View>
+                    <Text style={text}>{`${orderData.order_other} ตัว`}</Text>
+                  </View>
+                ) : null}
+
                 {orderData.order_isReed ? (
                   <Text style={text}>{`รีด`}</Text>
                 ) : null}
