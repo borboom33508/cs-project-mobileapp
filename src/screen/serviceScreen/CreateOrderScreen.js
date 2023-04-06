@@ -33,12 +33,20 @@ const CreateOrderScreen = ({ navigation, route }) => {
   const laundryName = route.params.laundry_name;
   const laundryService = route.params.laundry_service;
   const isFocused = useIsFocused();
-  const [isEnabled, setIsEnabled] = useState({ reed: false, QR: false, max: false });
+  const [isEnabled, setIsEnabled] = useState({
+    reed: false,
+    QR: false,
+    max: false,
+  });
+
+  const [currentG, setCurrentG] = useState(0);
+  const [currentCloth, setCurrentCloth] = useState(0);
+
   // setIsEnabled({ ...isEnabled, max: true})
   const [orderData, setOrderData] = useState({
     washingKgValue: 1,
-    shirt: 0,
     tshirt: 0,
+    shirt: 0,
     sLeg: 0,
     lLeg: 0,
     jean: 0,
@@ -128,8 +136,8 @@ const CreateOrderScreen = ({ navigation, route }) => {
     formdata.append("order_service_type", laundryService);
     formdata.append("order_washingKg", orderData.washingKgValue);
 
-    formdata.append("order_shirt", orderData.shirt);
     formdata.append("order_tshirt", orderData.tshirt);
+    formdata.append("order_shirt", orderData.shirt);
     formdata.append("order_sLeg", orderData.sLeg);
     formdata.append("order_lLeg", orderData.lLeg);
     formdata.append("order_jean", orderData.jean);
@@ -205,12 +213,22 @@ const CreateOrderScreen = ({ navigation, route }) => {
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
                 onPress={() => {
-                  orderData.washingKgValue > 1
-                    ? setOrderData({
-                        ...orderData,
-                        washingKgValue: orderData.washingKgValue - 1,
-                      })
-                    : null;
+                  if (orderData.washingKgValue > 1) {
+                    setOrderData({
+                      ...orderData,
+                      washingKgValue: orderData.washingKgValue - 1,
+                      tshirt: 0,
+                      shirt: 0,
+                      sLeg: 0,
+                      lLeg: 0,
+                      jean: 0,
+                      underwear: 0,
+                      sock: 0,
+                      other: 0,
+                    })
+                    setCurrentCloth(0);
+                    setCurrentG(0);
+                  }
                 }}
               >
                 <MaterialCommunityIcons
@@ -223,12 +241,12 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 {orderData.washingKgValue}
               </Text>
               <TouchableOpacity
-                onPress={() =>
+                onPress={() => {
                   setOrderData({
                     ...orderData,
                     washingKgValue: orderData.washingKgValue + 1,
-                  })
-                }
+                  });
+                }}
               >
                 <MaterialCommunityIcons
                   name="plus-box"
@@ -242,54 +260,28 @@ const CreateOrderScreen = ({ navigation, route }) => {
           <View style={content6}>
             <View>
               <Text style={[text, { fontSize: 18 }]}>{`เสื้อยืด`}</Text>
+              <Text style={[text, { fontSize: 12 }]}>{`~80 กรัม/ชิ้น`}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity
                 onPress={() => {
-                  orderData.shirt >= 1
-                    ? setOrderData({
-                        ...orderData,
-                        shirt: orderData.shirt - 1,
-                      })
-                    : null;
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="minus-box"
-                  size={36}
-                  color="#4691FB"
-                />
-              </TouchableOpacity>
-              <Text style={[text, { fontSize: 18, marginHorizontal: 10 }]}>
-                {orderData.shirt}
-              </Text>
-              <TouchableOpacity
-                onPress={() =>
-                  setOrderData({ ...orderData, shirt: orderData.shirt + 1 })
-                }
-              >
-                <MaterialCommunityIcons
-                  name="plus-box"
-                  size={36}
-                  color="#4691FB"
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={content6}>
-            <View>
-              <Text style={[text, { fontSize: 18 }]}>{`เสื้อเชิ๊ต`}</Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TouchableOpacity
-                onPress={() => {
-                  orderData.tshirt >= 1
-                    ? setOrderData({
-                        ...orderData,
-                        tshirt: orderData.tshirt - 1,
-                      })
-                    : null;
+                  let x = 0;
+                  x = orderData.tshirt ? orderData.tshirt - 1 : 0;
+                  orderData.tshirt ? null : (x = x - 1);
+                  if (x >= 1) {
+                    setOrderData({
+                      ...orderData,
+                      tshirt: orderData.tshirt - 1,
+                    });
+                    setCurrentCloth(currentCloth - 1);
+                    setCurrentG(currentG - 80);
+                  } else if (x == 0) {
+                    currentG ? setCurrentG(currentG - 80) : setCurrentG(0);
+                    setOrderData({
+                      ...orderData,
+                      tshirt: 0,
+                    });
+                  }
                 }}
               >
                 <MaterialCommunityIcons
@@ -302,9 +294,93 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 {orderData.tshirt}
               </Text>
               <TouchableOpacity
-                onPress={() =>
-                  setOrderData({ ...orderData, tshirt: orderData.tshirt + 1 })
-                }
+                onPress={() => {
+                  let x = 0;
+                  x = currentG ? currentG + 80 : 0;
+                  x / 1000 > orderData.washingKgValue
+                    ? null
+                    : setOrderData({
+                        ...orderData,
+                        tshirt: orderData.tshirt + 1,
+                      });
+                  setCurrentCloth(currentCloth + 1);
+                  setCurrentG(currentG + 80);
+                  currentG ? null : (x = x + 80);
+                  if (x / 1000 > orderData.washingKgValue) {
+                    setOrderData({
+                      ...orderData,
+                      washingKgValue: orderData.washingKgValue + 1,
+                      tshirt: orderData.tshirt + 1,
+                    });
+                  }
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="plus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={content6}>
+            <View>
+              <Text style={[text, { fontSize: 18 }]}>{`เสื้อเชิ้ต`}</Text>
+              <Text style={[text, { fontSize: 12 }]}>{`~100 กรัม/ชิ้น`}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  let x = 0;
+                  x = orderData.shirt ? orderData.shirt - 1 : 0;
+                  orderData.shirt ? null : (x = x - 1);
+                  if (x >= 1) {
+                    setOrderData({
+                      ...orderData,
+                      shirt: orderData.shirt - 1,
+                    });
+                    setCurrentCloth(currentCloth - 1);
+                    setCurrentG(currentG - 100);
+                  } else if (x == 0) {
+                    currentG ? setCurrentG(currentG - 100) : setCurrentG(0);
+                    setOrderData({
+                      ...orderData,
+                      shirt: 0,
+                    });
+                  }
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="minus-box"
+                  size={36}
+                  color="#4691FB"
+                />
+              </TouchableOpacity>
+              <Text style={[text, { fontSize: 18, marginHorizontal: 10 }]}>
+                {orderData.shirt}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  let x = 0;
+                  x = currentG ? currentG + 100 : 0;
+                  x / 1000 > orderData.washingKgValue
+                    ? null
+                    : setOrderData({
+                        ...orderData,
+                        shirt: orderData.shirt + 1,
+                      });
+                  setCurrentCloth(currentCloth + 1);
+                  setCurrentG(currentG + 100);
+                  currentG ? null : (x = x + 100);
+                  if (x / 1000 > orderData.washingKgValue) {
+                    setOrderData({
+                      ...orderData,
+                      washingKgValue: orderData.washingKgValue + 1,
+                      shirt: orderData.shirt + 1,
+                    });
+                  }
+                }}
               >
                 <MaterialCommunityIcons
                   name="plus-box"
@@ -320,13 +396,28 @@ const CreateOrderScreen = ({ navigation, route }) => {
               <Text
                 style={[text, { fontSize: 18 }]}
               >{`กางเกง/กระโปรง (ขาสั้น)`}</Text>
+              <Text style={[text, { fontSize: 12 }]}>{`~250 กรัม/ชิ้น`}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity
                 onPress={() => {
-                  orderData.sLeg >= 1
-                    ? setOrderData({ ...orderData, sLeg: orderData.sLeg - 1 })
-                    : null;
+                  let x = 0;
+                  x = orderData.sLeg ? orderData.sLeg - 1 : 0;
+                  orderData.sLeg ? null : (x = x - 1);
+                  if (x >= 1) {
+                    setOrderData({
+                      ...orderData,
+                      sLeg: orderData.sLeg - 1,
+                    });
+                    setCurrentCloth(currentCloth - 1);
+                    setCurrentG(currentG - 250);
+                  } else if (x == 0) {
+                    currentG ? setCurrentG(currentG - 250) : setCurrentG(0);
+                    setOrderData({
+                      ...orderData,
+                      sLeg: 0,
+                    });
+                  }
                 }}
               >
                 <MaterialCommunityIcons
@@ -339,9 +430,26 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 {orderData.sLeg}
               </Text>
               <TouchableOpacity
-                onPress={() =>
-                  setOrderData({ ...orderData, sLeg: orderData.sLeg + 1 })
-                }
+                onPress={() => {
+                  let x = 0;
+                  x = currentG ? currentG + 250 : 0;
+                  x / 1000 > orderData.washingKgValue
+                    ? null
+                    : setOrderData({
+                        ...orderData,
+                        sLeg: orderData.sLeg + 1,
+                      });
+                  setCurrentCloth(currentCloth + 1);
+                  setCurrentG(currentG + 250);
+                  currentG ? null : (x = x + 250);
+                  if (x / 1000 > orderData.washingKgValue) {
+                    setOrderData({
+                      ...orderData,
+                      washingKgValue: orderData.washingKgValue + 1,
+                      sLeg: orderData.sLeg + 1,
+                    });
+                  }
+                }}
               >
                 <MaterialCommunityIcons
                   name="plus-box"
@@ -357,13 +465,28 @@ const CreateOrderScreen = ({ navigation, route }) => {
               <Text
                 style={[text, { fontSize: 18 }]}
               >{`กางเกง/กระโปรง (ขายาว)`}</Text>
+              <Text style={[text, { fontSize: 12 }]}>{`~400 กรัม/ชิ้น`}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity
                 onPress={() => {
-                  orderData.lLeg >= 1
-                    ? setOrderData({ ...orderData, lLeg: orderData.lLeg - 1 })
-                    : null;
+                  let x = 0;
+                  x = orderData.lLeg ? orderData.lLeg - 1 : 0;
+                  orderData.lLeg ? null : (x = x - 1);
+                  if (x >= 1) {
+                    setOrderData({
+                      ...orderData,
+                      lLeg: orderData.lLeg - 1,
+                    });
+                    setCurrentCloth(currentCloth - 1);
+                    setCurrentG(currentG - 400);
+                  } else if (x == 0) {
+                    currentG ? setCurrentG(currentG - 400) : setCurrentG(0);
+                    setOrderData({
+                      ...orderData,
+                      lLeg: 0,
+                    });
+                  }
                 }}
               >
                 <MaterialCommunityIcons
@@ -376,9 +499,26 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 {orderData.lLeg}
               </Text>
               <TouchableOpacity
-                onPress={() =>
-                  setOrderData({ ...orderData, lLeg: orderData.lLeg + 1 })
-                }
+                onPress={() => {
+                  let x = 0;
+                  x = currentG ? currentG + 400 : 0;
+                  x / 1000 > orderData.washingKgValue
+                    ? null
+                    : setOrderData({
+                        ...orderData,
+                        lLeg: orderData.lLeg + 1,
+                      });
+                  setCurrentCloth(currentCloth + 1);
+                  setCurrentG(currentG + 400);
+                  currentG ? null : (x = x + 400);
+                  if (x / 1000 > orderData.washingKgValue) {
+                    setOrderData({
+                      ...orderData,
+                      washingKgValue: orderData.washingKgValue + 1,
+                      lLeg: orderData.lLeg + 1,
+                    });
+                  }
+                }}
               >
                 <MaterialCommunityIcons
                   name="plus-box"
@@ -391,14 +531,29 @@ const CreateOrderScreen = ({ navigation, route }) => {
 
           <View style={content6}>
             <View>
-              <Text style={[text, { fontSize: 18 }]}>{`กางเกงยีน`}</Text>
+              <Text style={[text, { fontSize: 18 }]}>{`กางเกงยีนส์`}</Text>
+              <Text style={[text, { fontSize: 12 }]}>{`~800 กรัม/ชิ้น`}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity
                 onPress={() => {
-                  orderData.jean >= 1
-                    ? setOrderData({ ...orderData, jean: orderData.jean - 1 })
-                    : null;
+                  let x = 0;
+                  x = orderData.jean ? orderData.jean - 1 : 0;
+                  orderData.jean ? null : (x = x - 1);
+                  if (x >= 1) {
+                    setOrderData({
+                      ...orderData,
+                      jean: orderData.jean - 1,
+                    });
+                    setCurrentCloth(currentCloth - 1);
+                    setCurrentG(currentG - 800);
+                  } else if (x == 0) {
+                    currentG ? setCurrentG(currentG - 800) : setCurrentG(0);
+                    setOrderData({
+                      ...orderData,
+                      jean: 0,
+                    });
+                  }
                 }}
               >
                 <MaterialCommunityIcons
@@ -411,9 +566,26 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 {orderData.jean}
               </Text>
               <TouchableOpacity
-                onPress={() =>
-                  setOrderData({ ...orderData, jean: orderData.jean + 1 })
-                }
+                onPress={() => {
+                  let x = 0;
+                  x = currentG ? currentG + 800 : 0;
+                  x / 1000 > orderData.washingKgValue
+                    ? null
+                    : setOrderData({
+                        ...orderData,
+                        jean: orderData.jean + 1,
+                      });
+                  setCurrentCloth(currentCloth + 1);
+                  setCurrentG(currentG + 800);
+                  currentG ? null : (x = x + 800);
+                  if (x / 1000 > orderData.washingKgValue) {
+                    setOrderData({
+                      ...orderData,
+                      washingKgValue: orderData.washingKgValue + 1,
+                      jean: orderData.jean + 1,
+                    });
+                  }
+                }}
               >
                 <MaterialCommunityIcons
                   name="plus-box"
@@ -427,16 +599,28 @@ const CreateOrderScreen = ({ navigation, route }) => {
           <View style={content6}>
             <View>
               <Text style={[text, { fontSize: 18 }]}>{`ชุดชั้นใน`}</Text>
+              <Text style={[text, { fontSize: 12 }]}>{`~30 กรัม/ชิ้น`}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity
                 onPress={() => {
-                  orderData.underwear >= 1
-                    ? setOrderData({
-                        ...orderData,
-                        underwear: orderData.underwear - 1,
-                      })
-                    : null;
+                  let x = 0;
+                  x = orderData.underwear ? orderData.underwear - 1 : 0;
+                  orderData.underwear ? null : (x = x - 1);
+                  if (x >= 1) {
+                    setOrderData({
+                      ...orderData,
+                      underwear: orderData.underwear - 1,
+                    });
+                    setCurrentCloth(currentCloth - 1);
+                    setCurrentG(currentG - 30);
+                  } else if (x == 0) {
+                    currentG ? setCurrentG(currentG - 30) : setCurrentG(0);
+                    setOrderData({
+                      ...orderData,
+                      underwear: 0,
+                    });
+                  }
                 }}
               >
                 <MaterialCommunityIcons
@@ -449,12 +633,26 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 {orderData.underwear}
               </Text>
               <TouchableOpacity
-                onPress={() =>
-                  setOrderData({
-                    ...orderData,
-                    underwear: orderData.underwear + 1,
-                  })
-                }
+                onPress={() => {
+                  let x = 0;
+                  x = currentG ? currentG + 30 : 0;
+                  x / 1000 > orderData.washingKgValue
+                    ? null
+                    : setOrderData({
+                        ...orderData,
+                        underwear: orderData.underwear + 1,
+                      });
+                  setCurrentCloth(currentCloth + 1);
+                  setCurrentG(currentG + 30);
+                  currentG ? null : (x = x + 30);
+                  if (x / 1000 > orderData.washingKgValue) {
+                    setOrderData({
+                      ...orderData,
+                      washingKgValue: orderData.washingKgValue + 1,
+                      underwear: orderData.underwear + 1,
+                    });
+                  }
+                }}
               >
                 <MaterialCommunityIcons
                   name="plus-box"
@@ -468,13 +666,28 @@ const CreateOrderScreen = ({ navigation, route }) => {
           <View style={content6}>
             <View>
               <Text style={[text, { fontSize: 18 }]}>{`ถุงเท้า`}</Text>
+              <Text style={[text, { fontSize: 12 }]}>{`~20 กรัม/ชิ้น`}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity
                 onPress={() => {
-                  orderData.sock >= 1
-                    ? setOrderData({ ...orderData, sock: orderData.sock - 1 })
-                    : null;
+                  let x = 0;
+                  x = orderData.sock ? orderData.sock - 1 : 0;
+                  orderData.sock ? null : (x = x - 1);
+                  if (x >= 1) {
+                    setOrderData({
+                      ...orderData,
+                      sock: orderData.sock - 1,
+                    });
+                    setCurrentCloth(currentCloth - 1);
+                    setCurrentG(currentG - 20);
+                  } else if (x == 0) {
+                    currentG ? setCurrentG(currentG - 20) : setCurrentG(0);
+                    setOrderData({
+                      ...orderData,
+                      sock: 0,
+                    });
+                  }
                 }}
               >
                 <MaterialCommunityIcons
@@ -487,9 +700,26 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 {orderData.sock}
               </Text>
               <TouchableOpacity
-                onPress={() =>
-                  setOrderData({ ...orderData, sock: orderData.sock + 1 })
-                }
+                onPress={() => {
+                  let x = 0;
+                  x = currentG ? currentG + 20 : 0;
+                  x / 1000 > orderData.washingKgValue
+                    ? null
+                    : setOrderData({
+                        ...orderData,
+                        sock: orderData.sock + 1,
+                      });
+                  setCurrentCloth(currentCloth + 1);
+                  setCurrentG(currentG + 20);
+                  currentG ? null : (x = x + 20);
+                  if (x / 1000 > orderData.washingKgValue) {
+                    setOrderData({
+                      ...orderData,
+                      washingKgValue: orderData.washingKgValue + 1,
+                      sock: orderData.sock + 1,
+                    });
+                  }
+                }}
               >
                 <MaterialCommunityIcons
                   name="plus-box"
@@ -503,13 +733,28 @@ const CreateOrderScreen = ({ navigation, route }) => {
           <View style={content6}>
             <View>
               <Text style={[text, { fontSize: 18 }]}>{`อื่นๆ`}</Text>
+              <Text style={[text, { fontSize: 12 }]}>{`~240 กรัม/ชิ้น`}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity
                 onPress={() => {
-                  orderData.other >= 1
-                    ? setOrderData({ ...orderData, other: orderData.other - 1 })
-                    : null;
+                  let x = 0;
+                  x = orderData.other ? orderData.other - 1 : 0;
+                  orderData.other ? null : (x = x - 1);
+                  if (x >= 1) {
+                    setOrderData({
+                      ...orderData,
+                      other: orderData.other - 1,
+                    });
+                    setCurrentCloth(currentCloth - 1);
+                    setCurrentG(currentG - 240);
+                  } else if (x == 0) {
+                    currentG ? setCurrentG(currentG - 240) : setCurrentG(0);
+                    setOrderData({
+                      ...orderData,
+                      other: 0,
+                    });
+                  }
                 }}
               >
                 <MaterialCommunityIcons
@@ -522,9 +767,26 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 {orderData.other}
               </Text>
               <TouchableOpacity
-                onPress={() =>
-                  setOrderData({ ...orderData, other: orderData.other + 1 })
-                }
+                onPress={() => {
+                  let x = 0;
+                  x = currentG ? currentG + 240 : 0;
+                  x / 1000 > orderData.washingKgValue
+                    ? null
+                    : setOrderData({
+                        ...orderData,
+                        other: orderData.other + 1,
+                      });
+                  setCurrentCloth(currentCloth + 1);
+                  setCurrentG(currentG + 240);
+                  currentG ? null : (x = x + 240);
+                  if (x / 1000 > orderData.washingKgValue) {
+                    setOrderData({
+                      ...orderData,
+                      washingKgValue: orderData.washingKgValue + 1,
+                      other: orderData.other + 1,
+                    });
+                  }
+                }}
               >
                 <MaterialCommunityIcons
                   name="plus-box"
@@ -533,6 +795,32 @@ const CreateOrderScreen = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             </View>
+          </View>
+
+          <View
+            style={{
+              justifyContent: "space-between",
+              marginTop: "2%",
+              flexDirection: "row",
+              alignItems: "center",
+              marginHorizontal: "8%",
+            }}
+          >
+            <Text>{`น้ำหนักโดยเฉลี่ยปัจจุบัน`}</Text>
+            <Text>{`${currentG / 1000} กิโลกรัม`}</Text>
+          </View>
+
+          <View
+            style={{
+              justifyContent: "space-between",
+              marginTop: "2%",
+              flexDirection: "row",
+              alignItems: "center",
+              marginHorizontal: "8%",
+            }}
+          >
+            <Text>{`น้ำหนักสูงสุดปัจจุบัน`}</Text>
+            <Text>{`${orderData.washingKgValue} กิโลกรัม`}</Text>
           </View>
 
           <View style={content2}>
@@ -577,26 +865,28 @@ const CreateOrderScreen = ({ navigation, route }) => {
             <Text style={[text, { fontSize: 20 }]}>{`สรุปรายการ`}</Text>
             <View style={[content3, { marginTop: "2%" }]}>
               <Text style={text}>{`ซักทั้งหมด`}</Text>
-              <Text style={text}>{`${orderData.washingKgValue} กิโลกรัม`}</Text>
+              <Text
+                style={text}
+              >{`~${orderData.washingKgValue} กิโลกรัม`}</Text>
             </View>
-
-            {orderData.shirt ? (
-              <View style={[content3, { marginTop: "2%" }]}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <FontAwesome name="circle" size={8} />
-                  <Text style={[text, { marginLeft: 10 }]}>{`เสื้อยืด`}</Text>
-                </View>
-                <Text style={text}>{`${orderData.shirt} ตัว`}</Text>
-              </View>
-            ) : null}
 
             {orderData.tshirt ? (
               <View style={[content3, { marginTop: "2%" }]}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <FontAwesome name="circle" size={8} />
-                  <Text style={[text, { marginLeft: 10 }]}>{`เสื้อเชิ๊ต`}</Text>
+                  <Text style={[text, { marginLeft: 10 }]}>{`เสื้อยืด`}</Text>
                 </View>
                 <Text style={text}>{`${orderData.tshirt} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.shirt ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`เสื้อเชิ้ต`}</Text>
+                </View>
+                <Text style={text}>{`${orderData.shirt} ตัว`}</Text>
               </View>
             ) : null}
 
@@ -628,7 +918,9 @@ const CreateOrderScreen = ({ navigation, route }) => {
               <View style={[content3, { marginTop: "2%" }]}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <FontAwesome name="circle" size={8} />
-                  <Text style={[text, { marginLeft: 10 }]}>{`กางเกงยีน`}</Text>
+                  <Text
+                    style={[text, { marginLeft: 10 }]}
+                  >{`กางเกงยีนส์`}</Text>
                 </View>
                 <Text style={text}>{`${orderData.jean} ตัว`}</Text>
               </View>
@@ -710,11 +1002,12 @@ const CreateOrderScreen = ({ navigation, route }) => {
         <TouchableOpacity
           onPress={() => postCreateOrder()}
           style={{
-            backgroundColor: isEnabled.QR ? "#4691FB" : "#767577",
+            backgroundColor:
+              isEnabled.QR && currentCloth != 0 ? "#4691FB" : "#767577",
             padding: 10,
             borderRadius: 5,
           }}
-          disabled={!isEnabled.QR}
+          disabled={!isEnabled.QR || currentCloth == 0}
         >
           <View style={[content3, { marginHorizontal: 5 }]}>
             <Text style={[text, { color: "#ffffff" }]}>{`ส่งซัก`}</Text>

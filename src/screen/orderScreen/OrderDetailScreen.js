@@ -182,7 +182,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
                   >{`${orderData.order_washingKg} กิโลกรัม`}</Text>
                 </View>
 
-                {orderData.order_shirt != 0 ? (
+                {orderData.order_tshirt != 0 ? (
                   <View style={content4}>
                     <View
                       style={{ flexDirection: "row", alignItems: "center" }}
@@ -192,11 +192,11 @@ const OrderDetailScreen = ({ navigation, route }) => {
                         style={[text, { marginLeft: 5 }]}
                       >{`เสื้อยืด`}</Text>
                     </View>
-                    <Text style={text}>{`${orderData.order_shirt} ตัว`}</Text>
+                    <Text style={text}>{`${orderData.order_tshirt} ตัว`}</Text>
                   </View>
                 ) : null}
 
-                {orderData.order_tshirt != 0 ? (
+                {orderData.order_shirt != 0 ? (
                   <View style={content4}>
                     <View
                       style={{ flexDirection: "row", alignItems: "center" }}
@@ -204,9 +204,9 @@ const OrderDetailScreen = ({ navigation, route }) => {
                       <FontAwesome name="circle" size={8} />
                       <Text
                         style={[text, { marginLeft: 5 }]}
-                      >{`เสื้อเชิ๊ต`}</Text>
+                      >{`เสื้อเชิ้ต`}</Text>
                     </View>
-                    <Text style={text}>{`${orderData.order_tshirt} ตัว`}</Text>
+                    <Text style={text}>{`${orderData.order_shirt} ตัว`}</Text>
                   </View>
                 ) : null}
 

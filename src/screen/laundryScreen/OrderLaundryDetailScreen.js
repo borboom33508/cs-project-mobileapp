@@ -206,22 +206,8 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
                   <Text style={text}>{`ซักผ้าทั้งหมด`}</Text>
                   <Text
                     style={text}
-                  >{`${orderData.order_washingKg} กิโลกรัม`}</Text>
+                  >{`~${orderData.order_washingKg} กิโลกรัม`}</Text>
                 </View>
-
-                {orderData.order_shirt != 0 ? (
-                  <View style={content4}>
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <FontAwesome name="circle" size={8} />
-                      <Text
-                        style={[text, { marginLeft: 5 }]}
-                      >{`เสื้อยืด`}</Text>
-                    </View>
-                    <Text style={text}>{`${orderData.order_shirt} ตัว`}</Text>
-                  </View>
-                ) : null}
 
                 {orderData.order_tshirt != 0 ? (
                   <View style={content4}>
@@ -231,9 +217,23 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
                       <FontAwesome name="circle" size={8} />
                       <Text
                         style={[text, { marginLeft: 5 }]}
-                      >{`เสื้อเชิ๊ต`}</Text>
+                      >{`เสื้อยืด`}</Text>
                     </View>
                     <Text style={text}>{`${orderData.order_tshirt} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_shirt != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`เสื้อเชิ้ต`}</Text>
+                    </View>
+                    <Text style={text}>{`${orderData.order_shirt} ตัว`}</Text>
                   </View>
                 ) : null}
 
@@ -273,7 +273,7 @@ const OrderLaundryDetailScreen = ({ navigation, route }) => {
                       <FontAwesome name="circle" size={8} />
                       <Text
                         style={[text, { marginLeft: 5 }]}
-                      >{`กางเกงยีน`}</Text>
+                      >{`กางเกงยีนส์`}</Text>
                     </View>
                     <Text style={text}>{`${orderData.order_jean} ตัว`}</Text>
                   </View>
