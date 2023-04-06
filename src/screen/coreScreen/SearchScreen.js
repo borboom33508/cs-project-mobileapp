@@ -45,7 +45,7 @@ const SearchScreen = ({ navigation }) => {
               laundry_picture: data.laundry_picture,
               laundry_location: data.laundry_location,
               laundry_hours: data.laundry_hours,
-              laundry_rating: data.laundry_rating,
+              // laundry_rating: data.laundry_rating,
               destination: destination[index],
             }));
             filterByQuery(laundryData, search);
@@ -162,10 +162,10 @@ const SearchScreen = ({ navigation }) => {
           <View style={{ marginLeft: 20 }}>
             <Text style={text}>{item.laundry_name}</Text>
             <View style={{ flexDirection: "row", marginVertical: 2 }}>
-              <FontAwesome name="star" size={18} color="orange" />
-              <Text style={[text, { fontSize: 14, marginLeft: 5 }]}>
+              {/* <FontAwesome name="star" size={18} color="orange" /> */}
+              {/* <Text style={[text, { fontSize: 14, marginLeft: 5 }]}>
                 {parseFloat(item.laundry_rating).toFixed(1)}
-              </Text>
+              </Text> */}
             </View>
             <View style={{ flexDirection: "row", marginBottom: 2 }}>
               <MaterialIcons name="delivery-dining" size={18} color="#4691FB" />
