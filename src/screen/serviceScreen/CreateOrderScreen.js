@@ -39,6 +39,15 @@ const CreateOrderScreen = ({ navigation, route }) => {
     max: false,
   });
 
+  const [tshirtReed, setTshirtReed] = useState(0);
+  const [shirtReed, setShirtReed] = useState(0);
+  const [slegReed, setSlegReed] = useState(0);
+  const [llegReed, setLlegReed] = useState(0);
+  const [jeanReed, setJeanReed] = useState(0);
+  const [underwearReed, setUnderwearReed] = useState(0);
+  const [sockReed, setSockReed] = useState(0);
+  const [otherReed, setOtherReed] = useState(0);
+
   const [currentG, setCurrentG] = useState(0);
   const [currentCloth, setCurrentCloth] = useState(0);
 
@@ -144,6 +153,16 @@ const CreateOrderScreen = ({ navigation, route }) => {
     formdata.append("order_underwear", orderData.underwear);
     formdata.append("order_sock", orderData.sock);
     formdata.append("order_other", orderData.other);
+
+    formdata.append("order_reed_tshirt", tshirtReed);
+    formdata.append("order_reed_shirt", shirtReed);
+    formdata.append("order_reed_sLeg", slegReed);
+    formdata.append("order_reed_lLeg", llegReed);
+    formdata.append("order_reed_jean", jeanReed);
+    formdata.append("order_reed_underwear", underwearReed);
+    formdata.append("order_reed_sock", sockReed);
+    formdata.append("order_reed_other", otherReed);
+
     formdata.append("order_isReed", isEnabled.reed);
     formdata.append(
       "order_description",
@@ -174,7 +193,15 @@ const CreateOrderScreen = ({ navigation, route }) => {
     if (isEnabled.reed) {
       return (
         orderData.washingKgValue * laundryService.split("_")[1] +
-        orderData.washingKgValue * 60
+        (tshirtReed +
+          shirtReed +
+          slegReed +
+          llegReed +
+          jeanReed +
+          underwearReed +
+          sockReed +
+          otherReed) *
+          15
       );
     } else {
       return orderData.washingKgValue * laundryService.split("_")[1];
@@ -225,7 +252,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
                       underwear: 0,
                       sock: 0,
                       other: 0,
-                    })
+                    });
                     setCurrentCloth(0);
                     setCurrentG(0);
                   }
@@ -800,7 +827,7 @@ const CreateOrderScreen = ({ navigation, route }) => {
           <View
             style={{
               justifyContent: "space-between",
-              marginTop: "2%",
+              marginTop: "3%",
               flexDirection: "row",
               alignItems: "center",
               marginHorizontal: "8%",
@@ -823,22 +850,418 @@ const CreateOrderScreen = ({ navigation, route }) => {
             <Text>{`${orderData.washingKgValue} กิโลกรัม`}</Text>
           </View>
 
-          <View style={content2}>
+          <View style={[content2, { marginBottom: 12 }]}>
             <View>
               <Text style={[text, { fontSize: 28 }]}>{`รีด`}</Text>
-              <Text style={[text, { fontSize: 14 }]}>{`~ตัวละ 10 บาท`}</Text>
+              <Text style={[text, { fontSize: 14 }]}>{`~ตัวละ 15 บาท`}</Text>
             </View>
             <Switch
               trackColor={{ false: "#767577", true: "#81b0ff" }}
               thumbColor={isEnabled.reed ? "#4691FB" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={() =>
-                setIsEnabled({ ...isEnabled, reed: !isEnabled.reed })
-              }
+              onValueChange={() => {
+                setIsEnabled({ ...isEnabled, reed: !isEnabled.reed });
+                setShirtReed(0);
+                setTshirtReed(0);
+                setSlegReed(0);
+                setLlegReed(0);
+                setJeanReed(0);
+                setUnderwearReed(0);
+                setSockReed(0);
+                setOtherReed(0);
+              }}
               value={isEnabled.reed}
               style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
             />
           </View>
+
+          {orderData.tshirt && isEnabled.reed ? (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginHorizontal: "4%",
+              }}
+            >
+              <Text style={[text, { marginLeft: 20 }]}>{"เสื้อยืด"}</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    tshirtReed == 0
+                      ? setTshirtReed(0)
+                      : setTshirtReed(tshirtReed - 1);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="minus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={[
+                    text,
+                    { fontSize: 18, marginHorizontal: 10, marginTop: 4 },
+                  ]}
+                >
+                  {tshirtReed}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    tshirtReed < orderData.tshirt
+                      ? setTshirtReed(tshirtReed + 1)
+                      : setTshirtReed(tshirtReed);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="plus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
+
+          {orderData.shirt && isEnabled.reed ? (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginHorizontal: "4%",
+              }}
+            >
+              <Text style={[text, { marginLeft: 20 }]}>{"เสื้อเชิ้ต"}</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    shirtReed == 0
+                      ? setShirtReed(0)
+                      : setShirtReed(shirtReed - 1);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="minus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={[
+                    text,
+                    { fontSize: 18, marginHorizontal: 10, marginTop: 4 },
+                  ]}
+                >
+                  {shirtReed}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    shirtReed < orderData.shirt
+                      ? setShirtReed(shirtReed + 1)
+                      : setShirtReed(shirtReed);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="plus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
+
+          {orderData.sLeg && isEnabled.reed ? (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginHorizontal: "4%",
+              }}
+            >
+              <Text style={[text, { marginLeft: 20 }]}>
+                {"กางเกง/กระโปรง (ขาสั้น)"}
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    slegReed == 0 ? setSlegReed(0) : setSlegReed(slegReed - 1);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="minus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={[
+                    text,
+                    { fontSize: 18, marginHorizontal: 10, marginTop: 4 },
+                  ]}
+                >
+                  {slegReed}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    slegReed < orderData.sLeg
+                      ? setSlegReed(slegReed + 1)
+                      : setSlegReed(slegReed);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="plus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
+
+          {orderData.lLeg && isEnabled.reed ? (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginHorizontal: "4%",
+              }}
+            >
+              <Text style={[text, { marginLeft: 20 }]}>
+                {"กางเกง/กระโปรง (ขายาว)"}
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    llegReed == 0 ? setLlegReed(0) : setLlegReed(llegReed - 1);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="minus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={[
+                    text,
+                    { fontSize: 18, marginHorizontal: 10, marginTop: 4 },
+                  ]}
+                >
+                  {llegReed}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    llegReed < orderData.lLeg
+                      ? setLlegReed(llegReed + 1)
+                      : setLlegReed(llegReed);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="plus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
+
+          {orderData.jean && isEnabled.reed ? (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginHorizontal: "4%",
+              }}
+            >
+              <Text style={[text, { marginLeft: 20 }]}>{"กางเกงยีนส์"}</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    jeanReed == 0 ? setJeanReed(0) : setJeanReed(jeanReed - 1);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="minus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={[
+                    text,
+                    { fontSize: 18, marginHorizontal: 10, marginTop: 4 },
+                  ]}
+                >
+                  {jeanReed}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    jeanReed < orderData.jean
+                      ? setJeanReed(jeanReed + 1)
+                      : setJeanReed(jeanReed);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="plus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
+
+          {orderData.underwear && isEnabled.reed ? (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginHorizontal: "4%",
+              }}
+            >
+              <Text style={[text, { marginLeft: 20 }]}>{"ชุดชั้นใน"}</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    underwearReed == 0
+                      ? setUnderwearReed(0)
+                      : setUnderwearReed(underwearReed - 1);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="minus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={[
+                    text,
+                    { fontSize: 18, marginHorizontal: 10, marginTop: 4 },
+                  ]}
+                >
+                  {underwearReed}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    underwearReed < orderData.underwear
+                      ? setUnderwearReed(underwearReed + 1)
+                      : setUnderwearReed(underwearReed);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="plus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
+
+          {orderData.sock && isEnabled.reed ? (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginHorizontal: "4%",
+              }}
+            >
+              <Text style={[text, { marginLeft: 20 }]}>{"ถุงเท้า"}</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    sockReed == 0 ? setSockReed(0) : setSockReed(sockReed - 1);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="minus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={[
+                    text,
+                    { fontSize: 18, marginHorizontal: 10, marginTop: 4 },
+                  ]}
+                >
+                  {sockReed}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    sockReed < orderData.sock
+                      ? setSockReed(sockReed + 1)
+                      : setSockReed(sockReed);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="plus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
+
+          {orderData.other && isEnabled.reed ? (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginHorizontal: "4%",
+              }}
+            >
+              <Text style={[text, { marginLeft: 20 }]}>{"อื่นๆ"}</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    otherReed == 0
+                      ? setOtherReed(0)
+                      : setOtherReed(otherReed - 1);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="minus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={[
+                    text,
+                    { fontSize: 18, marginHorizontal: 10, marginTop: 4 },
+                  ]}
+                >
+                  {otherReed}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    otherReed < orderData.other
+                      ? setOtherReed(otherReed + 1)
+                      : setOtherReed(otherReed);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="plus-box"
+                    size={36}
+                    color="#4691FB"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
 
           <View style={{ marginTop: "5%", marginHorizontal: "8%" }}>
             <Text style={[text, { fontSize: 20 }]}>{`คำแนะนำเพิ่มเติม`}</Text>
@@ -957,11 +1380,94 @@ const CreateOrderScreen = ({ navigation, route }) => {
             ) : null}
 
             {isEnabled.reed ? (
-              <View style={content3}>
+              <View style={[content3, { marginTop: 12, marginLeft: 18 }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text style={[text, { fontSize: 16 }]}>{`รีด`}</Text>
+                </View>
+              </View>
+            ) : null}
+
+            {orderData.tshirt && isEnabled.reed && tshirtReed != 0 ? (
+              <View style={[content3, { marginTop: "2%" }]}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <FontAwesome name="circle" size={8} />
-                  <Text style={[text, { marginLeft: 10 }]}>{`รีด`}</Text>
+                  <Text style={[text, { marginLeft: 10 }]}>{`เสื้อยืด`}</Text>
                 </View>
+                <Text style={text}>{`${tshirtReed} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.shirt && isEnabled.reed && shirtReed != 0 ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`เสื้อเชิ้ต`}</Text>
+                </View>
+                <Text style={text}>{`${shirtReed} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.sLeg && isEnabled.reed && slegReed != 0 ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text
+                    style={[text, { marginLeft: 10 }]}
+                  >{`กางเกง/กระโปรง (ขาสั้น)`}</Text>
+                </View>
+                <Text style={text}>{`${slegReed} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.lLeg && isEnabled.reed && llegReed != 0 ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text
+                    style={[text, { marginLeft: 10 }]}
+                  >{`กางเกง/กระโปรง (ขายาว)`}</Text>
+                </View>
+                <Text style={text}>{`${llegReed} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.jean && isEnabled.reed && jeanReed != 0 ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`กางเกงยีนส์`}</Text>
+                </View>
+                <Text style={text}>{`${jeanReed} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.underwear && isEnabled.reed && underwearReed != 0 ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`ชุดชั้นใน`}</Text>
+                </View>
+                <Text style={text}>{`${underwearReed} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.sock && isEnabled.reed && sockReed != 0 ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`ถุงเท้า`}</Text>
+                </View>
+                <Text style={text}>{`${sockReed} ตัว`}</Text>
+              </View>
+            ) : null}
+
+            {orderData.other && isEnabled.reed && otherReed != 0 ? (
+              <View style={[content3, { marginTop: "2%" }]}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <FontAwesome name="circle" size={8} />
+                  <Text style={[text, { marginLeft: 10 }]}>{`อื่นๆ`}</Text>
+                </View>
+                <Text style={text}>{`${otherReed} ตัว`}</Text>
               </View>
             ) : null}
 

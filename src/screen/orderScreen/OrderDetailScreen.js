@@ -246,7 +246,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
                       <FontAwesome name="circle" size={8} />
                       <Text
                         style={[text, { marginLeft: 5 }]}
-                      >{`กางเกงยีน`}</Text>
+                      >{`กางเกงยีนส์`}</Text>
                     </View>
                     <Text style={text}>{`${orderData.order_jean} ตัว`}</Text>
                   </View>
@@ -294,6 +294,132 @@ const OrderDetailScreen = ({ navigation, route }) => {
 
                 {orderData.order_isReed ? (
                   <Text style={text}>{`รีด`}</Text>
+                ) : null}
+              </View>
+
+              <View style={{marginHorizontal: 15 }}>
+                {orderData.order_reed_tshirt != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`เสื้อยืด`}</Text>
+                    </View>
+                    <Text
+                      style={text}
+                    >{`${orderData.order_reed_tshirt} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_reed_shirt != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`เสื้อเชิ้ต`}</Text>
+                    </View>
+                    <Text
+                      style={text}
+                    >{`${orderData.order_reed_shirt} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_reed_sLeg != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`กางเกง/กระโปรง (ขาสั้น)`}</Text>
+                    </View>
+                    <Text
+                      style={text}
+                    >{`${orderData.order_reed_sLeg} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_reed_lLeg != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`กางเกง/กระโปรง (ขายาว)`}</Text>
+                    </View>
+                    <Text
+                      style={text}
+                    >{`${orderData.order_reed_lLeg} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_reed_jean != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`กางเกงยีนส์`}</Text>
+                    </View>
+                    <Text
+                      style={text}
+                    >{`${orderData.order_reed_jean} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_reed_underwear != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text
+                        style={[text, { marginLeft: 5 }]}
+                      >{`ชุดชั้นใน`}</Text>
+                    </View>
+                    <Text
+                      style={text}
+                    >{`${orderData.order_reed_underwear} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_reed_sock != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text style={[text, { marginLeft: 5 }]}>{`ถุงเท้า`}</Text>
+                    </View>
+                    <Text
+                      style={text}
+                    >{`${orderData.order_reed_sock} ตัว`}</Text>
+                  </View>
+                ) : null}
+
+                {orderData.order_reed_other != 0 ? (
+                  <View style={content4}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <FontAwesome name="circle" size={8} />
+                      <Text style={[text, { marginLeft: 5 }]}>{`อื่นๆ`}</Text>
+                    </View>
+                    <Text
+                      style={text}
+                    >{`${orderData.order_reed_other} ตัว`}</Text>
+                  </View>
                 ) : null}
               </View>
 
