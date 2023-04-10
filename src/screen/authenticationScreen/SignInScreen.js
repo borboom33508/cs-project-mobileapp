@@ -170,7 +170,7 @@ const SignInScreen = ({ navigation, props }) => {
               >{`ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง`}</Text>
             ) : null}
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 navigation.navigate("PreChangePassword");
               }}
@@ -180,7 +180,7 @@ const SignInScreen = ({ navigation, props }) => {
               >
                 {"ลืมรหัสผ่าน?"}
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           <TouchableOpacity style={button} onPress={() => handleLogin()}>
